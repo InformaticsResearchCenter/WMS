@@ -54,6 +54,12 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
+SESSION_EXPIRE_SECONDS = 300
+
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+
+SESSION_TIMEOUT_REDIRECT = 'login'
+
 ROOT_URLCONF = 'WMS.urls'
 
 TEMPLATES = [
