@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-SESSION_EXPIRE_SECONDS = 15
+SESSION_EXPIRE_SECONDS = 300
 
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 
