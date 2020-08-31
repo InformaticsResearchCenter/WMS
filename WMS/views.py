@@ -3,8 +3,6 @@ from .models import Userdata
 
 from django.contrib.sessions.backends.db import SessionStore
 
-from pprint import pprint
-
 
 def index(request):
     context = {
@@ -41,7 +39,6 @@ def login(request):
                 request.session[0] = m.userid
                 request.session[1] = m.username
                 request.session[2] = level
-                pprint(level)
                 return redirect('home')
             else:
                 return redirect('login')
