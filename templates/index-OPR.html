@@ -1,0 +1,13 @@
+{% extends 'master.html' %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper d-flex align-items-stretch">
+    {% include 'sidebar.html' %}
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5">
+        {% include 'navbar.html' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+    </div>
+</div>
+{% endblock content %}
