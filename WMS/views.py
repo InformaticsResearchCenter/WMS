@@ -8,7 +8,7 @@ def index(request):
     context = {
         'title': 'Home | WMS Poltekpos'
     }
-    if '0' not in request.session and '1' not in request.session and '2' in request.session:
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
         if request.session['2'] == 'ADM':
