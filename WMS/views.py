@@ -5,13 +5,19 @@ from django.contrib.sessions.backends.db import SessionStore
 
 
 def index(request):
+    context = {
+        'title': 'Home | WMS Poltekpos'
+    }
     if '0' not in request.session and '1' not in request.session:
         return redirect('login')
     else:
-        return render(request, "index.html")
+        return render(request, "index.html", context)
 
 
 def login(request):
+    context = {
+        'title': 'Welcome WMS Poltekpos'
+    }
     if '0' in request.session and '1' in request.session:
         return redirect('home')
     else:
@@ -27,7 +33,7 @@ def login(request):
             else:
                 return redirect('login')
 
-    return render(request, "login_form.html")
+    return render(request, "login_form.html", context)
 
 
 def logout(request):
