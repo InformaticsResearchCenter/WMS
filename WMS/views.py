@@ -14,12 +14,12 @@ def index(request):
             'role': role,
         }
 
-        return render(request, "index.html", context)
+        return render(request, "content/index.html", context)
 
 
 def login(request):
     context = {
-        'title': 'Welcome WMS Poltekpos'
+        'title': 'Welcome | WMS Poltekpos'
     }
     if '0' in request.session and '1' in request.session and '2' in request.session:
         return redirect('home')
@@ -39,7 +39,7 @@ def login(request):
             else:
                 return redirect('login')
 
-    return render(request, "login_form.html", context)
+    return render(request, "login/login_form.html", context)
 
 
 def logout(request):

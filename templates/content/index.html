@@ -1,12 +1,12 @@
-{% extends 'master.html' %}
+{% extends 'base/master.html' %}
 {% load static %}
 
 {% block content %}
 <div class="wrapper d-flex align-items-stretch">
-  {% include 'sidebar.html' %}
+  {% include 'navigasi/sidebar.html' %}
   <!-- Page Content  -->
   <div id="content" class="p-4 p-md-5">
-    {% include 'navbar.html' %}
+    {% include 'navigasi/navbar.html' %}
     {% if role == 'ADM' %}
     <h2 class="mb-4">Ini Role ADM</h2>
     {% elif role == 'MAN' %}
