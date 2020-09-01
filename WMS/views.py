@@ -5,20 +5,16 @@ from django.contrib.sessions.backends.db import SessionStore
 
 
 def index(request):
-    context = {
-        'title': 'Home | WMS Poltekpos'
-    }
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        if request.session['2'] == 'ADM':
-            return render(request, "index.html", context)
-        elif request.session['2'] == 'MAN':
-            return render(request, "index-MAN.html", context)
-        elif request.session['2'] == 'OPR':
-            return render(request, "index-OPR.html", context)
-        else:
-            return redirect('login')
+        role = request.session['2']
+        context = {
+            'title': 'Home | WMS Poltekpos',
+            'role': role,
+        }
+
+        return render(request, "index.html", context)
 
 
 def login(request):
