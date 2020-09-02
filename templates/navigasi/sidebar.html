@@ -8,41 +8,36 @@
         </div>
         <ul class="list-unstyled components mb-5">
             <li class="active">
-                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-                <ul class="collapse list-unstyled" id="homeSubmenu">
+                <a href="#inboundSubmenu" data-toggle="collapse" aria-expanded="false"
+                    class="dropdown-toggle">Inbound</a>
+                <ul class="collapse list-unstyled" id="inboundSubmenu">
                     <li>
-                        <a href="#">Home 1</a>
+                        <a href="#">Inbound Data</a>
                     </li>
                     <li>
-                        <a href="#">Home 2</a>
+                        <a href="#">Supplier</a>
                     </li>
                     <li>
-                        <a href="#">Home 3</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">About</a>
-            </li>
-            <li>
-                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-                <ul class="collapse list-unstyled" id="pageSubmenu">
-                    <li>
-                        <a href="#">Page 1</a>
+                        <a href="#">Item</a>
                     </li>
                     <li>
-                        <a href="#">Page 2</a>
-                    </li>
-                    <li>
-                        <a href="#">Page 3</a>
+                        <a href="#">Return</a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="#">Portfolio</a>
+                <a href="#">Storage</a>
             </li>
             <li>
-                <a href="#">Contact</a>
+                <a href="#">Outbound</a>
+            </li>
+            {% if role == 'ADM' %}
+            <li>
+                <a href="#">User Management</a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="#">Report</a>
             </li>
         </ul>
         <div class="footer">
