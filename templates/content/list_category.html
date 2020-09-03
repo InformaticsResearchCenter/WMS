@@ -1,0 +1,53 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper d-flex align-items-stretch">
+    {% include 'navigasi/sidebar.html' %}
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5">
+        {% include 'navigasi/navbar.html' %}
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-10">
+                    <h1>Daftar Category</h1>
+                    <a href="{% url 'add_category' %}" class="btn btn-primary btn-sm"
+                        style="margin-bottom: 15px; float: right;" role="button" aria-pressed="true">Tambah Category</a>
+                    <br>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Category ID</th>
+                                <th scope="col">Category</th>
+                                <th scope="col" style="width: 200px;">Action</th>
+                            </tr>
+                            {% for cat in category %}
+                            <tr>
+                                <td scope="col">{{cat.id}}</td>
+                                <td scope="col">{{cat.name}}</td>
+                                <td>
+                                    <a href="{% url 'update_category' cat.id %}" class="btn btn-warning btn-sm"
+                                        role="button" aria-pressed="true">delete</a>
+                                    <a href="{% url 'delete_category' cat.id %}" class="btn btn-danger btn-sm"
+                                        role="button" aria-pressed="true">delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </thead>
+                    </table>
+                    <a href="{% url 'home' %}" class="btn btn-primary btn-sm" style="float: left;" role="button"
+                        aria-pressed="true">Kemblai ke
+                        Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

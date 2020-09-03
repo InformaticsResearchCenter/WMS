@@ -32,7 +32,7 @@ def login(request):
             password2 = m.password
             pass_model = password2.split(" ")[0]
             if pass_model == password:
-                request.session[0] = m.userid
+                request.session[0] = m.id
                 request.session[1] = m.username
                 request.session[2] = level
                 return redirect('home')

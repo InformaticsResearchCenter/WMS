@@ -79,6 +79,14 @@ class Role(models.Model):
         db_table = 'role'
 
 
+class SequencesSequence(models.Model):
+    name = models.CharField(primary_key=True, max_length=100)
+    last = models.IntegerField()
+
+    class Meta:
+        db_table = 'sequences_sequence'
+
+
 class Subcategory(models.Model):
     id = models.TextField(primary_key=True)
     name = models.CharField(max_length=30)
