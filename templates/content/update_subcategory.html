@@ -19,14 +19,18 @@
             <div class="row justify-content-center">
                 <div class="col-8">
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="id" id="id" value="CTR{{cat_id}}">
+                        <input type="hidden" class="form-control" name="id" id="id" value="{{subcategory.id}}">
                     </div>
                     <div class="form-group">
-                        <label for="category">Category</label>
-                        <input type="text" class="form-control" name="name" id="name" value="{{category.name}}"
-                            placeholder="Input Category">
+                        <label for="category">Update Subcategory</label>
+                        <input type="text" class="form-control" name="name" id="name" value="{{subcategory.name}}"
+                            placeholder="Input Subcategory">
                     </div>
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="categoryid" id="categoryid"
+                            value="{{subcat_id}}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </div>
         </form>

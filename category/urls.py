@@ -20,8 +20,17 @@ from . import views
 
 urlpatterns = [
     path('', views.list_category, name="list_category"),
-    path('add_category/', views.category, name="add_category"),
+    path('add_category/', views.main_category, name="add_category"),
+    path('add_subcategory/', views.main_subcategory, name="add_subcategory"),
+    path('update_category/<slug:id>/',
+         views.main_category, name="update_category"),
+    path('update_subcategory/<slug:id>/',
+         views.main_subcategory, name="update_subcategory"),
+    path('view_category/<slug:id>/',
+         views.view_category, name="view_category"),
     path('delete_category/<slug:id>/',
-         views.category_delete, name="delete_category"),
-    path('item/', views.item, name="item"),
+         views.delete_category, name="delete_category"),
+    path('delete_subcategory/<slug:id>/',
+         views.delete_subcategory, name="delete_subcategory"),
+    path('item/', views.main_item, name="item"),
 ]
