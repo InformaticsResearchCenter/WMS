@@ -2,22 +2,15 @@
 {% load static %}
 
 {% block content %}
-<div class="wrapper d-flex align-items-stretch">
-    {% include 'navigasi/sidebar.html' %}
-    <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5">
-        {% include 'navigasi/navbar.html' %}
-        {% if role == 'ADM' %}
-        <h2 class="mb-4">Ini Role ADM</h2>
-        {% elif role == 'MAN' %}
-        <h2 class="mb-4">Ini Role MAN</h2>
-        {% elif role == 'OPR' %}
-        <h2 class="mb-4">Ini Role OPR</h2>
-        {% endif %}
-        <a href="#" class="btn btn-primary btn-sm" style="margin: 20px;" role="button" aria-pressed="true">Tambah
-            Item</a>
-        <a href="{% url 'list_category' %}" class="btn btn-primary btn-sm" style="margin: 20px;" role="button"
-            aria-pressed="true">Category</a>
-    </div>
-</div>
+{% if role == 'ADM' %}
+<h2 class="mb-4">Ini Role ADM</h2>
+{% elif role == 'MAN' %}
+<h2 class="mb-4">Ini Role MAN</h2>
+{% elif role == 'OPR' %}
+<h2 class="mb-4">Ini Role OPR</h2>
+{% endif %}
+<a href="#" class="btn btn-primary btn-sm" style="margin: 20px;" role="button" aria-pressed="true">Add
+    Item</a>
+<a href="{% url 'list_category' %}" class="btn btn-primary btn-sm" style="margin: 20px;" role="button"
+    aria-pressed="true">Category</a>
 {% endblock content %}

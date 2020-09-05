@@ -9,9 +9,11 @@ def index(request):
         return redirect('login')
     else:
         role = request.session['2']
+        username = request.session['1']
         context = {
             'title': 'Home | WMS Poltekpos',
             'role': role,
+            'username': username,
         }
 
         return render(request, "content/index.html", context)

@@ -2,56 +2,49 @@
 {% load static %}
 
 {% block content %}
-<div class="wrapper d-flex align-items-stretch">
-    {% include 'navigasi/sidebar.html' %}
-    <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5">
-        {% include 'navigasi/navbar.html' %}
-        {% if role == 'ADM' %}
-        <h2 class="mb-4">Ini Role ADM</h2>
-        {% elif role == 'MAN' %}
-        <h2 class="mb-4">Ini Role MAN</h2>
-        {% elif role == 'OPR' %}
-        <h2 class="mb-4">Ini Role OPR</h2>
-        {% endif %}
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-10">
-                    <h1>Daftar Category</h1>
-                    <a href="{% url 'add_category' %}" class="btn btn-primary btn-sm"
-                        style="margin-bottom: 15px; float: right;" role="button" aria-pressed="true">Tambah Category</a>
-                    <br>
-                    <table class="table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Category ID</th>
-                                <th scope="col">Category</th>
-                                <th scope="col" style="width: 202px;">Action</th>
-                            </tr>
-                            {% for cat in category %}
-                            <tr>
-                                <td scope="col">{{cat.id}}</td>
-                                <td scope="col">{{cat.name}}</td>
-                                <td>
-                                    <a href="{% url 'view_category' cat.id %}" class="btn btn-primary btn-sm"
-                                        role="button" aria-pressed="true">View</a>
-                                    <a href="{% url 'update_category' cat.id %}" class="btn btn-success btn-sm"
-                                        role="button" aria-pressed="true">Update</a>
-                                    <form action="{% url 'delete_category' cat.id %}" method="POST" class="d-inline">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
-                                            <i class="text-white">Delete</i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </thead>
-                    </table>
-                    <a href="{% url 'home' %}" class="btn btn-primary btn-sm" style="float: left;" role="button"
-                        aria-pressed="true">Kembali ke Home</a>
-                </div>
-            </div>
+{% if role == 'ADM' %}
+<h2 class="mb-4">Ini Role ADM</h2>
+{% elif role == 'MAN' %}
+<h2 class="mb-4">Ini Role MAN</h2>
+{% elif role == 'OPR' %}
+<h2 class="mb-4">Ini Role OPR</h2>
+{% endif %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <h1>List Category</h1>
+            <a href="{% url 'add_category' %}" class="btn btn-primary btn-sm" style="margin-bottom: 15px; float: right;"
+                role="button" aria-pressed="true">Add Category</a>
+            <br>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Category ID</th>
+                        <th scope="col">Category</th>
+                        <th scope="col" style="width: 202px;">Action</th>
+                    </tr>
+                    {% for cat in category %}
+                    <tr>
+                        <td scope="col">{{cat.id}}</td>
+                        <td scope="col">{{cat.name}}</td>
+                        <td>
+                            <a href="{% url 'view_category' cat.id %}" class="btn btn-primary btn-sm" role="button"
+                                aria-pressed="true">View</a>
+                            <a href="{% url 'update_category' cat.id %}" class="btn btn-success btn-sm" role="button"
+                                aria-pressed="true">Update</a>
+                            <form action="{% url 'delete_category' cat.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                    <i class="text-white">Delete</i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+            <a href="{% url 'home' %}" class="btn btn-primary btn-sm" style="float: left;" role="button"
+                aria-pressed="true">Back</a>
         </div>
     </div>
 </div>

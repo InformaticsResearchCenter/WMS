@@ -18,13 +18,25 @@ def main_category(request, id=0):
     else:
         if request.method == "GET":
             if id == 0:
+                username = request.session['1']
                 form = CategoryForm()
                 cat_id = get_next_value("category_seq")
-                return render(request, 'content/category.html', {'form': form, 'cat_id': cat_id})
+                context = {
+                    'form': form,
+                    'username': username,
+                    'cat_id': cat_id
+                }
+                return render(request, 'content/category.html', context)
             else:
                 category = Category.objects.get(pk=id)
+                username = request.session['1']
                 form = CategoryForm(instance=category)
-                return render(request, 'content/update_category.html', {'form': form, 'category': category})
+                context = {
+                    'form': form,
+                    'username': username,
+                    'category': category
+                }
+                return render(request, 'content/update_category.html', context)
         else:
             if id == 0:
                 form = CategoryForm(request.POST)
@@ -41,7 +53,13 @@ def list_category(request):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        return render(request, 'content/list_category.html', {'category': Category.objects.order_by('id')})
+        category = Category.objects.order_by('id')
+        username = request.session['1']
+        context = {
+            'category': category,
+            'username': username,
+        }
+        return render(request, 'content/list_category.html', context)
 
 
 def delete_category(request, id):
@@ -59,14 +77,19 @@ def delete_subcategory(request, id):
     else:
         subcategory = Subcategory.objects.get(pk=id)
         subcategory.delete()
-        return redirect('list_category')
+        cat_id = request.session['cat_id']
+        return redirect('view_category', id=cat_id)
 
 
 def main_item(request):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        return render(request, 'content/main_item.html')
+        username = request.session['1']
+        context = {
+            'username': username
+        }
+        return render(request, 'content/main_item.html', context)
 
 
 def view_category(request, id):
@@ -74,12 +97,19 @@ def view_category(request, id):
         return redirect('login')
     else:
         subcategory = Subcategory.objects.all().filter(categoryid=id)
+        category = Category.objects.get(pk=id)
+        cat_name = category.name
         request.session['cat_id'] = id
+        request.session['cat_name'] = cat_name
         cat_id = request.session['cat_id']
+        cat_id = request.session['cat_name']
+        username = request.session['1']
         context = {
             'title': 'View Category - Subcategory',
             'subcategory': subcategory,
-            'cat_id': cat_id
+            'cat_id': cat_id,
+            'cat_name': cat_name,
+            'username': username,
         }
         return render(request, 'content/view_category.html', context)
 
@@ -90,16 +120,19 @@ def main_subcategory(request, id=0):
     else:
         if request.method == "GET":
             if id == 0:
+                username = request.session['1']
                 form = SubcategoryForm()
                 subcat_id = get_next_value("subcategory_seq")
                 cat_id = request.session['cat_id']
                 context = {
                     'form': form,
                     'subcat_id': subcat_id,
+                    'username': username,
                     'cat_id': cat_id
                 }
                 return render(request, 'content/subcategory.html', context)
             else:
+                username = request.session['1']
                 subcategory = Subcategory.objects.get(pk=id)
                 str_subcat_id = str(subcategory.categoryid)
                 subcat_id = str_subcat_id[17:-1]
@@ -107,6 +140,7 @@ def main_subcategory(request, id=0):
                 context = {
                     'subcategory': subcategory,
                     'subcat_id': subcat_id,
+                    'username': username,
                     'form': form
                 }
                 return render(request, 'content/update_subcategory.html', context)
