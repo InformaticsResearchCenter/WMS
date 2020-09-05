@@ -49,6 +49,7 @@ def logout(request):
         del request.session['0']
         del request.session['1']
         del request.session['2']
+        del request.session['cat_id']
         return redirect('login')
     except KeyError:
         pass

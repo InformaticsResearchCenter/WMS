@@ -22,6 +22,7 @@ def main_category(request, id=0):
                 form = CategoryForm()
                 cat_id = get_next_value("category_seq")
                 context = {
+                    'title': 'Add Category',
                     'form': form,
                     'username': username,
                     'cat_id': cat_id
@@ -32,6 +33,7 @@ def main_category(request, id=0):
                 username = request.session['1']
                 form = CategoryForm(instance=category)
                 context = {
+                    'title': 'Update Category',
                     'form': form,
                     'username': username,
                     'category': category
@@ -56,6 +58,7 @@ def list_category(request):
         category = Category.objects.order_by('id')
         username = request.session['1']
         context = {
+            'title': 'List Category',
             'category': category,
             'username': username,
         }
@@ -87,6 +90,7 @@ def main_item(request):
     else:
         username = request.session['1']
         context = {
+            'title': 'Item | WMS Poltekpos',
             'username': username
         }
         return render(request, 'content/main_item.html', context)
@@ -100,9 +104,7 @@ def view_category(request, id):
         category = Category.objects.get(pk=id)
         cat_name = category.name
         request.session['cat_id'] = id
-        request.session['cat_name'] = cat_name
         cat_id = request.session['cat_id']
-        cat_id = request.session['cat_name']
         username = request.session['1']
         context = {
             'title': 'View Category - Subcategory',
@@ -125,6 +127,7 @@ def main_subcategory(request, id=0):
                 subcat_id = get_next_value("subcategory_seq")
                 cat_id = request.session['cat_id']
                 context = {
+                    'title': 'Add Subcategory',
                     'form': form,
                     'subcat_id': subcat_id,
                     'username': username,
@@ -138,6 +141,7 @@ def main_subcategory(request, id=0):
                 subcat_id = str_subcat_id[17:-1]
                 form = SubcategoryForm(instance=subcategory)
                 context = {
+                    'title': 'Update Subcategory',
                     'subcategory': subcategory,
                     'subcat_id': subcat_id,
                     'username': username,
