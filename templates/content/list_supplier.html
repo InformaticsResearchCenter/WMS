@@ -13,36 +13,35 @@
         <h2 class="mb-4">Ini Role OPR</h2>
         {% endif %}
 
-        <h2>Data Item</h2>
+        <h2>Data Supplier</h2>
         <hr>
+
         <div class="card">
           <div class="card-header">
-            <a href="{% url 'add_item' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Tambah
-            Item</a>
-            <a href="{% url 'list_category' %}" class="btn btn-primary btn-sm" style="margin-left:20px;" role="button"
-                aria-pressed="true">Category</a>
+             <a href="{% url 'add_supplier' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Tambah
+            Supplier</a>
           </div>
           <div class="card-body">
-            <table class="table">
+             <table class="table">
           <thead class="thead-dark">
             <tr>
               <th scope="col">No</th>
-              <th scope="col">Item Id</th>
-              <th scope="col">Item</th>
-              <th scope="col">Subcategory</th>
+              <th scope="col">Supplier Id</th>
+              <th scope="col">Supplier</th>
+              <th scope="col">Detail</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            {% for item in Item %}
+            {% for list in list_supplier %}
             <tr>
               <th scope="row">1</th>
-              <td>{{item.0}}</td> 
-              <td>{{item.1}}</td>
-              <td>{{item.2}}</td>
+              <td>{{ list.id }}</td>
+              <td>{{ list.name }}</td>
+              <td><a href="{% url 'detail_supplier' list.id %}">View</a></td>
               <td>
-                  <a href="{% url 'update_item' item.0 %}" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
-                  <a href="{% url 'delete_item' item.0 %}"><button class="btn btn-danger btn-sm">Delete</button></a>
+                  <a href="{% url 'update_supplier' list.id %}" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
+                  <a href="{% url 'delete_supplier' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -50,6 +49,6 @@
         </table>
           </div>
         </div>
-        </div>
+    </div>
 </div>
 {% endblock content %}

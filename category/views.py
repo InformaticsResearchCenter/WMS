@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
-from .forms import CategoryForm, SubcategoryForm
-from WMS.models import Category, Subcategory
+from .forms import *
+from WMS.models import *
 
 from django.http import HttpResponseRedirect
 
@@ -9,6 +9,8 @@ from pprint import pprint
 
 from sequences import get_next_value
 
+from django.db import connection
+# from jointables.models import Item
 # Create your views here.
 
 
@@ -159,3 +161,94 @@ def main_subcategory(request, id=0):
                 form.save()
                 return redirect('view_category', id=cat_id)
         return render(request, 'content/subcategory.html')
+
+
+
+# ------------------------------ SUPLIER ------------------- 
+
+def list_supplier(request):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        context = {'list_supplier':Supplier.objects.order_by('id')}
+        return render(request, 'content/list_supplier.html', context)
+
+def supplier(request, id=0):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        if request.method == "GET":
+            if id == 0:
+                form = SupplierForm()
+                sup_id = get_next_value("supplier_seq")
+                return render(request, 'content/supplier.html', {'form': form, 'sup_id': sup_id})
+            else:
+                supplier = Supplier.objects.get(pk=id)
+                form = SupplierForm(instance=supplier)
+            return render(request, 'content/update_supplier.html', {'form': form, 'supplier': supplier})   
+        else:
+            if id == 0:
+                form = SupplierForm(request.POST)
+            else:
+                supplier = Supplier.objects.get(pk=id)
+                form = SupplierForm(request.POST, instance=supplier)
+            if form.is_valid():
+                form.save()
+                return redirect('list_supplier')
+        return render(request, 'content/supplier.html')   
+
+def supplier_delete(request, id):
+    supplier = Supplier.objects.get(pk=id)
+    supplier.delete()
+    return redirect('list_supplier')
+
+def supplier_detail(request, id):
+    supplier = Supplier.objects.get(pk=id)
+    form = SupplierForm(instance=supplier)
+    return render(request, 'content/detail_supplier.html', {'form': form, 'supplier': supplier})    
+
+# ------------------------- ITEM --------------------
+def main_item(request):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        cursor=connection.cursor()
+        cursor.execute("select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
+        results=cursor.fetchall()
+        return render(request, 'content/main_item.html', {'Item':results})
+
+def item(request, id=0):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        subcategory = Subcategory.objects.all()
+        if request.method == "GET":
+            if id == 0:
+                form = ItemForm()
+                item_id = get_next_value("item_seq")
+                return render(request, 'content/item.html', {'form': form, 'item_id': item_id, 'subcategory': subcategory})
+            else:
+                item = Item.objects.get(pk=id)
+                form = ItemForm(instance=item)
+                cursor=connection.cursor()
+                cursor.execute("select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
+                results=cursor.fetchall()
+                return render(request, 'content/update_item.html', {'form': form, 'item': item, 'subcategory': subcategory, 'Item':results})
+        else:
+            if id == 0:
+                form = ItemForm(request.POST)
+            else:
+                item = Item.objects.get(pk=id)
+                form = ItemForm(request.POST, instance=item)
+            if form.is_valid():
+                form.save()
+                return redirect('item')
+        return render(request, 'content/item.html')
+
+def delete_item(request, id):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        item = Item.objects.get(pk=id)
+        item.delete()
+        return redirect('item')   

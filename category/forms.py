@@ -1,5 +1,5 @@
 from django import forms
-from WMS.models import Category, Subcategory
+from WMS.models import *
 
 
 class CategoryForm(forms.ModelForm):
@@ -19,3 +19,28 @@ class SubcategoryForm(forms.ModelForm):
             'name',
             'categoryid'
         ]
+
+# ---------------------- Supplier ------------
+
+class SupplierForm(forms.ModelForm):
+    class Meta:
+        model = Supplier
+        fields = [
+            'id',
+            'name',
+            'email',
+            'phone',
+            'address',
+            'postalcode'
+        ]
+
+# ---------------------- Item ------------
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = [
+            'id',
+            'name',
+            'subcategoryid'
+        ]        

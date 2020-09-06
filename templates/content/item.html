@@ -1,0 +1,55 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper d-flex align-items-stretch">
+     <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5">
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+
+        <h2>Input Item</h2>
+        <hr>
+        <div class="card">
+          <div class="card-header">
+            Add Item
+          </div>
+          <div class="card-body">
+            <form method="POST" action="">
+            {%csrf_token%}
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" name="id" id="id" value="ITM{{item_id}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Item</label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Input Item">
+                    </div>
+                    <!-- <div class="form-group">
+                        <label for="category">Subcategory</label>
+                        <input type="text" class="form-control" name="subcategoryid" id="subcategoryid" placeholder="Input subcategoryid">
+                    </div> -->
+                    <div class="form-group">
+                        <label for="category">Subcategory</label>
+                        <select class="form-control" name="subcategoryid">
+                            {% for subcategory in subcategory %}
+                                <option value='{{subcategory.id}}'>{{subcategory.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </form>
+        <a href="{% url 'item' %}"><button type="submit" class="btn btn-success">Back</button></a
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

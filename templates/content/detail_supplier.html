@@ -1,0 +1,62 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper d-flex align-items-stretch">
+     <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5">
+      {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+
+        <h1>Supplier</h1>
+        <hr>
+        <div class="card">
+          <div class="card-header">
+            Detail Supplier
+          </div>
+          <div class="card-body">
+               <table>
+                <tr>
+                  <td>Supplier id</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{supplier.id}}</td>
+                </tr>
+                <tr>
+                  <td>Supplier</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{supplier.name}}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{supplier.email}}</td>
+                </tr>
+                <tr>
+                  <td>Phone</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{supplier.phone}}</td>
+                </tr>
+                <tr>
+                  <td>Address</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{supplier.address}}</td>
+                </tr>
+                <tr>
+                  <td>Postal Code</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{supplier.postalcode}}</td>
+                </tr>
+            </table>
+            <br>
+            <a href="{% url 'list_supplier' %}" class="btn btn-primary btn-sm">Kembali</a>
+          </div>
+        </div>  
+        <hr>
+    </div>
+</div>
+{% endblock content %}
