@@ -41,12 +41,14 @@ urlpatterns = [
     path('supplier/add_supplier/', views.supplier, name="add_supplier"),
     path('update_supplier/<slug:id>/',
          views.supplier, name="update_supplier"),
-    path('supplier/delete/<slug:id>/', views.supplier_delete, name="delete_supplier"),
-    path('supplier/detail/<slug:id>/',views.supplier_detail, name="detail_supplier"),
+    path('supplier/delete/<slug:id>/',
+         views.supplier_delete, name="delete_supplier"),
+    path('supplier/detail/<slug:id>/',
+         views.supplier_detail, name="detail_supplier"),
 
     # --------------------------------- Item ---------------------
     path('item/', views.main_item, name="item"),
     path('item/add_item/', views.item, name="add_item"),
-    path('item/delete_item/<slug:id>/',views.delete_item, name="delete_item"),
-    path('item/update_item/<slug:id>/',views.item,name='update_item'),
+    path('item/delete_item/<slug:id>/', views.delete_item, name="delete_item"),
+    path('item/update_item/<slug:id>/', views.item, name='update_item'),
 ]

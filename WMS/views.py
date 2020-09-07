@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Userdata
 
 from django.contrib.sessions.backends.db import SessionStore
+from django.contrib import messages
 
 
 def index(request):
@@ -15,7 +16,6 @@ def index(request):
             'role': role,
             'username': username,
         }
-
         return render(request, "content/index.html", context)
 
 
@@ -27,7 +27,12 @@ def login(request):
         return redirect('home')
     else:
         if request.method == 'POST':
-            m = Userdata.objects.get(username=request.POST['username'])
+            try:
+                m = Userdata.objects.get(username=request.POST['username'])
+            except Userdata.DoesNotExist:
+                messages.error(
+                    request, 'username does not exists!')
+                return redirect('login')
             n = str(m.roleid)
             level = n[13:-1]
             password = request.POST['password']
@@ -39,8 +44,9 @@ def login(request):
                 request.session[2] = level
                 return redirect('home')
             else:
+                messages.error(
+                    request, 'username or password is not correct!')
                 return redirect('login')
-
     return render(request, "login/login_form.html", context)
 
 
@@ -49,7 +55,6 @@ def logout(request):
         del request.session['0']
         del request.session['1']
         del request.session['2']
-        del request.session['cat_id']
         return redirect('login')
     except KeyError:
         pass

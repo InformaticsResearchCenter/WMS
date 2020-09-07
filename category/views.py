@@ -15,6 +15,7 @@ from django.db import connection
 
 
 def main_category(request, id=0):
+    # Login Requirements dengan mengecek session
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
@@ -86,18 +87,6 @@ def delete_subcategory(request, id):
         return redirect('view_category', id=cat_id)
 
 
-def main_item(request):
-    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
-        return redirect('login')
-    else:
-        username = request.session['1']
-        context = {
-            'title': 'Item | WMS Poltekpos',
-            'username': username
-        }
-        return render(request, 'content/main_item.html', context)
-
-
 def view_category(request, id):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
@@ -163,15 +152,15 @@ def main_subcategory(request, id=0):
         return render(request, 'content/subcategory.html')
 
 
-
-# ------------------------------ SUPLIER ------------------- 
+# ------------------------------ SUPLIER -------------------
 
 def list_supplier(request):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        context = {'list_supplier':Supplier.objects.order_by('id')}
+        context = {'list_supplier': Supplier.objects.order_by('id')}
         return render(request, 'content/list_supplier.html', context)
+
 
 def supplier(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
@@ -185,7 +174,7 @@ def supplier(request, id=0):
             else:
                 supplier = Supplier.objects.get(pk=id)
                 form = SupplierForm(instance=supplier)
-            return render(request, 'content/update_supplier.html', {'form': form, 'supplier': supplier})   
+            return render(request, 'content/update_supplier.html', {'form': form, 'supplier': supplier})
         else:
             if id == 0:
                 form = SupplierForm(request.POST)
@@ -195,27 +184,39 @@ def supplier(request, id=0):
             if form.is_valid():
                 form.save()
                 return redirect('list_supplier')
-        return render(request, 'content/supplier.html')   
+        return render(request, 'content/supplier.html')
+
 
 def supplier_delete(request, id):
     supplier = Supplier.objects.get(pk=id)
     supplier.delete()
     return redirect('list_supplier')
 
+
 def supplier_detail(request, id):
     supplier = Supplier.objects.get(pk=id)
     form = SupplierForm(instance=supplier)
-    return render(request, 'content/detail_supplier.html', {'form': form, 'supplier': supplier})    
+    return render(request, 'content/detail_supplier.html', {'form': form, 'supplier': supplier})
 
 # ------------------------- ITEM --------------------
+
+
 def main_item(request):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        cursor=connection.cursor()
-        cursor.execute("select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
-        results=cursor.fetchall()
-        return render(request, 'content/main_item.html', {'Item':results})
+        username = request.session['1']
+        cursor = connection.cursor()
+        cursor.execute(
+            "select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
+        results = cursor.fetchall()
+        context = {
+            'title': 'Item | WMS Poltekpos',
+            'username': username,
+            'Item': results
+        }
+        return render(request, 'content/main_item.html', context)
+
 
 def item(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
@@ -226,14 +227,28 @@ def item(request, id=0):
             if id == 0:
                 form = ItemForm()
                 item_id = get_next_value("item_seq")
-                return render(request, 'content/item.html', {'form': form, 'item_id': item_id, 'subcategory': subcategory})
+                context = {
+                    'form': form,
+                    'item_id': item_id,
+                    'subcategory': subcategory,
+                    'title': 'Add Item'
+                }
+                return render(request, 'content/item.html', context)
             else:
                 item = Item.objects.get(pk=id)
                 form = ItemForm(instance=item)
-                cursor=connection.cursor()
-                cursor.execute("select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
-                results=cursor.fetchall()
-                return render(request, 'content/update_item.html', {'form': form, 'item': item, 'subcategory': subcategory, 'Item':results})
+                cursor = connection.cursor()
+                cursor.execute(
+                    "select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
+                results = cursor.fetchall()
+                context = {
+                    'form': form,
+                    'item': item,
+                    'subcategory': subcategory,
+                    'Item': results,
+                    'title': 'Update Item'
+                }
+                return render(request, 'content/update_item.html', context)
         else:
             if id == 0:
                 form = ItemForm(request.POST)
@@ -245,10 +260,11 @@ def item(request, id=0):
                 return redirect('item')
         return render(request, 'content/item.html')
 
+
 def delete_item(request, id):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
         item = Item.objects.get(pk=id)
         item.delete()
-        return redirect('item')   
+        return redirect('item')
