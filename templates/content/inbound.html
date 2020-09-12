@@ -17,45 +17,43 @@
         <hr>
         <div class="card">
             <div class="card-header">
-                Add item
+                Add Inbound
             </div>
             <div class="card-body">
                 <form method="POST" action="">
-                    {%csrf_token%}
+                    {% csrf_token %}
                     <div class="row justify-content-center">
                         <div class="col-8">
                             <div class="form-group">
-                                <input type="hidden" class="form-control" name="id" id="id" value="SPR{{sup_id}}">
+                                <input type="hidden" class="form-control" name="id" id="id" value="{{id_inbound}}">
                             </div>
                             <div class="form-group">
-                                <label for="category">Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Input Name">
+                                <label for="supplier">Supplier</label>
+                                <select class="form-control" name="supplierid">
+                                    {% for sup in supplier %}
+                                    <option value='{{sup.id}}'>{{sup.name}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="category">Email</label>
-                                <input type="text" class="form-control" name="email" id="email"
-                                    placeholder="Input Email">
+                                <input type="hidden" class="form-control" name="status" id="status" value="On - Check">
                             </div>
                             <div class="form-group">
-                                <label for="category">Phone</label>
-                                <input type="text" class="form-control" name="phone" id="phone"
-                                    placeholder="Input Phone">
+                                <input type="hidden" class="form-control" name="date" id="date" value="{{date}}">
                             </div>
                             <div class="form-group">
-                                <label for="category">Address</label>
-                                <input type="text" class="form-control" name="address" id="address"
-                                    placeholder="Input Address">
+                                <input type="hidden" class="form-control" name="confirm" id="confirm"
+                                    value="{{con_cre}}">
                             </div>
                             <div class="form-group">
-                                <label for="category">PostalCode</label>
-                                <input type="text" class="form-control" name="postalcode" id="postalcode"
-                                    placeholder="Input PostalCode">
+                                <input type="hidden" class="form-control" name="created" id="created"
+                                    value="{{con_cre}}">
                             </div>
                             <button type="submit" class="btn btn-primary">Add</button>
                         </div>
                     </div>
                 </form>
-                <a href="{% url 'list_supplier' %}"><button type="submit" class="btn btn-success">Back</button></a>
+                <a href="#"><button type="submit" class="btn btn-success">Back</button></a>
             </div>
         </div>
     </div>

@@ -2,6 +2,8 @@ from django import forms
 from WMS.models import *
 
 
+# ------------------- Category -----------------
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
@@ -9,6 +11,9 @@ class CategoryForm(forms.ModelForm):
             'id',
             'name'
         ]
+
+
+# ------------------- Subcategory -----------------
 
 
 class SubcategoryForm(forms.ModelForm):
@@ -21,6 +26,7 @@ class SubcategoryForm(forms.ModelForm):
         ]
 
 # ---------------------- Supplier ------------
+
 
 class SupplierForm(forms.ModelForm):
     class Meta:
@@ -36,6 +42,7 @@ class SupplierForm(forms.ModelForm):
 
 # ---------------------- Item ------------
 
+
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
@@ -43,4 +50,35 @@ class ItemForm(forms.ModelForm):
             'id',
             'name',
             'subcategoryid'
-        ]        
+        ]
+
+
+# ---------------------- Itemdata ------------
+
+
+class ItemDataForm(forms.ModelForm):
+    class Meta:
+        model = Itemdata
+        fields = [
+            'id',
+            'inboundid',
+            'itemid',
+            'quantity',
+            'pass_field',
+            'reject',
+        ]
+
+
+# ---------------------- Inbound ------------
+
+class InbounddataForm(forms.ModelForm):
+    class Meta:
+        model = Inbounddata
+        fields = [
+            'id',
+            'supplierid',
+            'status',
+            'date',
+            'confirm',
+            'created',
+        ]

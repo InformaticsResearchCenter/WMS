@@ -17,7 +17,7 @@
         <hr>
         <div class="card">
             <div class="card-header">
-                Add item
+                Add ItemData
             </div>
             <div class="card-body">
                 <form method="POST" action="">
@@ -25,37 +25,40 @@
                     <div class="row justify-content-center">
                         <div class="col-8">
                             <div class="form-group">
-                                <input type="hidden" class="form-control" name="id" id="id" value="SPR{{sup_id}}">
+                                <input type="hidden" class="form-control" name="id" id="id" value="ITD{{itd_id}}">
                             </div>
                             <div class="form-group">
-                                <label for="category">Name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Input Name">
+                                <input type="hidden" class="form-control" name="inboundid" id="inboundid"
+                                    value="{{inbound_id}}">
                             </div>
                             <div class="form-group">
-                                <label for="category">Email</label>
-                                <input type="text" class="form-control" name="email" id="email"
-                                    placeholder="Input Email">
+                                <label for="itemdata">Item</label>
+                                <select class="form-control" name="itemid">
+                                    {% for itm in item %}
+                                    <option value='{{itm.id}}'>{{itm.name}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="category">Phone</label>
-                                <input type="text" class="form-control" name="phone" id="phone"
-                                    placeholder="Input Phone">
+                                <label for="itemdata">Quantity</label>
+                                <input type="text" class="form-control" name="quantity" id="quantity"
+                                    placeholder="Input Quantity">
                             </div>
                             <div class="form-group">
-                                <label for="category">Address</label>
-                                <input type="text" class="form-control" name="address" id="address"
-                                    placeholder="Input Address">
+                                <label for="itemdata">Pass</label>
+                                <input type="text" class="form-control" name="pass_field" id="pass_field"
+                                    placeholder="Input Pass">
                             </div>
                             <div class="form-group">
-                                <label for="category">PostalCode</label>
-                                <input type="text" class="form-control" name="postalcode" id="postalcode"
-                                    placeholder="Input PostalCode">
+                                <label for="itemdata">Reject</label>
+                                <input type="text" class="form-control" name="reject" id="reject"
+                                    placeholder="Input Reject">
                             </div>
                             <button type="submit" class="btn btn-primary">Add</button>
                         </div>
                     </div>
                 </form>
-                <a href="{% url 'list_supplier' %}"><button type="submit" class="btn btn-success">Back</button></a>
+                <a href="#"><button type="submit" class="btn btn-success">Back</button></a>
             </div>
         </div>
     </div>

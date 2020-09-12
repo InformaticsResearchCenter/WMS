@@ -12,7 +12,6 @@
     {% elif role == 'OPR' %}
     <h2 class="mb-4">Ini Role OPR</h2>
     {% endif %}
-
     <h2>Data Item</h2>
     <hr>
     <div class="card">
@@ -43,7 +42,12 @@
               <td>
                 <a href="{% url 'update_item' item.0 %}" class="btn btn-success btn-sm" role="button"
                   aria-pressed="true">Update</a>
-                <a href="{% url 'delete_item' item.0 %}"><button class="btn btn-danger btn-sm">Delete</button></a>
+                <form action="{% url 'delete_item' item.0 %}" method="POST" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                    <i class="text-white">Delete</i>
+                  </button>
+                </form>
               </td>
             </tr>
             {% endfor %}

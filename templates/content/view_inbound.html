@@ -1,0 +1,91 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<div class="wrapper d-flex align-items-stretch">
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5">
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+        <h2>Data Item</h2>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                <a href="{% url 'add_itemdata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+                    Item</a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-1">
+                        <h6>Inbound ID</h6>
+                        <h6>Supplier ID</h6>
+                        <h6>Supplier</h6>
+                        <h6>Date</h6>
+                        <h6>Status</h6>
+                        <h6>Created by</h6>
+                    </div>
+                    {% for inb in Inbound %}
+                    <div class="col">
+                        <h6><b>: {{inb.id}}</b></h6>
+                        <h6><b>: {{inb.supplierid}}</b></h6>
+                        <h6><b>: {{inb.supplierid__name}}</b></h6>
+                        <h6><b>: {{inb.date}}</b></h6>
+                        <h6><b>: {{inb.status}}</b></h6>
+                        <h6><b>: {{inb.created__username}}</b></h6>
+                    </div>
+                    {% endfor %}
+                </div>
+                <br>
+                <br>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Item</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Pass</th>
+                            <th scope="col">Reject</th>
+                            <th scope="col">QR Code</th>
+                            <th scope="col" style="width: 165px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for itdt in Itemdata %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>{{itdt.itemid.name}}</td>
+                            <td>{{itdt.quantity}}</td>
+                            <td>{{itdt.pass_field}}</td>
+                            <td>{{itdt.reject}}</td>
+                            <td>-</td>
+                            <td>
+                                <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm"
+                                    role="button" aria-pressed="true">Update</a>
+                                <form action="{% url 'delete_itemdata' itdt.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                        <i class="text-white">Delete</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-success">Back</button></a>
+                <form action="{% url 'confirm' %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px; float: right;">
+                        <i class="text-white">Confirm</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

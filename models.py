@@ -13,46 +13,41 @@ class Category(models.Model):
     name = models.CharField(max_length=30)
 
     class Meta:
+        managed = False
         db_table = 'category'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_session'
 
 
 class Inbounddata(models.Model):
     id = models.TextField(primary_key=True)
-    supplierid = models.ForeignKey(
-        'Supplier', models.DO_NOTHING, db_column='supplierid')
+    supplierid = models.ForeignKey('Supplier', models.DO_NOTHING, db_column='supplierid')
     status = models.CharField(max_length=20)
     date = models.DateField()
-    confirm = models.ForeignKey(
-        'Userdata', models.DO_NOTHING, related_name='confirm_inbound', db_column='confirm', blank=True, null=True)
-    created = models.ForeignKey(
-        'Userdata', models.DO_NOTHING, related_name='created_inbound', db_column='created', blank=True, null=True)
+    confirm = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='confirm', blank=True, null=True)
+    created = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='created', blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'inbounddata'
 
 
 class Item(models.Model):
     id = models.TextField(primary_key=True)
     name = models.CharField(max_length=50)
-    subcategoryid = models.ForeignKey(
-        'Subcategory', models.DO_NOTHING, db_column='subcategoryid')
+    subcategoryid = models.ForeignKey('Subcategory', models.DO_NOTHING, db_column='subcategoryid')
 
     class Meta:
+        managed = False
         db_table = 'item'
-
-
-class Itemdata(models.Model):
-    id = models.TextField(primary_key=True)
-    inboundid = models.ForeignKey(
-        Inbounddata, models.DO_NOTHING, db_column='inboundid')
-    itemid = models.ForeignKey(Item, models.DO_NOTHING, db_column='itemid')
-    quantity = models.IntegerField()
-    # Field renamed because it was a Python reserved word.
-    pass_field = models.IntegerField(db_column='pass')
-    reject = models.IntegerField()
-
-    class Meta:
-        db_table = 'itemdata'
 
 
 class Itembatch(models.Model):
@@ -60,26 +55,37 @@ class Itembatch(models.Model):
     rackid = models.TextField(blank=True, null=True)
     entry = models.DateField(blank=True, null=True)
     out = models.DateField(blank=True, null=True)
-    itemdataid = models.ForeignKey(
-        'Itemdata', models.DO_NOTHING, db_column='itemdataid')
+    itemdataid = models.ForeignKey('Itemdata', models.DO_NOTHING, db_column='itemdataid')
 
     class Meta:
+        managed = False
         db_table = 'itembatch'
+
+
+class Itemdata(models.Model):
+    id = models.TextField(primary_key=True)
+    inboundid = models.ForeignKey(Inbounddata, models.DO_NOTHING, db_column='inboundid')
+    itemid = models.ForeignKey(Item, models.DO_NOTHING, db_column='itemid')
+    quantity = models.IntegerField()
+    pass_field = models.IntegerField(db_column='pass')  # Field renamed because it was a Python reserved word.
+    reject = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'itemdata'
 
 
 class Returndata(models.Model):
     id = models.TextField(primary_key=True)
-    inboundid = models.ForeignKey(
-        Inbounddata, models.DO_NOTHING, db_column='inboundid')
+    inboundid = models.ForeignKey(Inbounddata, models.DO_NOTHING, db_column='inboundid')
     itemid = models.TextField()
     status = models.CharField(max_length=20)
     date = models.DateField()
-    confirm = models.ForeignKey(
-        'Userdata', models.DO_NOTHING, related_name='confirm_return', db_column='confirm', blank=True, null=True)
-    created = models.ForeignKey(
-        'Userdata', models.DO_NOTHING, related_name='created_return', db_column='created', blank=True, null=True)
+    confirm = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='confirm', blank=True, null=True)
+    created = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='created', blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'returndata'
 
 
@@ -88,16 +94,26 @@ class Role(models.Model):
     role = models.CharField(max_length=10)
 
     class Meta:
+        managed = False
         db_table = 'role'
+
+
+class SequencesSequence(models.Model):
+    name = models.CharField(primary_key=True, max_length=100)
+    last = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'sequences_sequence'
 
 
 class Subcategory(models.Model):
     id = models.TextField(primary_key=True)
     name = models.CharField(max_length=30)
-    categoryid = models.ForeignKey(
-        Category, models.DO_NOTHING, db_column='categoryid')
+    categoryid = models.ForeignKey(Category, models.DO_NOTHING, db_column='categoryid')
 
     class Meta:
+        managed = False
         db_table = 'subcategory'
 
 
@@ -110,6 +126,7 @@ class Supplier(models.Model):
     postalcode = models.CharField(max_length=6)
 
     class Meta:
+        managed = False
         db_table = 'supplier'
 
 
@@ -117,12 +134,12 @@ class Userdata(models.Model):
     id = models.TextField(primary_key=True)
     username = models.CharField(max_length=50, blank=True, null=True)
     password = models.CharField(max_length=50, blank=True, null=True)
-    roleid = models.ForeignKey(
-        Role, models.DO_NOTHING, db_column='roleid', blank=True, null=True)
+    roleid = models.ForeignKey(Role, models.DO_NOTHING, db_column='roleid', blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     phonenumber = models.CharField(max_length=13, blank=True, null=True)
     email = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'userdata'

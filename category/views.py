@@ -10,6 +10,8 @@ from pprint import pprint
 from sequences import get_next_value
 
 from django.db import connection
+
+from datetime import datetime
 # from jointables.models import Item
 # Create your views here.
 
@@ -158,7 +160,12 @@ def list_supplier(request):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        context = {'list_supplier': Supplier.objects.order_by('id')}
+        username = request.session['1']
+        context = {
+            'list_supplier': Supplier.objects.order_by('id'),
+            'username': username,
+            'title': 'Supplier | WMS Poltekpos'
+        }
         return render(request, 'content/list_supplier.html', context)
 
 
@@ -170,11 +177,25 @@ def supplier(request, id=0):
             if id == 0:
                 form = SupplierForm()
                 sup_id = get_next_value("supplier_seq")
-                return render(request, 'content/supplier.html', {'form': form, 'sup_id': sup_id})
+                username = request.session['1']
+                context = {
+                    'form': form,
+                    'sup_id': sup_id,
+                    'username': username,
+                    'title': 'Add Supplier'
+                }
+                return render(request, 'content/supplier.html', context)
             else:
                 supplier = Supplier.objects.get(pk=id)
                 form = SupplierForm(instance=supplier)
-            return render(request, 'content/update_supplier.html', {'form': form, 'supplier': supplier})
+                username = request.session['1']
+                context = {
+                    'form': form,
+                    'supplier': supplier,
+                    'username': username,
+                    'title': 'Update Suppliers'
+                }
+            return render(request, 'content/update_supplier.html', context)
         else:
             if id == 0:
                 form = SupplierForm(request.POST)
@@ -196,7 +217,14 @@ def supplier_delete(request, id):
 def supplier_detail(request, id):
     supplier = Supplier.objects.get(pk=id)
     form = SupplierForm(instance=supplier)
-    return render(request, 'content/detail_supplier.html', {'form': form, 'supplier': supplier})
+    username = request.session['1']
+    context = {
+        'form': form,
+        'supplier': supplier,
+        'username': username,
+        'title': 'Detail Supplier'
+    }
+    return render(request, 'content/detail_supplier.html', context)
 
 # ------------------------- ITEM --------------------
 
@@ -227,11 +255,13 @@ def item(request, id=0):
             if id == 0:
                 form = ItemForm()
                 item_id = get_next_value("item_seq")
+                username = request.session['1']
                 context = {
                     'form': form,
                     'item_id': item_id,
                     'subcategory': subcategory,
-                    'title': 'Add Item'
+                    'title': 'Add Item',
+                    'username': username
                 }
                 return render(request, 'content/item.html', context)
             else:
@@ -241,12 +271,14 @@ def item(request, id=0):
                 cursor.execute(
                     "select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
                 results = cursor.fetchall()
+                username = request.session['1']
                 context = {
                     'form': form,
                     'item': item,
                     'subcategory': subcategory,
                     'Item': results,
-                    'title': 'Update Item'
+                    'title': 'Update Item',
+                    'username': username
                 }
                 return render(request, 'content/update_item.html', context)
         else:
@@ -268,3 +300,197 @@ def delete_item(request, id):
         item = Item.objects.get(pk=id)
         item.delete()
         return redirect('item')
+
+
+# ------------------ Inbound -------------------
+
+
+def inbound(request, id=0):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        supplier = Supplier.objects.all()
+        if request.method == "GET":
+            if id == 0:
+                form = InbounddataForm()
+                date_time = datetime.now()
+                date_id = date_time.strftime("%d%m%Y%H%M%S%f")
+                date = date_time.strftime("%Y-%m-%d")
+                id_inbound = date_id
+                username = request.session['1']
+                con_cre = request.session['0']
+                context = {
+                    'form': form,
+                    'supplier': supplier,
+                    'title': 'Add Item',
+                    'username': username,
+                    'date': date,
+                    'id_inbound': id_inbound,
+                    'con_cre': con_cre
+                }
+                return render(request, 'content/inbound.html', context)
+            # else:
+                # item = Item.objects.get(pk=id)
+                # form = ItemForm(instance=item)
+                # cursor = connection.cursor()
+                # cursor.execute(
+                # "select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
+                # results = cursor.fetchall()
+                # username = request.session['1']
+                # context = {
+                # 'form': form,
+                # 'item': item,
+                # 'subcategory': subcategory,
+                # 'Item': results,
+                # 'title': 'Update Item',
+                # 'username': username
+                # }
+                # return render(request, 'content/update_item.html', context)
+        else:
+            if id == 0:
+                form = InbounddataForm(request.POST)
+            # else:
+                # item = Item.objects.get(pk=id)
+                # form = ItemForm(request.POST, instance=item)
+            if form.is_valid():
+                form.save()
+                return redirect('inbound')
+        return render(request, 'content/inbound.html')
+
+
+def main_inbound(request):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        cursor = connection.cursor()
+        cursor.execute(
+            "select inbounddata.id, supplier.name, inbounddata.status, inbounddata.date from inbounddata join supplier on inbounddata.supplierid=supplier.id")
+        results = cursor.fetchall()
+        username = request.session['1']
+        context = {
+            'title': 'Item | WMS Poltekpos',
+            'username': username,
+            'Inbound': results
+        }
+        return render(request, 'content/main_inbound.html', context)
+
+
+def view_inbound(request, id):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        inbound = Inbounddata.objects.filter(pk=id).values(
+            'id', 'supplierid', 'supplierid__name', 'date', 'status', 'created__username')
+        results2 = Itemdata.objects.all().filter(inboundid=id)
+        # cursor2 = connection.cursor()
+        # cursor2.execute(
+        # "select item.name, itemdata.quantity, itemdata.pass, itemdata.reject from itemdata join item on itemdata.itemid = item.id")
+        # results2 = cursor2.fetchall()
+        request.session['inbound_id'] = id
+        context = {
+            'Inbound': inbound,
+            'Itemdata': results2,
+            'title': 'View Inbound',
+        }
+        return render(request, 'content/view_inbound.html', context)
+
+
+def delete_inbound(request, id):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        inbound = Inbounddata.objects.get(pk=id)
+        inbound.delete()
+        return redirect('inbound')
+
+
+def item_data(request, id=0):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        item = Item.objects.all()
+        if request.method == "GET":
+            if id == 0:
+                form = ItemDataForm()
+                itd_id = get_next_value("itemdata_seq")
+                inbound_id = request.session['inbound_id']
+                username = request.session['1']
+                context = {
+                    'form': form,
+                    'itd_id': itd_id,
+                    'item': item,
+                    'title': 'Add Item',
+                    'username': username,
+                    'inbound_id': inbound_id
+                }
+                return render(request, 'content/itemdata.html', context)
+            else:
+                itemdata = Itemdata.objects.get(pk=id)
+                inboundid = request.session['inbound_id']
+                form = ItemDataForm(instance=itemdata)
+                username = request.session['1']
+                context = {
+                    'form': form,
+                    'itd': itemdata,
+                    'item': item,
+                    'title': 'Update ItemData',
+                    'username': username,
+                    'inboundid': inboundid
+                }
+                return render(request, 'content/update_itemdata.html', context)
+        else:
+            if id == 0:
+                form = ItemDataForm(request.POST)
+            else:
+                itemdata = Itemdata.objects.get(pk=id)
+                form = ItemDataForm(request.POST, instance=itemdata)
+            if form.is_valid():
+                form.save()
+                return redirect('view_inbound', id=request.session['inbound_id'])
+        return render(request, 'content/main_inbound.html')
+
+
+def delete_itemdata(request, id):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        itemdata = Itemdata.objects.get(pk=id)
+        itemdata.delete()
+        return redirect('view_inbound', id=request.session['inbound_id'])
+
+
+def confirm(request):
+    index = 0
+    inbound_id = request.session['inbound_id']
+    itemdata = Itemdata.objects.all().filter(
+        inboundid=inbound_id)
+    itemdata_id = list(itemdata.values_list('id', flat=True))
+    list_itemdata = list(itemdata.values_list('pass_field', flat=True))
+    date_time = datetime.now()
+    date = date_time.strftime("%Y-%m-%d")
+    data_fix = []
+    rackid = "Test "
+    entry = date
+    out = date
+    for i in list_itemdata:
+        itemdataid = itemdata_id[index]
+        for x in range(i):
+            # c = Itembatch(
+            #    id=inbound_id+confirm_id,
+            #    rackid="Test " + str(x+1),
+            #    entry=date,
+            #    out='-',
+            #    itemdataid=itemdata_id[index])
+            # c.save()
+            confirm_id = str(get_next_value('confirm_seq'))
+            id_batch = inbound_id+confirm_id
+            data = (id_batch, rackid, entry, out, itemdataid)
+            data_fix.append(data)
+            #cursor.execute(query, data)
+        index += 1
+    cursor = connection.cursor()
+    query = """INSERT INTO Itembatch(id, rackid, entry, out, itemdataid)
+                VALUES
+                (%s, %s, %s, %s, %s) """
+    cursor.executemany(query, data_fix)
+    return redirect('inbound')

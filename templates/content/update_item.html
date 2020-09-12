@@ -12,7 +12,6 @@
         {% elif role == 'OPR' %}
         <h2 class="mb-4">Ini Role OPR</h2>
         {% endif %}
-
         <h2>Update Item</h2>
         <hr>
         <div class="card">
@@ -21,7 +20,7 @@
             </div>
             <div class="card-body">
                 <form method="POST" action="">
-                    {%csrf_token%}
+                    {% csrf_token %}
                     <div class="row justify-content-center">
                         <div class="col-8">
                             <div class="form-group">
