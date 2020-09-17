@@ -34,6 +34,7 @@ urlpatterns = [
     path('delete_subcategory/<slug:id>/',
          views.delete_subcategory, name="delete_subcategory"),
     path('item/', views.main_item, name="item"),
+    path('dummydoor/', views.dummyFun, name="dummy"), #DEBUGAREA
 
 
     # --------------------- SUPPLIER ------------------

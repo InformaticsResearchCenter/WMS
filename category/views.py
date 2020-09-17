@@ -12,9 +12,27 @@ from sequences import get_next_value
 from django.db import connection
 
 from datetime import datetime
+
 # from jointables.models import Item
 # Create your views here.
 
+def dummyFun(request):
+    model = Itemdata.objects.all().select_related('inboundid').filter(inboundid="10092020230730872946")
+    itemdataidlist=[]
+    for i in model:
+        itemdataidlist.append(i.id)
+
+    Itemdatalist = []
+    for e in model:
+        Itemdatalist.append(Itembatch.objects.all().select_related('itemdataid').filter(itemdataid=e.id))
+
+    pprint(Itemdatalist)
+    datalist = []
+    for i in Itemdatalist:
+        for x in i:
+            datalist.append(x.id)
+    
+    return render(request, 'content/dummy.html', {'datalist':datalist,'itemdataid':itemdataidlist, 'inboundid':"10092020230730872946"})
 
 def main_category(request, id=0):
     # Login Requirements dengan mengecek session
