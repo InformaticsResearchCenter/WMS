@@ -12,12 +12,10 @@
         {% elif role == 'OPR' %}
         <h2 class="mb-4">Ini Role OPR</h2>
         {% endif %}
-        <h2>Data Item</h2>
+        <h2>Data Item Return</h2>
         <hr>
         <div class="card">
             <div class="card-header">
-                <a href="{% url 'add_itemdata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-                    Item</a>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -66,24 +64,12 @@
                             <td>
                                 <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm"
                                     role="button" aria-pressed="true">Update</a>
-                                <form action="{% url 'delete_itemdata' itdt.id %}" method="POST" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
-                                        <i class="text-white">Delete</i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-success">Back</button></a>
-                <form action="{% url 'confirm' %}" method="POST" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px; float: right;">
-                        <i class="text-white">Confirm</i>
-                    </button>
-                </form>
+                <a href="{% url 'return' %}"><button type="submit" class="btn btn-success">Back</button></a>
             </div>
         </div>
     </div>
