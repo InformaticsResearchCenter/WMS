@@ -9,7 +9,7 @@
     
     <form id="qr-reader-results" action="#" methods="post">
 
-    <input type="submit">
+    <input type="submit"><br>
     </form>
 </body>
 <script src="{% static 'js/minified/html5-qrcode.min.js' %}"></script>
@@ -32,7 +32,7 @@
             if (qrCodeMessage !== lastResult) {
                 countResults++;
                 lastResult = qrCodeMessage;
-                resultContainer.innerHTML += `<input type="text"  name="name" id="name"${countResults} value="${qrCodeMessage}" readonly>`;
+                resultContainer.innerHTML += `<input type="text"  name="name" id="name"${countResults} value="${qrCodeMessage}" readonly><br>`;
             }
         }
 
