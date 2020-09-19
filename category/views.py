@@ -10,6 +10,7 @@ from pprint import pprint
 from sequences import get_next_value
 
 from django.db import connection
+from django.db.models import Q
 
 from datetime import datetime
 
@@ -332,7 +333,7 @@ def inbound(request, id=0):
             if id == 0:
                 form = InbounddataForm()
                 date_time = datetime.now()
-                date_id = date_time.strftime("%d%m%Y%H%M%S%f")
+                date_id = date_time.strftime("%d%m%Y%H%M%S")
                 date = date_time.strftime("%Y-%m-%d")
                 id_inbound = date_id
                 username = request.session['1']
@@ -397,8 +398,7 @@ def view_inbound(request, id):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        inbound = Inbounddata.objects.filter(pk=id).values(
-            'id', 'supplierid', 'supplierid__name', 'date', 'status', 'created__username')
+        inbound = Inbounddata.objects.filter(pk=id)
         results2 = Itemdata.objects.all().filter(inboundid=id)
         # cursor2 = connection.cursor()
         # cursor2.execute(
@@ -504,7 +504,6 @@ def confirm(request):
             id_batch = inbound_id+confirm_id
             data = (id_batch, rackid, entry, out, itemdataid)
             data_fix.append(data)
-            #cursor.execute(query, data)
         index += 1
     cursor = connection.cursor()
     query = """INSERT INTO Itembatch(id, rackid, entry, out, itemdataid)
@@ -512,3 +511,21 @@ def confirm(request):
                 (%s, %s, %s, %s, %s) """
     cursor.executemany(query, data_fix)
     return redirect('inbound')
+
+
+# --------- Return -----------
+def fungsi_return(request):
+    itemdata = Itemdata.objects.select_related(
+        'inboundid').exclude(reject=0).distinct('inboundid')
+    return render(request, 'content/return.html', {'itemdata': itemdata})
+
+
+def view_return(request, id):
+    inbound = Inbounddata.objects.filter(pk=id)
+    results = Itemdata.objects.all().filter(inboundid=id).exclude(reject=0)
+    context = {
+        'Inbound': inbound,
+        'Itemdata': results,
+        'title': 'View Inbound',
+    }
+    return render(request, 'content/view_return.html', context)

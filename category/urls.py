@@ -69,4 +69,10 @@ urlpatterns = [
          views.item_data, name="update_itemdata"),
     path('inbound/delete_itemdata/<slug:id>/',
          views.delete_itemdata, name="delete_itemdata"),
+
+
+    # ------------------ Return --------------------------
+    path('return/', views.fungsi_return, name="return"),
+    path('return/view_return/<slug:id>/',
+         views.view_return, name="view_return"),
 ]
