@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'category',
     'WMS',
+    'storage',
 ]
 
 INSTALLED_APPS += ['sequences.apps.SequencesConfig']
