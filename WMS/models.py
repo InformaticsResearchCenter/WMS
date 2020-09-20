@@ -78,6 +78,8 @@ class Returndata(models.Model):
         'Userdata', models.DO_NOTHING, related_name='confirm_return', db_column='confirm', blank=True, null=True)
     created = models.ForeignKey(
         'Userdata', models.DO_NOTHING, related_name='created_return', db_column='created', blank=True, null=True)
+    itemdataid = models.ForeignKey(
+        Itemdata, models.DO_NOTHING, db_column='itemdataid', blank=True, null=True)
 
     class Meta:
         db_table = 'returndata'

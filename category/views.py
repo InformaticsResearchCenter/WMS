@@ -10,7 +10,7 @@ from pprint import pprint
 from sequences import get_next_value
 
 from django.db import connection
-from django.db.models import Q
+from django.db import models
 
 from datetime import datetime
 # from jointables.models import Item
@@ -475,13 +475,6 @@ def confirm(request):
     for i in list_itemdata:
         itemdataid = itemdata_id[index]
         for x in range(i):
-            # c = Itembatch(
-            #    id=inbound_id+confirm_id,
-            #    rackid="Test " + str(x+1),
-            #    entry=date,
-            #    out='-',
-            #    itemdataid=itemdata_id[index])
-            # c.save()
             confirm_id = str(get_next_value('confirm_seq'))
             id_batch = inbound_id+confirm_id
             data = (id_batch, rackid, entry, out, itemdataid)
@@ -495,19 +488,91 @@ def confirm(request):
     return redirect('inbound')
 
 
-# --------- Return -----------
+# ------------------------- Return -----------------------------
+
 def fungsi_return(request):
     itemdata = Itemdata.objects.select_related(
         'inboundid').exclude(reject=0).distinct('inboundid')
-    return render(request, 'content/return.html', {'itemdata': itemdata})
+    context = {
+        'itemdata': itemdata,
+        'title': 'Return | WMS Poltekpos'
+    }
+    return render(request, 'content/return.html', context)
 
 
 def view_return(request, id):
     inbound = Inbounddata.objects.filter(pk=id)
     results = Itemdata.objects.all().filter(inboundid=id).exclude(reject=0)
+    request.session['inbound_id'] = id
     context = {
         'Inbound': inbound,
         'Itemdata': results,
-        'title': 'View Inbound',
+        'title': 'View Return',
     }
     return render(request, 'content/view_return.html', context)
+
+
+def done(request):
+    index = 0
+    inbound_id = request.session['inbound_id']
+    itemdata = Itemdata.objects.all().filter(
+        inboundid=inbound_id).exclude(reject=0)
+    itemdata_id = list(itemdata.values_list('id', flat=True))
+    list_itemdata = list(itemdata.values_list('reject', flat=True))
+    list_itemdata_quantity = list(itemdata.values_list('quantity', flat=True))
+    date_time = datetime.now()
+    date = date_time.strftime("%Y-%m-%d")
+    rackid = "Test "
+    entry = date
+    out = date
+    # -------------------- Looping Data ---------------------
+    data_fix = []
+    for i in list_itemdata:
+        itemdataid = itemdata_id[index]
+        for x in range(i):
+            confirm_id = str(get_next_value('confirm_seq'))
+            id_batch = inbound_id+confirm_id
+            data = (id_batch, rackid, entry, out, itemdataid)
+            data_fix.append(data)
+        index += 1
+    cursor = connection.cursor()
+    query = """INSERT INTO Itembatch(id, rackid, entry, out, itemdataid)
+                VALUES
+                (%s, %s, %s, %s, %s) """
+    cursor.executemany(query, data_fix)
+    # -------------- Insert Data to Returndata ----------------
+    inboundidlist = []
+    itemidlist = []
+    statuslist = []
+    datelist = []
+    iditemdata = []
+    for i in itemdata:
+        inboundidlist.append(i.inboundid.id)
+        itemidlist.append(i.itemid.id)
+        statuslist.append(i.inboundid.status)
+        datelist.append(i.inboundid.date)
+        iditemdata.append(i.id)
+
+    data_return = []
+    con_cre = request.session['0']
+    for j in range(len(inboundidlist)):
+        return_seq = str(get_next_value('return_seq'))
+        return_id = 'RTN'+return_seq
+        data2 = (return_id, inboundidlist[j], itemidlist[j],
+                 statuslist[j], datelist[j], con_cre, con_cre, iditemdata[j])
+        data_return.append(data2)
+        # Returndata.objects.create(id=return_id, inboundid=inboundidlist[j], itemid=itemidlist[j],
+        #                           status=statuslist[j], date=datelist[j], confirm=request.session['0'], created=request.session['0'])
+
+    query2 = """INSERT INTO Returndata(id, inboundid, itemid, status, date, confirm, created, itemdataid)
+                 VALUES
+                 (%s, %s, %s, %s, %s, %s, %s, %s) """
+    cursor.executemany(query2, data_return)
+    # ------------- Update Reject = 0 --------------------
+    for k in range(len(list_itemdata_quantity)):
+        i = Itemdata.objects.get(id=itemdata_id[k])
+        i.pass_field = list_itemdata_quantity[k]
+        i.save()
+    itemdata.update(reject=0)
+
+    return redirect('return')

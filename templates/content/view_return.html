@@ -48,8 +48,6 @@
                             <th scope="col">Quantity</th>
                             <th scope="col">Pass</th>
                             <th scope="col">Reject</th>
-                            <th scope="col">QR Code</th>
-                            <th scope="col" style="width: 165px;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,17 +57,18 @@
                             <td>{{itdt.itemid.name}}</td>
                             <td>{{itdt.quantity}}</td>
                             <td>{{itdt.pass_field}}</td>
-                            <td>{{itdt.reject}}</td>
-                            <td>-</td>
-                            <td>
-                                <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm"
-                                    role="button" aria-pressed="true">Update</a>
-                            </td>
+                            <td><b>{{itdt.reject}}</b></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
                 <a href="{% url 'return' %}"><button type="submit" class="btn btn-success">Back</button></a>
+                <form action="{% url 'done' %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" style="float: right;">
+                        <i class="text-white">Done</i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

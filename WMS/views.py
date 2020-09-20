@@ -4,6 +4,8 @@ from .models import Userdata
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib import messages
 
+from pprint import pprint
+
 
 def index(request):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
@@ -37,6 +39,7 @@ def login(request):
             level = n[13:-1]
             password = request.POST['password']
             password2 = m.password
+            pprint(password2)
             pass_model = password2.split(" ")[0]
             if pass_model == password:
                 request.session[0] = m.id
