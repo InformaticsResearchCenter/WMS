@@ -17,24 +17,26 @@ from datetime import datetime
 # from jointables.models import Item
 # Create your views here.
 
+
 def dummyFun(request):
-    model = Itemdata.objects.all().select_related('inboundid').filter(inboundid="10092020230730872946")
-    itemdataidlist=[]
+    model = Itemdata.objects.all().select_related(
+        'inboundid').filter(inboundid="10092020230730872946")
+    itemdataidlist = []
     for i in model:
         itemdataidlist.append(i.id)
 
     Itemdatalist = []
     for e in model:
-        
-        Itemdatalist.append(Itembatch.objects.all().select_related('itemdataid').filter(itemdataid=e.id))
+        Itemdatalist.append(Itembatch.objects.all().select_related(
+            'itemdataid').filter(itemdataid=e.id))
 
-    pprint(Itemdatalist)
     datalist = []
     for i in Itemdatalist:
         for x in i:
             datalist.append(x.id)
-    
-    return render(request, 'content/dummy.html', {'datalist':datalist,'itemdataid':itemdataidlist, 'inboundid':"10092020230730872946"})
+
+    return render(request, 'content/dummy.html', {'datalist': datalist, 'itemdataid': itemdataidlist, 'inboundid': "10092020230730872946"})
+
 
 def main_category(request, id=0):
     # Login Requirements dengan mengecek session
@@ -349,29 +351,9 @@ def inbound(request, id=0):
                     'con_cre': con_cre
                 }
                 return render(request, 'content/inbound.html', context)
-            # else:
-                # item = Item.objects.get(pk=id)
-                # form = ItemForm(instance=item)
-                # cursor = connection.cursor()
-                # cursor.execute(
-                # "select item.id, item.name, subcategory.name from item join subcategory on item.subcategoryid=subcategory.id")
-                # results = cursor.fetchall()
-                # username = request.session['1']
-                # context = {
-                # 'form': form,
-                # 'item': item,
-                # 'subcategory': subcategory,
-                # 'Item': results,
-                # 'title': 'Update Item',
-                # 'username': username
-                # }
-                # return render(request, 'content/update_item.html', context)
         else:
             if id == 0:
                 form = InbounddataForm(request.POST)
-            # else:
-                # item = Item.objects.get(pk=id)
-                # form = ItemForm(request.POST, instance=item)
             if form.is_valid():
                 form.save()
                 return redirect('inbound')
@@ -401,10 +383,6 @@ def view_inbound(request, id):
     else:
         inbound = Inbounddata.objects.filter(pk=id)
         results2 = Itemdata.objects.all().filter(inboundid=id)
-        # cursor2 = connection.cursor()
-        # cursor2.execute(
-        # "select item.name, itemdata.quantity, itemdata.pass, itemdata.reject from itemdata join item on itemdata.itemid = item.id")
-        # results2 = cursor2.fetchall()
         request.session['inbound_id'] = id
         context = {
             'Inbound': inbound,
@@ -560,17 +538,11 @@ def done(request):
                 (%s, %s, %s, %s, %s) """
     cursor.executemany(query, data_fix)
     # -------------- Insert Data to Returndata ----------------
-    inboundidlist = []
-    itemidlist = []
-    statuslist = []
-    datelist = []
-    iditemdata = []
-    for i in itemdata:
-        inboundidlist.append(i.inboundid.id)
-        itemidlist.append(i.itemid.id)
-        statuslist.append(i.inboundid.status)
-        datelist.append(i.inboundid.date)
-        iditemdata.append(i.id)
+
+    inboundidlist = list(itemdata.values_list('inboundid', flat=True))
+    itemidlist = list(itemdata.values_list('itemid', flat=True))
+    statuslist = list(itemdata.values_list('inboundid__status', flat=True))
+    datelist = list(itemdata.values_list('inboundid__date', flat=True))
 
     data_return = []
     con_cre = request.session['0']
@@ -578,10 +550,8 @@ def done(request):
         return_seq = str(get_next_value('return_seq'))
         return_id = 'RTN'+return_seq
         data2 = (return_id, inboundidlist[j], itemidlist[j],
-                 statuslist[j], datelist[j], con_cre, con_cre, iditemdata[j])
+                 statuslist[j], datelist[j], con_cre, con_cre, itemdata_id[j])
         data_return.append(data2)
-        # Returndata.objects.create(id=return_id, inboundid=inboundidlist[j], itemid=itemidlist[j],
-        #                           status=statuslist[j], date=datelist[j], confirm=request.session['0'], created=request.session['0'])
 
     query2 = """INSERT INTO Returndata(id, inboundid, itemid, status, date, confirm, created, itemdataid)
                  VALUES
