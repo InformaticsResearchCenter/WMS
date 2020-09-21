@@ -25,6 +25,7 @@ def dummyFun(request):
 
     Itemdatalist = []
     for e in model:
+        
         Itemdatalist.append(Itembatch.objects.all().select_related('itemdataid').filter(itemdataid=e.id))
 
     pprint(Itemdatalist)
