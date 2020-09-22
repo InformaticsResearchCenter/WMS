@@ -2,9 +2,6 @@
 {% load static %}
 
 {% block content %}
-<div class="wrapper d-flex align-items-stretch">
-    <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5">
         {% if role == 'ADM' %}
         <h2 class="mb-4">Ini Role ADM</h2>
         {% elif role == 'MAN' %}
@@ -21,7 +18,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-1">
+                    <div class="col-2">
                         <h6>Inbound ID</h6>
                         <h6>Supplier ID</h6>
                         <h6>Supplier</h6>
@@ -42,8 +39,12 @@
                 </div>
                 <br>
                 <br>
-                <table class="table">
-                    <thead class="thead-dark">
+            </div>
+        </div>
+        <div class="card">
+                <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
                         <tr>
                             <th scope="col">No</th>
                             <th scope="col">Item</th>
@@ -86,6 +87,5 @@
                 </form>
             </div>
         </div>
-    </div>
-</div>
+
 {% endblock content %}
