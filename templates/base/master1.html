@@ -1,0 +1,141 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{title}}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico' %}" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+    <!--===============================================================================================-->
+</head>
+
+<body>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            <div class="p-4 pt-5">
+                <div class="login100-pic-sidebar js-tilt" data-tilt>
+                    <a href="https://wmspoltekpos.herokuapp.com/" class="img logo"><img
+                            src="{% static 'images/img-01.png' %}" alt="IMG" /></a>
+                </div>
+                <ul class="list-unstyled components mb-5">
+                    <li class="active">
+                        <a href="#inboundSubmenu" data-toggle="collapse" aria-expanded="false"
+                            class="dropdown-toggle">Inbound</a>
+                        <ul class="collapse list-unstyled" id="inboundSubmenu">
+                            <li>
+                                <a href="{% url 'inbound' %}">Inbound Data</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'list_supplier' %}">Supplier</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'item' %}">Item</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'return' %}">Return</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Storage</a>
+                    </li>
+                    <li>
+                        <a href="#">Outbound</a>
+                    </li>
+                    {% if role == 'ADM' %}
+                    <li>
+                        <a href="#">User Management</a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <a href="#">Report</a>
+                    </li>
+                </ul>
+                <div class="footer">
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;<script>
+                            document.write(new Date().getFullYear());
+                        </script> All rights reserved | by WMS POLTEKPOS
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div id="content" class="p-4 p-md-5">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                        <i class="fa fa-bars"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <p class="text-sm-left nav-link" style="margin-bottom: 0px;">Hello,
+                                    {{username}}
+                                </p>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'home' %}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Contact</a>
+                            </li>
+                            <li class="nav-item-logout">
+                                <a class="nav-link" style="color: #ffc401;" href="{% url 'logout' %}">Logout <i
+                                        class="fa fa-sign-out" aria-hidden="true"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            {%  block content %}
+            {%  endblock content %}
+        </div>
+    </div>
+
+
+    <!--===============================================================================================-->
+    <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+    <!--===============================================================================================-->
+    <script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--===============================================================================================-->
+    <script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+    <!--===============================================================================================-->
+    <script src="{% static 'vendor/tilt/tilt.jquery.min.js' %}"></script>
+    <script>
+        $(".js-tilt").tilt({
+            scale: 1.1,
+        });
+    </script>
+    <!--===============================================================================================-->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
