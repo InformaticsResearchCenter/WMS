@@ -8,7 +8,7 @@
     <div id="qr-reader" style="width:500px; height:500px; margin-left:25%;" ></div>
     
     <form id="qr-reader-results" action="#" methods="post">
-
+    <input type="text" id="code" readonly>
     <input type="submit"><br>
     </form>l
 </body>
@@ -25,14 +25,15 @@
         }
     }
     docReady(function () {
-        var resultContainer = document.getElementById('qr-reader-results');
+        var resultContainer = document.getElementById("code")
         var lastResult, countResults= 0;
 
         function onScanSuccess(qrCodeMessage) {
             if (qrCodeMessage !== lastResult) {
                 countResults++;
                 lastResult = qrCodeMessage;
-                resultContainer.innerHTML += `<input type="text"  name="name" id="name"${countResults} value="${qrCodeMessage}" readonly><br>`;
+                resultContainer.value = qrCodeMessage
+                //html5QrcodeScanner.clear();
             }
         }
 

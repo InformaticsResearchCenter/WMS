@@ -19,23 +19,24 @@ from datetime import datetime
 
 
 def dummyFun(request):
-    model = Itemdata.objects.all().select_related(
-        'inboundid').filter(inboundid="10092020230730872946")
-    itemdataidlist = []
-    for i in model:
-        itemdataidlist.append(i.id)
 
-    Itemdatalist = []
-    for e in model:
-        Itemdatalist.append(Itembatch.objects.all().select_related(
-            'itemdataid').filter(itemdataid=e.id))
+    datas = list(Itemdata.objects.all().select_related(
+        'inboundid').filter(inboundid="10092020230730872946").values_list('id', 'itemid__name', 'quantity', 'pass_field', 'reject'))
+    itembatchs = []
+    for e in datas:
+        itembatchs.append(list(Itembatch.objects.all().select_related(
+            'itemdataid').filter(itemdataid=e[0]).values_list('id', flat=True)))
 
-    datalist = []
-    for i in Itemdatalist:
-        for x in i:
-            datalist.append(x.id)
+    print(datas)
+    print(itembatchs)
 
-    return render(request, 'content/dummy.html', {'datalist': datalist, 'itemdataid': itemdataidlist, 'inboundid': "10092020230730872946"})
+    for data in datas:
+        print(data[1])
+        for itembatch in itembatchs:
+            for item in itembatch:
+                print(item)
+
+    return render(request, 'content/dummy.html')
 
 
 def main_category(request, id=0):
