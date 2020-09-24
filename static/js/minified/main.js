@@ -16,17 +16,14 @@ docReady(function () {
     var lastResult, countResults = 0;
     var code = [];
 
-    function createElement() {
-        data.innerHTML = code;
 
-    }
     button.addEventListener('click', function () {
         if (resultContainer.value != "" || lastResultContainer != resultContainer.value) {
             code.push(resultContainer.value);
             lastResultContainer = resultContainer.value;
             resultContainer.value = "";
             console.log(code);
-            createElement();
+            data.value = code;
         }
 
     })
