@@ -1,14 +1,16 @@
 <html>
     <h1>inbound</h1>
-{{inboundid}}
+{%for a in datas%}
+    {{a.1}}
+{%endfor%}
 
-{% for i in itemdataid %}
-    <h1>itemdata</h1>
-    {{i}}
-{% endfor %}
-{% for i in datalist %}
-<h1>itembatch</h1>
-    {{i}}
+{% for i,a in datacollect %}
+    <hr>
+    {{i.1}}
+    <hr>
+    {% for u in a%}
+        {{u}}
+    {% endfor %}
 {% endfor %}
 
 </html>

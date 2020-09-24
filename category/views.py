@@ -27,16 +27,9 @@ def dummyFun(request):
         itembatchs.append(list(Itembatch.objects.all().select_related(
             'itemdataid').filter(itemdataid=e[0]).values_list('id', flat=True)))
 
-    print(datas)
-    print(itembatchs)
+    datacollect = zip(datas, itembatchs)
 
-    for data in datas:
-        print(data[1])
-        for itembatch in itembatchs:
-            for item in itembatch:
-                print(item)
-
-    return render(request, 'content/dummy.html')
+    return render(request, 'content/dummy.html', {"datacollect": datacollect})
 
 
 def main_category(request, id=0):

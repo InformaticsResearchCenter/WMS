@@ -9,22 +9,24 @@
 {% elif role == 'OPR' %}
 <h2 class="mb-4">Ini Role OPR</h2>
 {% endif %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-10">
-            <h1>View Category - Subcategory - {{cat_name}}</h1>
-            <a href="{% url 'add_subcategory' %}" class="btn btn-primary btn-sm"
-                style="margin-bottom: 15px; float: right;" role="button" aria-pressed="true">Add
-                Subcategory</a>
-            <br>
-            <table class="table">
-                <thead class="thead-dark">
+<br>
+<h2>View Category - Subcategory - {{cat_name}}</h2>
+ <div class="card">
+      <div class="card-header">
+        <a href="{% url 'add_subcategory' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Tambah
+          Item</a>
+      </div>
+      <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+                  <thead>
                     <tr>
                         <th scope="col">Category ID</th>
                         <th scope="col">Subcategory ID</th>
                         <th scope="col">Subcategory</th>
                         <th scope="col" style="width: 150px;">Action</th>
                     </tr>
+                </thead>
+                <tbody>
                     {% for subcat in subcategory %}
                     <tr>
                         <td scope="col">{{cat_id}}</td>
@@ -42,7 +44,7 @@
                         </td>
                     </tr>
                     {% endfor %}
-                </thead>
+                </tbody>
             </table>
             <a href="{% url 'list_category' %}" class="btn btn-primary btn-sm" style="float: left;" role="button"
                 aria-pressed="true">Back</a>

@@ -2,9 +2,8 @@
 {% load static %}
 
 {% block content %}
-<div class="wrapper d-flex align-items-stretch">
-  <!-- Page Content  -->
-  <div id="content" class="p-4 p-md-5">
+<!-- <div class="wrapper d-flex align-items-stretch">
+ -->  <!-- Page Content  -->
     {% if role == 'ADM' %}
     <h2 class="mb-4">Ini Role ADM</h2>
     {% elif role == 'MAN' %}
@@ -22,8 +21,8 @@
           aria-pressed="true">Category</a>
       </div>
       <div class="card-body">
-        <table class="table">
-          <thead class="thead-dark">
+        <table id="example1" class="table table-bordered table-striped">
+                  <thead>
             <tr>
               <th scope="col">No</th>
               <th scope="col">Item Id</th>
