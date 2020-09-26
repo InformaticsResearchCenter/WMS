@@ -1,4 +1,4 @@
-
+{% load static %}
 {% block content %}
     <div id="content">
         <h1>Inbound Invoice</h1>
@@ -39,6 +39,8 @@
                 background-color: #fff; /* Modern Browsers */
             }
         </style>
+        <script src="{% static 'Admin/qrcode.min.js' %}"></script>
+        <!-- <script src="qrcode.min.js"></script> -->
     </head>
     <body style="margin-bottom: 40px;">
         <div class='wrapper'>
@@ -101,28 +103,34 @@
 
                 <hr class='hrItem' />
                 <h2>Itembatch</h2>
+                {% for itbc,itdt in datacollect %}
+                    <hr>
+                     <b>{{itbc.1}}</b>
+                   <hr> 
                 <table class="table" border="1" style="text-align: center;padding-top: 5px;">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col" width="200px">No</th>
-                            <th scope="col">Rack id</th>
-                            <th scope="col">Entry</th>
-                            <th scope="col">Out</th>
-                            <th scope="col">Item</th>
+                            <th scope="col">QRCode</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for itbc in itembatchs %}
+                        
+                           
+                           {% for u in itdt %}
+
                         <tr>
-                            <th scope="row">{{itbc.0}}</th>
-                            <td>{{itbc.rackid}}</td>
-                            <td>{{itbc.entry}}</td>
-                            <td>{{itbc.out}}</td>
-                            <td>{{itbc.itemdataid}}</td>
+                            <th scope="row">{{u}}</th>
+                            <td><img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl="{{u}}"'></td>
+                            <!-- 
+                            <input type="text" id="qr-data" onchange="generateQR()">
+                            <td><div id="qrcode"></div></td> -->
                         </tr>
-                        {% endfor %}
+                             {% endfor %}
+                       
                     </tbody>
                 </table>
+                 {% endfor %}
     </div>
     </body>
     <footer style="margin-top: 40px;">
@@ -131,5 +139,15 @@
      <p style="font-family: arial;margin-left: 480px;padding-top: 50px;">
       <b>(  Politeknik Pos Indonesia )</b></p>
   </footer> 
+  <script>
+      var qrdata = document.getElementById('qr-data');
+      var qrcode = new QRCode(document.getElementById('qrcode'));
+
+      function generateQR(){
+        var data = qrdata.value;
+
+        qrcode.makeCode(data);
+      }
+  </script>
 </html>
 {% endblock %}
