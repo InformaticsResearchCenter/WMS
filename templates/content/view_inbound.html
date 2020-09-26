@@ -15,8 +15,15 @@
             <div class="card-header">
                 <a href="{% url 'add_itemdata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
                     Item</a>
+                                    <form action="{% url 'confirm' %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px; float: right;">
+                        <i class="text-white">Confirm</i>
+                    </button>
+                </form>
             </div>
             <div class="card-body">
+            
                 <div class="row">
                     <div class="col-2">
                         <h6>Inbound ID</h6>
@@ -79,12 +86,7 @@
                     </tbody>
                 </table>
                 <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-success">Back</button></a>
-                <form action="{% url 'confirm' %}" method="POST" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px; float: right;">
-                        <i class="text-white">Confirm</i>
-                    </button>
-                </form>
+
             </div>
         </div>
 
