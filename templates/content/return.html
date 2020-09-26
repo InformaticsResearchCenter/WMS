@@ -3,50 +3,51 @@
 
 {% block content %}
 <!-- <div class="wrapper d-flex align-items-stretch">
- -->    <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5">
-        {% if role == 'ADM' %}
-        <h2 class="mb-4">Ini Role ADM</h2>
-        {% elif role == 'MAN' %}
-        <h2 class="mb-4">Ini Role MAN</h2>
-        {% elif role == 'OPR' %}
-        <h2 class="mb-4">Ini Role OPR</h2>
-        {% endif %}
-        <h2>Data Return</h2>
-        <hr>
-        <div class="card">
-            <div class="card-header">
-            </div>
-            <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Inbound Id</th>
-                            <th scope="col">Supplier</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Date</th>
-                            <th scope="col" style="width: 100px;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for i in itemdata %}
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>{{i.inboundid.id}}</td>
-                            <td>{{i.inboundid.supplierid.name}}</td>
-                            <td>{{i.inboundid.status}}</td>
-                            <td>{{i.inboundid.date}}</td>
-                            <td>
-                                <a href="{% url 'view_return' i.inboundid.id  %}" class="btn btn-primary btn-sm"
-                                    role="button" aria-pressed="true">View</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+ -->
+<!-- Page Content  -->
+<div id="content" class="p-4 p-md-5">
+    {% if role == 'ADM' %}
+    <h2 class="mb-4">Ini Role ADM</h2>
+    {% elif role == 'MAN' %}
+    <h2 class="mb-4">Ini Role MAN</h2>
+    {% elif role == 'OPR' %}
+    <h2 class="mb-4">Ini Role OPR</h2>
+    {% endif %}
+    <h2>Data Return</h2>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Inbound Id</th>
+                        <th scope="col">Supplier</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Date</th>
+                        <th scope="col" style="width: 100px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in itemdata %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>{{i.inboundid.id}}</td>
+                        <td>{{i.inboundid.supplierid.name}}</td>
+                        <td>{{i.inboundid.status}}</td>
+                        <td>{{i.inboundid.date}}</td>
+                        <td>
+                            <a href="{% url 'view_return' i.inboundid.id  %}" class="btn btn-primary btn-sm"
+                                role="button" aria-pressed="true">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </div>
 {% endblock content %}
