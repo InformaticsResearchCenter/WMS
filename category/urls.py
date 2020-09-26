@@ -78,4 +78,7 @@ urlpatterns = [
     path('inbound/done/',
          views.done, name="done"),
 
+    # -------------------- PDFInbound --------------------------
+    path('inbound/<int:pk>/',views.PdfInbound.as_view(),),
+
 ]

@@ -1,0 +1,153 @@
+{% load static %}
+{% block content %}
+    <div id="content">
+        <h1>Inbound Invoice</h1>
+    </div>
+    <html>
+    <head>
+        <title>Title</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+        </style>
+        <script src="{% static 'Admin/qrcode.min.js' %}"></script>
+        <!-- <script src="qrcode.min.js"></script> -->
+    </head>
+    <body style="margin-bottom: 40px;">
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'><u>Invoice #{{obj.id}}</u></p>
+            </div>
+        <div>
+        	<table width="310px">
+                <tr>
+        			<td width="100px">Supplier ID</td>
+        			<td>:</td>
+        			<td width="200px">{{obj.supplierid.id}}</td>
+        		</tr>
+                <tr>
+                    <td width="100px">Supplier Name</td>
+                    <td>:</td>
+                    <td width="200px">{{obj.supplierid.name}}</td>
+                </tr>
+        		<tr>
+        			<td width="100px">Status</td>
+        			<td>:</td>
+        			<td width="200px">{{obj.status}}</td>
+        		</tr>
+        		<tr>
+        			<td width="100px">Date</td>
+        			<td>:</td>
+        			<td width="200px">{{obj.date}}</td>
+        		</tr>
+        		<tr>
+        			<td width="100px">Confirm</td>
+        			<td>:</td>
+        			<td width="200px">{{obj.created.username}}</td>
+        		</tr>
+          	</table>
+            <hr class='hrItem' />
+            <h2>Itemdata</h2>
+            <table class="table" border="1" style="text-align: center;padding-top: 5px;">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Item</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Pass</th>
+                            <th scope="col">Reject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for itdt in datas %}
+                        <tr>
+                            <th scope="row">{{itdt.0}}</th>
+                            <td>{{itdt.1}}</td>
+                            <td>{{itdt.2}}</td>
+                            <td>{{itdt.3}}</td>
+                            <td>{{itdt.4}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+
+                <hr class='hrItem' />
+                <h2>Itembatch</h2>
+                {% for itbc,itdt in datacollect %}
+                    <hr>
+                     <b>{{itbc.1}}</b>
+                   <hr> 
+                <table class="table" border="1" style="text-align: center;padding-top: 5px;">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" width="200px">No</th>
+                            <th scope="col">QRCode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                           
+                           {% for u in itdt %}
+
+                        <tr>
+                            <th scope="row">{{u}}</th>
+                            <td><img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl="{{u}}"'></td>
+                            <!-- 
+                            <input type="text" id="qr-data" onchange="generateQR()">
+                            <td><div id="qrcode"></div></td> -->
+                        </tr>
+                             {% endfor %}
+                       
+                    </tbody>
+                </table>
+                 {% endfor %}
+    </div>
+    </body>
+    <footer style="margin-top: 40px;">
+    <p style="font-family: arial;margin-left: 500px;margin-top: 20px;">Bandung, 18 Sep 2020</p>
+     <p style="font-family: arial;margin-left: 530px;"><b>Pemilik WMS</b></p>
+     <p style="font-family: arial;margin-left: 480px;padding-top: 50px;">
+      <b>(  Politeknik Pos Indonesia )</b></p>
+  </footer> 
+  <script>
+      var qrdata = document.getElementById('qr-data');
+      var qrcode = new QRCode(document.getElementById('qrcode'));
+
+      function generateQR(){
+        var data = qrdata.value;
+
+        qrcode.makeCode(data);
+      }
+  </script>
+</html>
+{% endblock %}

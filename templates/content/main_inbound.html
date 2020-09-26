@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+<!-- <script src="qrcode.min.js"></script>
+ --><script src="{% static 'Admin/qrcode.min.js' %}"></script>
         {% if role == 'ADM' %}
         <h2 class="mb-4">Ini Role ADM</h2>
         {% elif role == 'MAN' %}
@@ -12,6 +14,7 @@
         <h2>Data Inbound</h2>
         <hr>
         <div class="card">
+            
              <div class="card-header">
                 <a href="{% url 'add_inbound' %}" class="btn btn-primary btn-sm" role="button"
                     aria-pressed="true">Create
@@ -27,6 +30,7 @@
                     <th scope="col">Supplier</th>
                     <th scope="col">Status</th>
                     <th scope="col">Date</th>
+                   <!--  <th scope="col">QRCODE</th> -->
                     <th scope="col" style="width: 165px;">Action</th>
                   </tr>
                   </thead>
@@ -38,7 +42,13 @@
                         <td>{{inb.1}}</td>
                         <td>{{inb.2}}</td>
                         <td>{{inb.3}}</td>
+                        <!-- <td>
+                            <img src='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl="{{inb.0}}"'>
+                            <input type="text" id="qr-data" value="a" onchange="generateQR()">
+                            <div id="qrcode"></div>
+                        </td> -->
                         <td>
+                            <a href="{{inb.0}}"><button class="btn btn-success btn-sm">PDF</button></a>
                             <a href="{% url 'view_inbound' inb.0 %}" class="btn btn-primary btn-sm" role="button"
                                 aria-pressed="true">View</a>
                             <form action="{% url 'delete_inbound' inb.0 %}" method="POST" class="d-inline">
@@ -109,4 +119,14 @@
                 </table>
             </div>
         </div> -->
+<script>
+      var qrdata = document.getElementById('qr-data');
+      var qrcode = new QRCode(document.getElementById('qrcode'));
+
+      function generateQR(){
+        var data = qrdata.value;
+
+        qrcode.makeCode(data);
+      }
+  </script>
 {% endblock content %}

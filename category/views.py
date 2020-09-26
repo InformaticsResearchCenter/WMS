@@ -14,6 +14,13 @@ from django.db import models
 
 from datetime import datetime
 
+#-------- PDF -----------
+from django.template.loader import get_template
+from category.utils import render_to_pdf
+from django.http import HttpResponse
+from django.views.generic import View
+from django.shortcuts import get_list_or_404, get_object_or_404
+
 # from jointables.models import Item
 # Create your views here.
 
@@ -455,19 +462,32 @@ def confirm(request):
     inbound_id = request.session['inbound_id']
     itemdata = Itemdata.objects.all().filter(
         inboundid=inbound_id)
-    itemdata_id = list(itemdata.values_list('id', flat=True))
-    list_itemdata = list(itemdata.values_list('pass_field', flat=True))
+    itemdata_id_list = list(itemdata.values_list('id', flat=True))
+    item_id_list = list(itemdata.values_list('itemid', flat=True))
+    pass_field_list = list(itemdata.values_list('pass_field', flat=True))
+
+    # Memanggil Value Reject yang lebih dari 0
+    itemdata2 = Itemdata.objects.all().filter(
+        inboundid=inbound_id).exclude(reject=0)
+    rejectlist = list(itemdata2.values_list('reject', flat=True))
+    # -----------------------------------------
+
+    # Isi field Itembatch
     date_time = datetime.now()
     date = date_time.strftime("%Y-%m-%d")
     data_fix = []
-    rackid = "Test "
+    rackid = "Rack 1"
     entry = date
     out = date
-    for i in list_itemdata:
-        itemdataid = itemdata_id[index]
+    # ----------------------------------------
+
+    # Looping insert data ke Itembatch
+    for i in pass_field_list:
+        itemid = item_id_list[index]
+        itemdataid = itemdata_id_list[index]
         for x in range(i):
             confirm_id = str(get_next_value('confirm_seq'))
-            id_batch = inbound_id+confirm_id
+            id_batch = inbound_id+confirm_id+itemid
             data = (id_batch, rackid, entry, out, itemdataid)
             data_fix.append(data)
         index += 1
@@ -476,14 +496,23 @@ def confirm(request):
                 VALUES
                 (%s, %s, %s, %s, %s) """
     cursor.executemany(query, data_fix)
+    # --------------------------------------------
+
+    # Update status Inbound data
+    if len(rejectlist) > 0:
+        Inbounddata.objects.filter(id=inbound_id).update(status="Rejected")
+    else:
+        Inbounddata.objects.filter(id=inbound_id).update(status="Succes")
+    # -------------------------------------------------
+
     return redirect('inbound')
 
 
 # ------------------------- Return -----------------------------
 
 def fungsi_return(request):
-    itemdata = Itemdata.objects.select_related(
-        'inboundid').exclude(reject=0).distinct('inboundid')
+    itemdata = Itemdata.objects.select_related('inboundid').filter(inboundid__status="Rejected").exclude(
+        reject=0).distinct('inboundid')
     context = {
         'itemdata': itemdata,
         'title': 'Return | WMS Poltekpos'
@@ -508,21 +537,23 @@ def done(request):
     inbound_id = request.session['inbound_id']
     itemdata = Itemdata.objects.all().filter(
         inboundid=inbound_id).exclude(reject=0)
-    itemdata_id = list(itemdata.values_list('id', flat=True))
-    list_itemdata = list(itemdata.values_list('reject', flat=True))
+    list_itemdata_id = list(itemdata.values_list('id', flat=True))
+    list_itemdata_itemid = list(itemdata.values_list('itemid', flat=True))
+    list_itemdata_reject = list(itemdata.values_list('reject', flat=True))
     list_itemdata_quantity = list(itemdata.values_list('quantity', flat=True))
     date_time = datetime.now()
     date = date_time.strftime("%Y-%m-%d")
-    rackid = "Test "
+    rackid = "Rack 1"
     entry = date
     out = date
     # -------------------- Looping Data ---------------------
     data_fix = []
-    for i in list_itemdata:
-        itemdataid = itemdata_id[index]
+    for i in list_itemdata_reject:
+        itemid = list_itemdata_itemid[index]
+        itemdataid = list_itemdata_id[index]
         for x in range(i):
             confirm_id = str(get_next_value('confirm_seq'))
-            id_batch = inbound_id+confirm_id
+            id_batch = inbound_id+confirm_id+itemid
             data = (id_batch, rackid, entry, out, itemdataid)
             data_fix.append(data)
         index += 1
@@ -544,7 +575,7 @@ def done(request):
         return_seq = str(get_next_value('return_seq'))
         return_id = 'RTN'+return_seq
         data2 = (return_id, inboundidlist[j], itemidlist[j],
-                 statuslist[j], datelist[j], con_cre, con_cre, itemdata_id[j])
+                 statuslist[j], datelist[j], con_cre, con_cre, list_itemdata_id[j])
         data_return.append(data2)
 
     query2 = """INSERT INTO Returndata(id, inboundid, itemid, status, date, confirm, created, itemdataid)
@@ -553,9 +584,47 @@ def done(request):
     cursor.executemany(query2, data_return)
     # ------------- Update Reject = 0 --------------------
     for k in range(len(list_itemdata_quantity)):
-        i = Itemdata.objects.get(id=itemdata_id[k])
+        i = Itemdata.objects.get(id=list_itemdata_id[k])
         i.pass_field = list_itemdata_quantity[k]
         i.save()
     itemdata.update(reject=0)
+    Inbounddata.objects.filter(id=inbound_id).update(status="Succes")
 
     return redirect('return')
+
+
+# -----------------------------PDF ALL Data-------------------------
+class PdfInbound(View):
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Inbounddata, pk=kwargs['pk'])
+        #inbound = Inbounddata.objects.filter(pk=kwargs['pk'])
+        
+        datas = list(Itemdata.objects.all().select_related(
+        'inboundid').filter(inboundid=obj).values_list('id', 'itemid__name', 'quantity', 'pass_field', 'reject'))
+        itembatchs = []
+        for e in datas:
+            itembatchs.append(list(Itembatch.objects.all().select_related(
+                'itemdataid').filter(itemdataid=e[0]).values_list('id', flat='true')))
+     
+        datacollect = zip(datas, itembatchs)    
+
+        # print(datas)
+        # print(itembatchs)
+     
+        # for data in datas:
+        #     print(data[1])
+        #     for itembatch in itembatchs:
+        #         for item in itembatch:
+        #             print(item)
+
+        pdf = render_to_pdf('content/pdf_inbound.html',{'datacollect':datacollect,'datas':datas,'itembatchs':itembatchs, 'obj':obj})    
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Invoice_%s.pdf" %(12341231)
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not Found")
