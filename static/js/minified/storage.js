@@ -24,6 +24,8 @@ docReady(function () {
             resultContainer.value = "";
             console.log(code);
             data.value = code;
+            console.log("FOOOOOOD")
+            console.log("MATTER")
         }
 
     })
