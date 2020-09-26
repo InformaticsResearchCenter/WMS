@@ -1,12 +1,16 @@
 <html>
-{% for i in inboundid %}
-    {{i}}
-{% endfor %}
-{% for i in itemdataid %}
-    {{i}}
-{% endfor %}
-{% for i in datalist %}
-    {{i}}
+    <h1>inbound</h1>
+{%for a in datas%}
+    {{a.1}}
+{%endfor%}
+
+{% for i,a in datacollect %}
+    <hr>
+    {{i.1}}
+    <hr>
+    {% for u in a%}
+        {{u}}
+    {% endfor %}
 {% endfor %}
 
 </html>

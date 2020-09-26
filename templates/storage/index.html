@@ -1,45 +1,39 @@
+{% extends 'base/master.html' %}
 {% load static %}
-<html>
-<head>
-    <title>Html-Qrcode Demo</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
 
-<body>
-    <div id="qr-reader" style="width:500px; height:500px; margin-left:25%;" ></div>
-    
-    <form id="qr-reader-results" action="#" methods="post">
+{% block content %}
+<!-- <div class="wrapper d-flex align-items-stretch">
+ -->
+<!-- Page Content  -->
+<div id="content" class="p-4 p-md-5">
+    {% if role == 'ADM' %}
+    <h2 class="mb-4">Ini Role ADM</h2>
+    {% elif role == 'MAN' %}
+    <h2 class="mb-4">Ini Role MAN</h2>
+    {% elif role == 'OPR' %}
+    <h2 class="mb-4">Ini Role OPR</h2>
+    {% endif %}
 
-    <input type="submit"><br>
-    </form>
-</body>
-<script src="{% static 'js/minified/html5-qrcode.min.js' %}"></script>
-<script>
-    function docReady(fn) {
-        // see if DOM is already available
-        if (document.readyState === "complete"
-            || document.readyState === "interactive") {
-            // call on next available tick
-            setTimeout(fn, 1);
-        } else {
-            document.addEventListener("DOMContentLoaded", fn);
-        }
-    }
-    docReady(function () {
-        var resultContainer = document.getElementById('qr-reader-results');
-        var lastResult, countResults= 0;
+    <html>
+    <head>
+        <title>Html-Qrcode Demo</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"
+            integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
 
-        function onScanSuccess(qrCodeMessage) {
-            if (qrCodeMessage !== lastResult) {
-                countResults++;
-                lastResult = qrCodeMessage;
-                resultContainer.innerHTML += `<input type="text"  name="name" id="name"${countResults} value="${qrCodeMessage}" readonly><br>`;
-            }
-        }
-
-        var html5QrcodeScanner = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess);
-    });
-</script>
-</head>
-</html>
+    <body>
+        <div id="qr-reader" style="width:100%; height:100%; " class="mx-auto"></div>
+        <div style="width:50%" class="mx-auto">
+            <form id="qr-reader-results" action="#"  methods="post">
+                <input style="width:100%" class="mx-auto" type="text" id="code" readonly><br>
+                <input style="width:100%" class="mx-auto" type="text" id="data" readonly><br>
+                <input style="width:100%" class="mx-auto" type="button" id="button" value="Add"><br>
+            </form>
+            <div id="qrcode"></div>
+        </div>
+    </body>
+    <script src="{% static 'js/minified/html5-qrcode.min.js' %}"></script>
+    <script src="{% static 'js/minified/qrcode.js' %}"></script>
+    <script src="{% static 'js/minified/storage.js' %}"></script>
+    </head>
+    </html>
+    {% endblock content %}
