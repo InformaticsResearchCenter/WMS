@@ -6,6 +6,10 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from PIL import Image, ImageDraw
 
 
 class Category(models.Model):
@@ -57,6 +61,7 @@ class Itemdata(models.Model):
 
 class Itembatch(models.Model):
     id = models.TextField(primary_key=True)
+    qr_code = models.ImageField(upload_to='qr_codes', blank=True)
     rackid = models.TextField(blank=True, null=True)
     entry = models.DateField(blank=True, null=True)
     out = models.DateField(blank=True, null=True)
@@ -65,6 +70,21 @@ class Itembatch(models.Model):
 
     class Meta:
         db_table = 'itembatch'
+
+    def __str__(self):
+        return str(self.id)
+
+    def save(self, *args, **kwargs):
+        canvas = Image.new('RGB', (290, 290), 'white')
+        draw = ImageDraw.Draw(canvas)
+        qrcode_img = qrcode.make(self.id)
+        canvas.paste(qrcode_img)
+        fname = f'qr_code-{self.id}.png'
+        buffer = BytesIO()
+        canvas.save(buffer, 'PNG')
+        self.qr_code.save(fname, File(buffer), save=False)
+        canvas.close()
+        super().save(*args, **kwargs)    
 
 
 class Returndata(models.Model):

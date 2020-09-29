@@ -14,6 +14,13 @@ from django.db import models
 
 from datetime import datetime
 
+#-------- PDF -----------
+from django.template.loader import get_template
+from category.utils import render_to_pdf
+from django.http import HttpResponse
+from django.views.generic import View
+from django.shortcuts import get_list_or_404, get_object_or_404
+
 # from jointables.models import Item
 # Create your views here.
 
@@ -584,3 +591,40 @@ def done(request):
     Inbounddata.objects.filter(id=inbound_id).update(status="Succes")
 
     return redirect('return')
+
+
+# -----------------------------PDF ALL Data-------------------------
+class PdfInbound(View):
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Inbounddata, pk=kwargs['pk'])
+        #inbound = Inbounddata.objects.filter(pk=kwargs['pk'])
+        
+        datas = list(Itemdata.objects.all().select_related(
+        'inboundid').filter(inboundid=obj).values_list('id', 'itemid__name', 'quantity', 'pass_field', 'reject'))
+        itembatchs = []
+        for e in datas:
+            itembatchs.append(list(Itembatch.objects.all().select_related(
+                'itemdataid').filter(itemdataid=e[0]).values_list('id', flat='true')))
+     
+        datacollect = zip(datas, itembatchs)    
+
+        # print(datas)
+        # print(itembatchs)
+     
+        # for data in datas:
+        #     print(data[1])
+        #     for itembatch in itembatchs:
+        #         for item in itembatch:
+        #             print(item)
+
+        pdf = render_to_pdf('content/pdf_inbound.html',{'datacollect':datacollect,'datas':datas,'itembatchs':itembatchs, 'obj':obj})    
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Invoice_%s.pdf" %(12341231)
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not Found")

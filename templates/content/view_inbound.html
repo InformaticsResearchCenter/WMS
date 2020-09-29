@@ -15,6 +15,16 @@
     <div class="card-header">
         <a href="{% url 'add_itemdata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Item</a>
+        {% for inb in Inbound %}
+        {% if inb.status == "On - Check" %}
+        <form action="{% url 'confirm' %}" method="POST" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;">
+                <i class="text-white">Confirm</i>
+            </button>
+        </form>
+        {% endif %}
+        {% endfor %}
     </div>
     <div class="card-body">
         <div class="row">
@@ -65,8 +75,12 @@
                     <td>{{itdt.reject}}</td>
                     <td>-</td>
                     <td>
+                        {% for inb in Inbound %}
+                        {% if inb.status == "On - Check" %}
                         <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
+                        {% endif %}
+                        {% endfor %}
                         <form action="{% url 'delete_itemdata' itdt.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
@@ -79,16 +93,7 @@
             </tbody>
         </table>
         <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-warning">Back</button></a>
-        {% for inb in Inbound %}
-        {% if inb.status == "On - Check" %}
-        <form action="{% url 'confirm' %}" method="POST" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;">
-                <i class="text-white">Confirm</i>
-            </button>
-        </form>
-        {% endif %}
-        {% endfor %}
+
     </div>
 </div>
 
