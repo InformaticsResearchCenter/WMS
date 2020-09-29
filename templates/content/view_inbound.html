@@ -75,8 +75,12 @@
                     <td>{{itdt.reject}}</td>
                     <td>-</td>
                     <td>
+                        {% for inb in Inbound %}
+                        {% if inb.status == "On - Check" %}
                         <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
+                        {% endif %}
+                        {% endfor %}
                         <form action="{% url 'delete_itemdata' itdt.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
