@@ -12,6 +12,23 @@ from django.core.files import File
 from PIL import Image, ImageDraw
 
 
+class Binlocation(models.Model):
+    id = models.TextField(primary_key=True)
+    rackid = models.ForeignKey('Rack', models.DO_NOTHING, db_column='rackid')
+    capacity = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'binlocation'
+
+
+class Rack(models.Model):
+    id = models.TextField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'rack'
+
+
 class Category(models.Model):
     id = models.TextField(primary_key=True)
     name = models.CharField(max_length=30)
@@ -84,7 +101,7 @@ class Itembatch(models.Model):
         canvas.save(buffer, 'PNG')
         self.qr_code.save(fname, File(buffer), save=False)
         canvas.close()
-        super().save(*args, **kwargs)    
+        super().save(*args, **kwargs)
 
 
 class Returndata(models.Model):

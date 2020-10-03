@@ -3,81 +3,81 @@
 
 {% block content %}
 <!-- <script src="qrcode.min.js"></script>
- --><script src="{% static 'Admin/qrcode.min.js' %}"></script>
-        {% if role == 'ADM' %}
-        <h2 class="mb-4">Ini Role ADM</h2>
-        {% elif role == 'MAN' %}
-        <h2 class="mb-4">Ini Role MAN</h2>
-        {% elif role == 'OPR' %}
-        <h2 class="mb-4">Ini Role OPR</h2>
-        {% endif %}
-        <h2>Data Inbound</h2>
-        <hr>
-        <div class="card">
-            
-             <div class="card-header">
-                <a href="{% url 'add_inbound' %}" class="btn btn-primary btn-sm" role="button"
-                    aria-pressed="true">Create
-                    Inbound</a>
-            </div>
+ -->
+<script src="{% static 'Admin/qrcode.min.js' %}"></script>
+{% if role == 'ADM' %}
+<h2 class="mb-4">Ini Role ADM</h2>
+{% elif role == 'MAN' %}
+<h2 class="mb-4">Ini Role MAN</h2>
+{% elif role == 'OPR' %}
+<h2 class="mb-4">Ini Role OPR</h2>
+{% endif %}
+<h2>Data Inbound</h2>
+<hr>
+<div class="card">
 
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
+    <div class="card-header">
+        <a href="{% url 'add_inbound' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Create
+            Inbound</a>
+    </div>
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
                     <th scope="col">No</th>
                     <th scope="col">Inbound Id</th>
                     <th scope="col">Supplier</th>
                     <th scope="col">Status</th>
                     <th scope="col">Date</th>
-                   <!--  <th scope="col">QRCODE</th> -->
+                    <!--  <th scope="col">QRCODE</th> -->
                     <th scope="col" style="width: 165px;">Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                   {% for inb in Inbound %}
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>{{inb.0}}</td>
-                        <td>{{inb.1}}</td>
-                        <td>{{inb.2}}</td>
-                        <td>{{inb.3}}</td>
-                        <!-- <td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inb in Inbound %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>{{inb.0}}</td>
+                    <td>{{inb.1}}</td>
+                    <td>{{inb.2}}</td>
+                    <td>{{inb.3}}</td>
+                    <!-- <td>
                             <img src='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl="{{inb.0}}"'>
                             <input type="text" id="qr-data" value="a" onchange="generateQR()">
                             <div id="qrcode"></div>
                         </td> -->
-                        <td>
-                            <a href="{% url 'view_inbound' inb.0 %}" class="btn btn-primary btn-sm" role="button"
-                                aria-pressed="true">View</a>
-                            <form action="{% url 'delete_inbound' inb.0 %}" method="POST" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
-                                    <i class="text-white">Delete</i>
-                                </button>
-                            </form>
-                            {% if inb.2 == "Rejected" %}
-                            <a href="{{inb.0}}"><button class="btn btn-success btn-sm">PDF</button></a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                  <tfoot>
-                  {% comment %} <tr>
+                    <td>
+                        <a href="{% url 'view_inbound' inb.0 %}" class="btn btn-primary btn-sm" role="button"
+                            aria-pressed="true">View</a>
+                        <form action="{% url 'delete_inbound' inb.0 %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                <i class="text-white">Delete</i>
+                            </button>
+                        </form>
+                        {% if inb.2 != "On - Check" %}
+                        <a href="{{inb.0}}"><button class="btn btn-success btn-sm">PDF</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                {% comment %} <tr>
                     <th scope="col">No</th>
                     <th scope="col">Inbound Id</th>
                     <th scope="col">Supplier</th>
                     <th scope="col">Status</th>
                     <th scope="col">Date</th>
                     <th scope="col" style="width: 165px;">Action</th>
-                  </tr>
-                  </tfoot> {% endcomment %}
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
+                </tr>
+            </tfoot> {% endcomment %}
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
 
 <!-- 
         <div class="card">
@@ -123,13 +123,13 @@
             </div>
         </div> -->
 <script>
-      var qrdata = document.getElementById('qr-data');
-      var qrcode = new QRCode(document.getElementById('qrcode'));
+    var qrdata = document.getElementById('qr-data');
+    var qrcode = new QRCode(document.getElementById('qrcode'));
 
-      function generateQR(){
+    function generateQR() {
         var data = qrdata.value;
 
         qrcode.makeCode(data);
-      }
-  </script>
+    }
+</script>
 {% endblock content %}

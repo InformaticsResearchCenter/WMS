@@ -34,7 +34,7 @@ urlpatterns = [
     path('delete_subcategory/<slug:id>/',
          views.delete_subcategory, name="delete_subcategory"),
     path('item/', views.main_item, name="item"),
-    path('dummydoor/', views.dummyFun, name="dummy"), #DEBUGAREA
+    path('dummydoor/', views.dummyFun, name="dummy"),  # DEBUGAREA
 
 
     # --------------------- SUPPLIER ------------------
@@ -79,6 +79,9 @@ urlpatterns = [
          views.done, name="done"),
 
     # -------------------- PDFInbound --------------------------
-    path('inbound/<int:pk>/',views.PdfInbound.as_view(),),
+    path('inbound/<int:pk>/', views.PdfInbound.as_view(),),
+
+
+
 
 ]
