@@ -27,6 +27,7 @@ urlpatterns = [
     path('logout/', views.logout, name="logout"),
     path('category/', include('category.urls')),
     path('storage/', include('storage.urls')),
+    path('outbound/', include('outbound.urls')),
 ]
 
 

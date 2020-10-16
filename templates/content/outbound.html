@@ -1,0 +1,57 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Page Content  -->
+    <div id="content" width="80%">
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+
+        <h2>Input Supllier</h2>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                Add Outbound
+            </div>
+            <div class="card-body">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="id" id="id" value="{{id_outbound}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Customer Name</label>
+                                <input type="text" class="form-control" name="customername" id="customername" placeholder="Customer Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Address</label>
+                                <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Phone Number</label>
+                                <input type="text" class="form-control" name="phonenumber" id="phonenumber" placeholder="Phone Number">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Date</label>
+                                <input type="text" class="form-control" name="date" id="date"
+                                    value="{{date}}" readonly="true">
+                            </div>
+                            <input type="hidden" class="form-control" name="status" id="status"
+                                    value="On - Progress">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+                <a href="#"><button type="submit" class="btn btn-success">Back</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
