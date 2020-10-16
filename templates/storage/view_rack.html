@@ -1,0 +1,49 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<!-- <script src="qrcode.min.js"></script>
+ -->
+{% if role == 'ADM' %}
+<h2 class="mb-4">Ini Role ADM</h2>
+{% elif role == 'MAN' %}
+<h2 class="mb-4">Ini Role MAN</h2>
+{% elif role == 'OPR' %}
+<h2 class="mb-4">Ini Role OPR</h2>
+{% endif %}
+<h2>Data Rack - <b>{{rack}}</b> - Number of Bin = {{bin_len}}</h2>
+<hr>
+<div class="card">
+
+    <div class="card-header">
+        <h5>Data Bin Location</h5>
+    </div>
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 100px;">No</th>
+                    <th scope="col">Bin Id</th>
+                    <th scope="col">Capacity</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in binlocation %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><b>{{b.id}}</b></td>
+                    <td>{{b.capacity}}</td>
+                    <td>
+                        <!-- <a href="#" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a> -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+{% endblock content %}
