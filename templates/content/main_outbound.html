@@ -1,0 +1,130 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<!-- <script src="qrcode.min.js"></script>
+ --><script src="{% static 'Admin/qrcode.min.js' %}"></script>
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+        <h2>Data Outbound</h2>
+        <hr>
+        <div class="card">
+            
+             <div class="card-header">
+                <a href="{% url 'add_outbound' %}" class="btn btn-primary btn-sm" role="button"
+                    aria-pressed="true">Create
+                    Outbound</a>
+            </div>
+
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Outbound Id</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Address</th>
+                    <!-- <th scope="col">Phone Number</th>
+                     -->
+                     <th scope="col">Date</th>
+                     <th scope="col">Status</th>
+                   <!--  <th scope="col">QRCODE</th> -->
+                    <th scope="col" style="width: 165px;">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for onb in outbound %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>{{onb.id}}</td>
+                        <td>{{onb.customername}}</td>
+                        <td>{{onb.address}}</td>
+                        <!-- <td>{{onb.phonenumber}}</td>
+                         -->
+                         <td>{{onb.date}}</td>
+                         <td>{{onb.status}}</td>
+                        <td>
+                            <a href="{% url 'view_outbound' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
+                            <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
+                            {% if onb.status == "Complete" %}
+                            <a href="{{onb.id}}"><button class="btn-success btn-sm">PDF</button></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                  {% comment %} <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Inbound Id</th>
+                    <th scope="col">Supplier</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                  </tr>
+                  </tfoot> {% endcomment %}
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+
+<!-- 
+        <div class="card">
+            <div class="card-header">
+                <a href="{% url 'add_inbound' %}" class="btn btn-primary btn-sm" role="button"
+                    aria-pressed="true">Create
+                    Inbound</a>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Inbound Id</th>
+                            <th scope="col">Supplier</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Date</th>
+                            <th scope="col" style="width: 165px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inb in Inbound %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>{{inb.0}}</td>
+                            <td>{{inb.1}}</td>
+                            <td>{{inb.2}}</td>
+                            <td>{{inb.3}}</td>
+                            <td>
+                                <a href="{% url 'view_inbound' inb.0 %}" class="btn btn-primary btn-sm" role="button"
+                                    aria-pressed="true">View</a>
+                                <form action="{% url 'delete_inbound' inb.0 %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                        <i class="text-white">Delete</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div> -->
+<script>
+      var qrdata = document.getElementById('qr-data');
+      var qrcode = new QRCode(document.getElementById('qrcode'));
+
+      function generateQR(){
+        var data = qrdata.value;
+
+        qrcode.makeCode(data);
+      }
+  </script>
+{% endblock content %}

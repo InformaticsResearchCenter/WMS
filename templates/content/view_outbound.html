@@ -1,0 +1,94 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+{% if role == 'ADM' %}
+<h2 class="mb-4">Ini Role ADM</h2>
+{% elif role == 'MAN' %}
+<h2 class="mb-4">Ini Role MAN</h2>
+{% elif role == 'OPR' %}
+<h2 class="mb-4">Ini Role OPR</h2>
+{% endif %}
+<h2>Data Outbound</h2>
+<hr>
+<div class="card">
+    <div class="card-header">
+        <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add Outbound Data</a>
+
+        {% for otb in Outbound %}
+        {% if otb.status == "On - Progress" %}
+        <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;">
+                <i class="text-white">Confirm</i>
+            </button>
+        </form>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-2">
+                <h6>Outbound ID</h6>
+                <h6>Customer Name</h6>
+                <h6>Address</h6>
+                <h6>Phone Number</h6>
+                <h6>Date</h6>
+                <h6>Status</h6>
+            </div>
+            {% for otb in Outbound %}
+            <div class="col">
+                <h6><b>: {{otb.id}}</b></h6>
+                <h6><b>: {{otb.customername}}</b></h6>
+                <h6><b>: {{otb.address}}</b></h6>
+                <h6><b>: {{otb.phonenumber}}</b></h6>
+                <h6><b>: {{otb.date}}</b></h6>
+                <h6><b>: {{otb.status}}</b></h6>
+            </div>
+            {% endfor %}
+        </div>
+        <br>
+        <br>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Id Outbound Data</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Outbound</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for itdt in Outbounddata %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>{{itdt.id}}</td>
+                    <td>{{itdt.itemid}}</td>
+                    <td>{{itdt.quantity}}</td>
+                    <td>{{itdt.outboundid}}</td>
+                    <td>
+                        <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
+                            aria-pressed="true">Update</a>
+                        <form action="{% url 'delete_outbounddata' itdt.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                <i class="text-white">Delete</i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-warning">Back</button></a>
+
+    </div>
+</div>
+
+{% endblock content %}

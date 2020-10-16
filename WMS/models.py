@@ -148,3 +148,27 @@ class Userdata(models.Model):
 
     class Meta:
         db_table = 'userdata'
+
+
+class Outbound(models.Model):
+    id = models.TextField(primary_key=True)
+    customername = models.CharField(max_length=50)
+    address = models.CharField(max_length=50)
+    phonenumber = models.CharField(max_length=13)
+    date = models.DateField()
+    status = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = 'outbound'
+
+class Outbounddata(models.Model):
+    id = models.TextField(primary_key=True)
+    itemid = models.ForeignKey(
+        Item, models.DO_NOTHING, db_column='itemid')
+    quantity = models.IntegerField()
+    outboundid = models.ForeignKey(
+        Outbound, models.DO_NOTHING, db_column='outboundid')
+
+    class Meta:
+        db_table = 'outbounddata'
+    

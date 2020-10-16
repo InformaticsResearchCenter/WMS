@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'category',
     'WMS',
     'storage',
+    'outbound',
 ]
 
 INSTALLED_APPS += ['sequences.apps.SequencesConfig']
