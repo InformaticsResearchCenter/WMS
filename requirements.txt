@@ -29,7 +29,6 @@ keyboard==0.13.5
 lazy-object-proxy==1.4.3
 mccabe==0.6.1
 mhyt==0.7
-minepy==1.2.4
 mysql-connector-python==8.0.21
 packaging==20.4
 path==14.0.1
