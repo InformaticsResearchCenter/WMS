@@ -6,8 +6,9 @@
  -->
 <!-- Page Content  -->
             <select id="opt">
+                <option value="-">-</option>
                 <option value="inbound">Inbound</option>
-                <option value="outbound">Outbound</option>
+                <option value="outbound">Outbound</option>      
                 <option value="move">Move</option>
             </select>
 
@@ -21,22 +22,105 @@
         <div class="mx-auto" >
         <form id="qr-reader-results" action="#" methods="post" class="mx-auto">
             {% csrf_token %}
-
-            <input class="mx-auto" type="text" id="name" readonly><br>
+            <div id="inbound">
+                <table>
+                <div id="containerInboundBinlocation">
+                        <tr>
+                            <td valign="top"><label for="inboundBinlocation"> Binlocation </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><input class="mx-auto" type="text" id="inboundBinlocation" readonly></td>
+                            <td><input type="button" id="inboundBinlocationButton" value="Scan"></td>
+                        </tr>
+                    </div>
+                    <div id="item">
+                        <tr>
+                            <td valign="top"><label for="inboundItemCode"> item code </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><input class="mx-auto" type="text" id="inboundItemCode" readonly></td>
+                            <td><input type="button" id="inboundItemCodeButton" value="Scan"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label for="inboundItemName"> item name </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><input class="mx-auto" type="text" id="inboundItemName" readonly></td>
+                            <td><input type="button" id="inboundInputButton" value="Input"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label for="inboundScannedItem"> item inputed </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><textarea name="inboundScannedItem" id="inboundScannedItem"  readonly></textarea></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"> 
+                                <input type="button" id="inboundFinish" value="finish">
+                                <input type="button" id="inboundClear" value="clear">
+                            </td>
+                        </tr>
+                </div>
+            </table>
+            <!-- <input class="mx-auto" type="text" id="name" readonly><br>
             <input class="mx-auto" type="text" id="code" readonly><br>
             <input class="mx-auto" type="text" id="data" readonly><br>
             <input class="mx-auto" type="button" id="button" value="Add"><br>
-            <input class="mx-auto" type="button" id="button" value="Reset"><br>
-            
+            <input class="mx-auto" type="button" id="button" value="Reset"><br> -->
+            </div>
+
+            <div id="outbound">
+            <h1>outbound</h1>
+            </div>
+
+            <div id="move">
+                <table>
+                <div id="containermoveBinlocation">
+                        <tr>
+                            <td valign="top"><label for="moveBinlocation"> Binlocation </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><input class="mx-auto" type="text" id="moveBinlocation" readonly></td>
+                            <td><input type="button" id="moveBinlocationButton" value="Scan"></td>
+                        </tr>
+                    </div>
+                    <div id="item">
+                        <tr>
+                            <td valign="top"><label for="moveItemCode"> item code </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><input class="mx-auto" type="text" id="moveItemCode" readonly></td>
+                            <td><input type="button" id="moveItemCodeButton" value="Scan"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label for="moveItemName"> item name </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><input class="mx-auto" type="text" id="moveItemName" readonly></td>
+                            <td><input type="button" id="moveInputButton" value="Input"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label for="moveScannedItem"> item inputed </label></td>
+                            <td valign="top"> : </td>
+                            <td valign="top"><textarea name="moveScannedItem" id="moveScannedItem"  readonly></textarea></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"> 
+                                <input type="button" id="moveFinish" value="finish">
+                                <input type="button" id="moveClear" value="clear">
+                            </td>
+                        </tr>
+                </div>
+            </table>
+            </div>
+
+
+
+
         </form>
-        <input type="hidden" id="dodo"></div>
+        <input type="hidden" id="itemlist"></div>
         <div id="dataset"> </div>
         </div>
     </div>
 <script type="text/javascript">
 var item = JSON.parse("{{datas|escapejs}}"); 
-var dodo = document.getElementById('dodo');
-dodo.value="{{datas|escapejs}}";
+var itemlist = document.getElementById('itemlist');
+itemlist.value="{{datas|escapejs}}";
 </script>
     <script src="{% static 'js/minified/html5-qrcode.min.js' %}"></script>
     <script src="{% static 'js/minified/jquery-3.5.1.min.js' %}"></script>

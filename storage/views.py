@@ -40,10 +40,14 @@ def scanner(request):
 
 
 def put(request):
-    data = request.POST.get('codedata', None)
-    print(data)
-    return JsonResponse({'code': data}, status=200)
+    itemCode = request.POST.get('itemCode', None)
+    binlocation = request.POST.get('binlocation', None)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
+def move(request):
+    itemCode = request.POST.get('itemCode', None)
+    binlocation = request.POST.get('binlocation', None)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 def rack(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
