@@ -15,7 +15,7 @@ from django.db.models import Count
 from django.db.models import Max
 
 from datetime import datetime
-from json import dumps
+from json import dumps,loads
 
 
 # -------- PDF -----------
@@ -40,14 +40,13 @@ def scanner(request):
 
 
 def put(request):
-    itemCode = request.POST.get('itemCode', None)
+    itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 def move(request):
-    itemCode = request.POST.get('itemCode', None)
+    itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
-    print(binlocation, itemCode)
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 def rack(request, id=0):
