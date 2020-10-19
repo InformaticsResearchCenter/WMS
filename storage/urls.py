@@ -2,7 +2,12 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
+    # path('', views.scanner, name="storage"),
+    # path('move/', views.move, name="move"),
+    # path('out/', views.out, name="out")
     path('', views.scanner, name="index"),
+    path('put/', views.put, name="put"),    
+    path('move/', views.move, name="move"),    
     path('rack/add_rack', views.rack, name="add_rack"),
     path('rack/', views.main_rack, name="rack"),
     path('rack/view_rack/<slug:id>/', views.view_rack, name="view_rack"),

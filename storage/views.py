@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import *
 from WMS.models import *
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 from pprint import pprint
 
@@ -15,6 +15,8 @@ from django.db.models import Count
 from django.db.models import Max
 
 from datetime import datetime
+from json import dumps
+
 
 # -------- PDF -----------
 from django.template.loader import get_template
@@ -27,8 +29,26 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 def scanner(request):
-    return render(request, 'storage/index.html')
+    data = {
+        "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name'))
+    }
+    datas = dumps(data)
+    # if request.is_ajax():
+    #     text = request.GET.get('data')
+    #     return JsonResponse({'Da})
+    return render(request, 'storage/index.html', {"datas": datas})
 
+
+def put(request):
+    itemCode = request.POST.get('itemCode', None)
+    binlocation = request.POST.get('binlocation', None)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
+def move(request):
+    itemCode = request.POST.get('itemCode', None)
+    binlocation = request.POST.get('binlocation', None)
+    print(binlocation, itemCode)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 def rack(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
