@@ -47,6 +47,7 @@ def put(request):
 def move(request):
     itemCode = request.POST.get('itemCode', None)
     binlocation = request.POST.get('binlocation', None)
+    print(binlocation, itemCode)
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 def rack(request, id=0):

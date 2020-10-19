@@ -68,9 +68,10 @@ $(document).ready(function () {
 				code: scannedCode
 			});
 			$("#inboundScannedItem").val($("#inboundScannedItem").val()+scannedCode + "\n");
+			console.log("scanned item")
 			console.log(code)
 		}
-		resultContainer.value = '';
+		// resultContainer.value = '';
 		
 	});
 	$("#moveInputButton").click(function (e) { 
@@ -85,7 +86,7 @@ $(document).ready(function () {
 			$("#moveScannedItem").val($("#moveScannedItem").val()+scannedCode + "\n");
 			console.log(code)
 		}
-		resultContainer.value = '';
+		// resultContainer.value = '';
 		
 	});
 	
@@ -144,7 +145,7 @@ $(document).ready(function () {
 				url: '/storage/put/',
 				data: {
 					binlocation: $("#inboundBinlocation").val(),
-					codedata: JSON.stringify(code),
+					itemCode: JSON.stringify(code),
 					csrfmiddlewaretoken: csrf
 				},
 				success: function (response) {
@@ -166,7 +167,7 @@ $(document).ready(function () {
 				url: '/storage/move/',
 				data: {
 					binlocation: $("#moveBinlocation").val(),
-					codedata: JSON.stringify(code),
+					itemCode: JSON.stringify(code),
 					csrfmiddlewaretoken: csrf
 				},
 				success: function (response) {
