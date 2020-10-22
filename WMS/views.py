@@ -4,6 +4,9 @@ from .models import Userdata
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib import messages
 
+from django.http import HttpResponseNotFound
+from django.core.exceptions import PermissionDenied
+
 from pprint import pprint
 
 
@@ -32,8 +35,7 @@ def login(request):
             try:
                 m = Userdata.objects.get(username=request.POST['username'])
             except Userdata.DoesNotExist:
-                messages.error(
-                    request, 'username does not exists!')
+                messages.error(request, 'username does not exists!')
                 return redirect('login')
             n = str(m.roleid)
             level = n[13:-1]
@@ -46,8 +48,7 @@ def login(request):
                 request.session[2] = level
                 return redirect('home')
             else:
-                messages.error(
-                    request, 'username or password is not correct!')
+                messages.error(request, 'username or password is not correct!')
                 return redirect('login')
     return render(request, "login/login_form.html", context)
 
@@ -60,3 +61,19 @@ def logout(request):
         return redirect('login')
     except KeyError:
         pass
+
+
+def usermanagement(request):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        level = request.session['2']
+        if level == 'OPR':
+            # return HttpResponseNotFound('<h1>Page not found</h1>')
+            raise PermissionDenied
+        else:
+            user = Userdata.objects.all()
+            context = {
+                'user': user,
+            }
+            return render(request, 'content/usermanagement.html', context)
