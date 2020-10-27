@@ -10,11 +10,18 @@ $(document).ready(function () {
 	var itemlist = document.getElementById('itemlist');
 	var csrf = $("input[name='csrfmiddlewaretoken']").val();
 	var scanPoint = null;
+	var costumer = []
+	var items = []
 	var html5QrcodeScanner = new Html5QrcodeScanner('qr-reader', {
 		fps: 10,
 		qrbox: 250
 	});
 
+	$("#inbound").hide();
+	$("#outbound").hide();
+	$("#move").hide();
+	$(".flex-item").hide();
+	$("#storageOverlay").hide();
 	function onScanSuccess(qrCodeMessage) {
 		var itemlist = JSON.parse(document.getElementById('itemlist').value);
 		// if (qrCodeMessage !== lastResult) {
@@ -51,11 +58,15 @@ $(document).ready(function () {
 		else if(scanPoint == "moveItemCode"){
 			$("#moveItemCode").val(qrCodeMessage);
 		}
+		if(scanPoint == "outboundId"){
+			$("#outboundId").val(qrCodeMessage);
+		}
+		else if(scanPoint == "outboundItemCode"){
+			$("#outboundItemCode").val(qrCodeMessage);
+		}
 	}
 	 
-	$("#inbound").hide();
-	$("#outbound").hide();
-	$("#move").hide();
+
 
 	// input item
 	$("#inboundInputButton").click(function (e) { 
@@ -68,6 +79,22 @@ $(document).ready(function () {
 				code: scannedCode
 			});
 			$("#inboundScannedItem").val($("#inboundScannedItem").val()+scannedCode + "\n");
+			console.log("scanned item")
+			console.log(code)
+		}
+		// resultContainer.value = '';
+		
+	});
+	$("#outboundInputButton").click(function (e) { 
+		e.preventDefault();
+		var scannedCode = $("#outboundItemCode").val();
+		if ($("#outboundScannedItem").val().includes(scannedCode)) {
+			alert('code ' + scannedCode + ' sudah di scan');
+		} else {
+			code.push({
+				code: scannedCode
+			});
+			$("#outboundScannedItem").val($("#outboundScannedItem").val()+scannedCode + "\n");
 			console.log("scanned item")
 			console.log(code)
 		}
@@ -103,6 +130,11 @@ $(document).ready(function () {
 		console.log(scanPoint)
 		
 	});
+	$("#outboundItemCodeButton").click(function (e) { 
+		e.preventDefault();
+		scanPoint = "outboundItemCode"
+		console.log(scanPoint)
+	});
 	$("#moveItemCodeButton").click(function (e) { 
 		e.preventDefault();
 		scanPoint = "moveItemCode"
@@ -115,21 +147,31 @@ $(document).ready(function () {
 		console.log(scanPoint)
 		
 	});
+	$("#outboundIdButton").click(function (e) { 
+		e.preventDefault();
+		scanPoint = "outboundId"
+		console.log(scanPoint)
+
+	});
  
 	$("#opt").change(function (e) {
 		console.log($("#opt").val())
 		html5QrcodeScanner.render(onScanSuccess);
+		$(".flex-item").show();
 		if($("#opt").val() == "inbound"){
+			$("#cardStorage").text("Storage - Inbound");
 			$("#inbound").show();
 			$("#outbound").hide();
 			$("#move").hide();
 		}
 		else if($("#opt").val() == "outbound"){
+			$("#cardStorage").text("Storage - Outbound");
 			$("#inbound").hide();
 			$("#outbound").show();
 			$("#move").hide();
 		}
 		else if($("#opt").val() == "move"){
+			$("#cardStorage").text("Storage - Move");
 			$("#inbound").hide();
 			$("#outbound").hide();
 			$("#move").show();
@@ -180,19 +222,48 @@ $(document).ready(function () {
 			$('#data').val('');
 		}
 	});
-	button.addEventListener('click', function () {
-		var resultValue = resultContainer.value;
-		if (data.value.includes(resultValue)) {
-			alert('code ' + resultValue + ' sudah di scan');
-		} else {
-			code.push({
-				code: resultValue
+
+	$('#outboundIdCheckButton').click(function () {
+		console.log(code);
+		$("#systeminfo").val("Loading data");
+		$("#storageOverlay").show();
+
+			$.ajax({
+				type: 'post',
+				url: '/storage/checkOutbound/',
+				data: {
+					outboundId: $("#outboundId").val(),
+					csrfmiddlewaretoken: csrf
+				},
+				success: function (response) {
+					costumer = response['costumer']
+					items = response['items']
+					console.log(costumer)
+					console.log(items)
+					$("#systeminfo").val("Data Loaded");
+					$("#storageOverlay").hide();
+				}
 			});
-			data.value = code;
-			// console.log(code)
-		}
-		resultContainer.value = '';
 	});
+	$("#dummy").click(function (e) { 
+		e.preventDefault();
+		alert(costumer[0])
+		alert(items)
+		
+	});
+	// button.addEventListener('click', function () {
+	// 	var resultValue = resultContainer.value;
+	// 	if (data.value.includes(resultValue)) {
+	// 		alert('code ' + resultValue + ' sudah di scan');
+	// 	} else {
+	// 		code.push({
+	// 			code: resultValue
+	// 		});
+	// 		data.value = code;
+	// 		// console.log(code)
+	// 	}
+	// 	resultContainer.value = '';
+	// });
 
 	// --------------------------------------------------------
 	// ---------------- Scanner area --------------------------

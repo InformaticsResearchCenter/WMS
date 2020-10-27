@@ -38,6 +38,15 @@ def scanner(request):
     #     return JsonResponse({'Da})
     return render(request, 'storage/index.html', {"datas": datas})
 
+def dummy(request):
+    data = {
+        "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name'))
+    }
+    datas = dumps(data)
+    return render(request, 'storage/index2.html', {"datas": datas})
+def checkItem(request):
+    itemCode = list(Itembatch.objects.filter(id=request.POST.get('itemCode', None)))
+    return JsonResponse({'itemData': itemCode}, status=200)
 
 def put(request):
     itemCode = loads(request.POST.get('itemCode', None))
@@ -47,7 +56,24 @@ def put(request):
 def move(request):
     itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
+    print("yo")
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
+def checkOutbound(request):
+    outboundid = request.POST.get('outboundId', None)
+    print(outboundid)
+    # print(Outbound.objects.filter(id="16102020205558").values())
+    customer = list(Outbound.objects.filter(id=str(outboundid)).values_list('customername','address','phonenumber','date','status'))
+    items = list(Outbounddata.objects.filter(outboundid=str(outboundid)).values_list('itemid','quantity'))
+    print(items)
+    print(Outbound.objects.filter(id="16102020231158").values_list('customername','address','phonenumber','date','status'))
+    return JsonResponse({'costumer': customer, 'items' : items} ,status=200)
+
+def out(request):
+    itemCode = loads(request.POST.get('itemCode', None))
+    binlocation = request.POST.get('binlocation', None)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
 
 def rack(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:

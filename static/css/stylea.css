@@ -1,24 +1,28 @@
 #qr-reader {
 	width: 400px;
-	height: 400px;
 }
 
 form>input,
 form,
 form>button {
-	width: 400px;
-}
+ }
 
 /* form {
 	width: 400px;
 } */
+.gridcontainer{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
 @media (max-width: 700px) {
 	#qr-reader {
 		width: 300px;
-		height: 300px;
 	}
-
+	.gridcontainer{
+		display: block;
+	}
 	/* 
 	form {
 		width: 300px;
