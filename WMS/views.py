@@ -68,12 +68,21 @@ def usermanagement(request):
         return redirect('login')
     else:
         level = request.session['2']
-        if level == 'OPR':
-            # return HttpResponseNotFound('<h1>Page not found</h1>')
+        if level == 'OPR' and level == 'ADM':
             raise PermissionDenied
         else:
             user = Userdata.objects.all()
             context = {
                 'user': user,
+                'title': 'User Management | WMS POLTEKPOS',
             }
             return render(request, 'content/usermanagement.html', context)
+
+
+def delete_user(request, id):
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        user = Userdata.objects.get(pk=id)
+        user.delete()
+        return redirect('user')

@@ -48,7 +48,7 @@
               <td><a href="#">View</a></td>
               <td>
                   <a href="#" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
-                  <a href="#"><button class="btn btn-danger btn-sm">Delete</button></a>
+                  <a href="{% url 'delete_user' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
               </td>
             </tr>
             {% endfor %}
