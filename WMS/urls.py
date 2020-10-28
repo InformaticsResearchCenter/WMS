@@ -25,6 +25,8 @@ urlpatterns = [
     path('', views.index, name="home"),
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
+    path('user/', views.usermanagement, name="user"),
+    path('user/delete_user/<slug:id>/', views.delete_user, name="delete_user"),
     path('category/', include('category.urls')),
     path('storage/', include('storage.urls')),
     path('outbound/', include('outbound.urls')),

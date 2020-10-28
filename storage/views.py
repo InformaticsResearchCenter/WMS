@@ -15,7 +15,7 @@ from django.db.models import Count
 from django.db.models import Max
 
 from datetime import datetime
-from json import dumps,loads
+from json import dumps, loads
 
 
 # -------- PDF -----------
@@ -42,12 +42,38 @@ def scanner(request):
 def put(request):
     itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
+
+    listput = []
+    for i in itemCode:
+        data = (binlocation, i["code"])
+        listput.append(data)
+
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listput)
+
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
 
 def move(request):
     itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
+
+    listmove = []
+    for i in itemCode:
+        data = (binlocation, i["code"])
+        listmove.append(data)
+
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listmove)
+
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
 
 def rack(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:

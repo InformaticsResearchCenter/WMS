@@ -1,0 +1,61 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<!-- <div class="wrapper d-flex align-items-stretch">
+ -->    <!-- Page Content  -->
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+        <h2>Data User</h2>
+        <hr>
+        <div class="card">
+          <div class="card-header">
+             <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            User</a>
+          </div>
+          <div class="card-body">
+             <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">Username</th>
+              <th scope="col">Password</th>
+              <th scope="col">Role</th>
+              <th scope="col">Name</th>
+              <th scope="col">Address</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Email</th>
+              <th scope="col">Detail</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in user %}
+            <tr>
+              <th scope="row">{{ list.id }}</th>
+              <td>{{ list.username }}</td>
+              <td>{{ list.password }}</td>
+              <td>{{ list.roleid.role }}</td>
+              <td>{{ list.name }}</td>
+              <td>{{ list.address }}</td>
+              <td>{{ list.phonenumber }}</td>
+              <td>{{ list.email }}</td>
+              <td><a href="#">View</a></td>
+              <td>
+                  <a href="#" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
+                  <a href="{% url 'delete_user' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
