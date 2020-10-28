@@ -51,6 +51,7 @@
                          <td>{{onb.status}}</td>
                         <td>
                             <a href="{% url 'view_outbound' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
+                            <a href="{% url 'update_outbound' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
                             <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
                             {% if onb.status == "Complete" %}
                             <a href="{{onb.id}}"><button class="btn-success btn-sm">PDF</button></a>

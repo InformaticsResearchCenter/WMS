@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 
 from pprint import pprint
 
-from sequences import get_next_value, get_last_value, Sequence
+#from sequences import get_next_value, get_last_value, Sequence
 
 from django.db import connection
 from django.db import models

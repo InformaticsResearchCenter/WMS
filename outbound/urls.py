@@ -10,8 +10,8 @@ urlpatterns = [
     path('add_outbounddata', views.outbounddata, name="add_outbounddata"),
     path('delete_outbounddata/<slug:id>/', views.delete_outbounddata, name="delete_outbounddata"),
     path('confirm/',views.confirm,name='confirm_outbound'),
-
-
+    path('update_outbounddata/<slug:id>/',views.outbounddata, name="update_outbounddata"),
+    path('update_outbound/<slug:id>/',views.outbound, name="update_outbound"),
     # -------------------- PDFOutbound --------------------------
     path('<slug:pk>/',views.PdfOutbound.as_view(),), 
 ]

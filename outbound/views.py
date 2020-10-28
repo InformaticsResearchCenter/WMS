@@ -48,9 +48,26 @@ def outbound(request, id=0):
                     'id_outbound': id_outbound,
                 }
                 return render(request, 'content/outbound.html', context)
+            else:
+                outbound = Outbound.objects.get(pk=id)
+                form = OutboundForm(instance=outbound)
+                date_time = datetime.now()
+                date = date_time.strftime("%Y-%m-%d")
+                username = request.session['1']
+                context = {
+                    'form': form,
+                    'outbound': outbound,
+                    'username': username,
+                    'date': date,
+                    'title': 'Update Outbound'
+                }
+            return render(request, 'content/update_outbound.html', context)    
         else:
             if id == 0:
                 form = OutboundForm(request.POST)
+            else:
+                outbound = Outbound.objects.get(pk=id)
+                form = OutboundForm(request.POST, instance=outbound)    
             if form.is_valid():
                 form.save()
                 return redirect('outbound')
@@ -88,7 +105,6 @@ def outbounddata(request, id=0):
                 outbounddata_id = get_next_value("outbounddata_seq")
                 item = Item.objects.all()
                 outboundid = request.session['outbound_id']
-    
                 context = {
                     'form': form,
                     'title': 'Add Outbounddata',
@@ -96,14 +112,29 @@ def outbounddata(request, id=0):
                     'outbounddata_id': outbounddata_id,
                     'outboundid': outboundid,
                 }
-                pprint(context)
                 return render(request, 'content/outbounddata.html', context)
+            else:
+                outbounddata = Outbounddata.objects.get(pk=id)
+                username = request.session['1']
+                item = Item.objects.all()
+                form = OutbounddataForm(instance=outbounddata)
+                context = {
+                    'title': 'Update Outbounddata',
+                    'form': form,
+                    'username':username,
+                    'item': item,
+                    'outbounddata':outbounddata
+                }
+                return render(request, 'content/update_outbounddata.html', context)
         else:
             if id == 0:
                 form = OutbounddataForm(request.POST)
+            else:
+                outbounddata = Outbounddata.objects.get(pk=id)
+                form = OutbounddataForm(request.POST, instance=outbounddata)
             if form.is_valid():
                 form.save()
-                return redirect('outbound')
+                return redirect('view_outbound', id=request.session['outbound_id'])
         return render(request, 'content/outbounddata.html')
 
 def delete_outbounddata(request, id):
@@ -127,11 +158,11 @@ def confirm(request):
 class PdfOutbound(View):
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Outbound, pk=kwargs['pk'])
-
+        username = request.session['1']
         datas = list(Outbounddata.objects.all().select_related(
             'outboundid').filter(outboundid=obj).values_list('id', 'itemid__name', 'quantity', 'outboundid'))
 
-        pdf = render_to_pdf('content/pdf_outbound.html',{'datas':datas, 'obj':obj})    
+        pdf = render_to_pdf('content/pdf_outbound.html',{'datas':datas, 'obj':obj, 'username':username})    
       
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')

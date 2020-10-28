@@ -19,7 +19,7 @@
         {% if otb.status == "On - Progress" %}
         <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
             {% csrf_token %}
-            <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;">
+            <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
                 <i class="text-white">Confirm</i>
             </button>
         </form>
@@ -60,7 +60,6 @@
                     <th scope="col">Id Outbound Data</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
-                    <th scope="col">Outbound</th>
                     <th scope="col" style="width: 165px;">Action</th>
                 </tr>
             </thead>
@@ -69,15 +68,14 @@
                 <tr>
                     <th scope="row">1</th>
                     <td>{{itdt.id}}</td>
-                    <td>{{itdt.itemid}}</td>
+                    <td>{{itdt.itemid.name}}</td>
                     <td>{{itdt.quantity}}</td>
-                    <td>{{itdt.outboundid}}</td>
                     <td>
-                        <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
+                        <a href="{% url 'update_outbounddata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
                         <form action="{% url 'delete_outbounddata' itdt.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
                                 <i class="text-white">Delete</i>
                             </button>
                         </form>
