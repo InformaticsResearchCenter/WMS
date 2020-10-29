@@ -131,7 +131,6 @@ def userdata(request, id=0):
                 form.save()
                 return redirect('user')
         return render(request, 'content/userdata.html')
-=======
         level = request.session['2']
         if level != "MAN":
             raise PermissionDenied
@@ -139,4 +138,3 @@ def userdata(request, id=0):
             user = Userdata.objects.get(pk=id)
             user.delete()
             return redirect('user')
->>>>>>> 30abf7fb799d9c78a1a78819d7b16f85ef38450e
