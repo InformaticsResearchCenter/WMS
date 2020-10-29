@@ -2,24 +2,15 @@
 {% load static %}
 
 {% block content %}
-<!-- <div class="wrapper d-flex align-items-stretch">
- -->    <!-- Page Content  -->
-        {% if role == 'ADM' %}
-        <h2 class="mb-4">Ini Role ADM</h2>
-        {% elif role == 'MAN' %}
-        <h2 class="mb-4">Ini Role MAN</h2>
-        {% elif role == 'OPR' %}
-        <h2 class="mb-4">Ini Role OPR</h2>
-        {% endif %}
         <h2>Data User</h2>
         <hr>
         <div class="card">
           <div class="card-header">
-             <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             User</a>
           </div>
           <div class="card-body">
-             <table id="example1" class="table table-bordered table-striped">
+            <table id="example1" class="table table-bordered table-striped">
                   <thead>
             <tr>
               <th scope="col">No</th>

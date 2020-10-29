@@ -2,33 +2,26 @@
 {% load static %}
 
 {% block content %}
-<!-- <div class="wrapper d-flex align-items-stretch">
- -->    <!-- Page Content  -->
-        {% if role == 'ADM' %}
-        <h2 class="mb-4">Ini Role ADM</h2>
-        {% elif role == 'MAN' %}
-        <h2 class="mb-4">Ini Role MAN</h2>
-        {% elif role == 'OPR' %}
-        <h2 class="mb-4">Ini Role OPR</h2>
-        {% endif %}
-
         <h2>Data Supplier</h2>
         <hr>
-
         <div class="card">
           <div class="card-header">
-             <a href="{% url 'add_supplier' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Tambah
+            {% if role != 'OPR' %}
+            <a href="{% url 'add_supplier' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Supplier</a>
+            {% endif %}
           </div>
           <div class="card-body">
-             <table id="example1" class="table table-bordered table-striped">
+            <table id="example1" class="table table-bordered table-striped">
                   <thead>
             <tr>
               <th scope="col">No</th>
               <th scope="col">Supplier Id</th>
               <th scope="col">Supplier</th>
               <th scope="col">Detail</th>
+              {% if role != 'OPR' %}
               <th scope="col">Action</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -38,10 +31,12 @@
               <td>{{ list.id }}</td>
               <td>{{ list.name }}</td>
               <td><a href="{% url 'detail_supplier' list.id %}">View</a></td>
+              {% if role != 'OPR' %}
               <td>
                   <a href="{% url 'update_supplier' list.id %}" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
                   <a href="{% url 'delete_supplier' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
               </td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>

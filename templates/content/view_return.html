@@ -2,16 +2,7 @@
 {% load static %}
 
 {% block content %}
-<!-- <div class="wrapper d-flex align-items-stretch">-->
-<!-- Page Content  -->
-{% if role == 'ADM' %}
-<h2 class="mb-4">Ini Role ADM</h2>
-{% elif role == 'MAN' %}
-<h2 class="mb-4">Ini Role MAN</h2>
-{% elif role == 'OPR' %}
-<h2 class="mb-4">Ini Role OPR</h2>
-{% endif %}
-<h2>Data Item Return</h2>
+<h2>Data Item Return - Rejected</h2>
 <hr>
 <div class="card">
     <div class="card-header">
@@ -49,7 +40,7 @@
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Pass</th>
-                    <th scope="col">Reject</th>
+                    <th scope="col"><b>Reject</b></th>
                 </tr>
             </thead>
             <tbody>
@@ -65,12 +56,14 @@
             </tbody>
         </table>
         <a href="{% url 'return' %}"><button type="submit" class="btn btn-success">Back</button></a>
+        {% if role != 'OPR' %}
         <form action="{% url 'done' %}" method="POST" class="d-inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger" style="float: right;">
                 <i class="text-white">Done</i>
             </button>
         </form>
+        {% endif %}
     </div>
 </div>
 </div>
