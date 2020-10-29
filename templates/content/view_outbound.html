@@ -8,6 +8,7 @@
     <div class="card-header">
         {% if role != 'OPR' %}
         <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add Outbound Data</a>
+<<<<<<< HEAD
             {% for otb in Outbound %}
                 {% if otb.status == "On - Progress" %}
                 <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
@@ -18,6 +19,17 @@
                 </form>
                 {% endif %}
             {% endfor %}
+=======
+
+        {% for otb in Outbound %}
+        {% if otb.status == "On - Progress" %}
+        <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
+                <i class="text-white">Confirm</i>
+            </button>
+        </form>
+>>>>>>> 16774924d948abeb3c527c5f87ddf9d261a06cdf
         {% endif %}
     </div>
     <div class="card-body">
@@ -54,8 +66,11 @@
                     <th scope="col">Id Outbound Data</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
+<<<<<<< HEAD
                     <th scope="col">Outbound</th>
                     {% if role != 'OPR' %}
+=======
+>>>>>>> 16774924d948abeb3c527c5f87ddf9d261a06cdf
                     <th scope="col" style="width: 165px;">Action</th>
                     {% endif %}
                 </tr>
@@ -65,16 +80,19 @@
                 <tr>
                     <th scope="row">1</th>
                     <td>{{itdt.id}}</td>
-                    <td>{{itdt.itemid}}</td>
+                    <td>{{itdt.itemid.name}}</td>
                     <td>{{itdt.quantity}}</td>
+<<<<<<< HEAD
                     <td>{{itdt.outboundid}}</td>
                     {% if role != 'OPR' %}
+=======
+>>>>>>> 16774924d948abeb3c527c5f87ddf9d261a06cdf
                     <td>
-                        <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
+                        <a href="{% url 'update_outbounddata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
                         <form action="{% url 'delete_outbounddata' itdt.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
                                 <i class="text-white">Delete</i>
                             </button>
                         </form>

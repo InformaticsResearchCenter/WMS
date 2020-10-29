@@ -37,7 +37,11 @@
                         <td>{{onb.status}}</td>
                         <td>
                             <a href="{% url 'view_outbound' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
+<<<<<<< HEAD
                             {% if role != 'OPR' %}
+=======
+                            <a href="{% url 'update_outbound' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
+>>>>>>> 16774924d948abeb3c527c5f87ddf9d261a06cdf
                             <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
                             {% endif %}
                             {% if onb.status == "Complete" %}
