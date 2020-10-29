@@ -85,7 +85,6 @@ def delete_user(request, id):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-<<<<<<< HEAD
         user = Userdata.objects.get(pk=id)
         user.delete()
         return redirect('user')
