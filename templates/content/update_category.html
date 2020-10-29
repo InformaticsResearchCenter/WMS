@@ -2,13 +2,6 @@
 {% load static %}
 
 {% block content %}
-{% if role == 'ADM' %}
-<h2 class="mb-4">Ini Role ADM</h2>
-{% elif role == 'MAN' %}
-<h2 class="mb-4">Ini Role MAN</h2>
-{% elif role == 'OPR' %}
-<h2 class="mb-4">Ini Role OPR</h2>
-{% endif %}
 <form method="POST" action="">
     {%csrf_token%}
     <div class="row justify-content-center">

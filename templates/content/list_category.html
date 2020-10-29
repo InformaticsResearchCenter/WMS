@@ -2,22 +2,17 @@
 {% load static %}
 
 {% block content %}
-{% if role == 'ADM' %}
-<h2 class="mb-4">Ini Role ADM</h2>
-{% elif role == 'MAN' %}
-<h2 class="mb-4">Ini Role MAN</h2>
-{% elif role == 'OPR' %}
-<h2 class="mb-4">Ini Role OPR</h2>
-{% endif %}
 <br>
- <h2>List Category</h2>
+    <h2>List Category</h2>
 <hr>
-  <div class="card">
-      <div class="card-header">
-        <a href="{% url 'add_category' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Tambah
-          Category</a>
-      </div>
-      <div class="card-body">
+    <div class="card">
+        <div class="card-header">
+        {% if role != 'OPR' %}
+        <a href="{% url 'add_category' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            Category</a>
+        {% endif %}
+        </div>
+        <div class="card-body">
         <table id="example1" class="table table-bordered table-striped">
             <thead>
                     <tr>
@@ -34,6 +29,7 @@
                         <td>
                             <a href="{% url 'view_category' cat.id %}" class="btn btn-primary btn-sm" role="button"
                                 aria-pressed="true">View</a>
+                            {% if role != 'OPR' %}
                             <a href="{% url 'update_category' cat.id %}" class="btn btn-success btn-sm" role="button"
                                 aria-pressed="true">Update</a>
                             <form action="{% url 'delete_category' cat.id %}" method="POST" class="d-inline">
@@ -42,6 +38,7 @@
                                     <i class="text-white">Delete</i>
                                 </button>
                             </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

@@ -70,7 +70,7 @@ def usermanagement(request):
         return redirect('login')
     else:
         level = request.session['2']
-        if level == 'OPR' and level == 'ADM':
+        if level != "MAN":
             raise PermissionDenied
         else:
             user = Userdata.objects.all()
@@ -85,6 +85,7 @@ def delete_user(request, id):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
+<<<<<<< HEAD
         user = Userdata.objects.get(pk=id)
         user.delete()
         return redirect('user')
@@ -131,3 +132,12 @@ def userdata(request, id=0):
                 form.save()
                 return redirect('user')
         return render(request, 'content/userdata.html')
+=======
+        level = request.session['2']
+        if level != "MAN":
+            raise PermissionDenied
+        else:
+            user = Userdata.objects.get(pk=id)
+            user.delete()
+            return redirect('user')
+>>>>>>> 30abf7fb799d9c78a1a78819d7b16f85ef38450e

@@ -2,29 +2,23 @@
 {% load static %}
 
 {% block content %}
-{% if role == 'ADM' %}
-<h2 class="mb-4">Ini Role ADM</h2>
-{% elif role == 'MAN' %}
-<h2 class="mb-4">Ini Role MAN</h2>
-{% elif role == 'OPR' %}
-<h2 class="mb-4">Ini Role OPR</h2>
-{% endif %}
 <h2>Data Outbound</h2>
 <hr>
 <div class="card">
     <div class="card-header">
+        {% if role != 'OPR' %}
         <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add Outbound Data</a>
-
-        {% for otb in Outbound %}
-        {% if otb.status == "On - Progress" %}
-        <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
-                <i class="text-white">Confirm</i>
-            </button>
-        </form>
+            {% for otb in Outbound %}
+                {% if otb.status == "On - Progress" %}
+                <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
+                        <i class="text-white">Confirm</i>
+                    </button>
+                </form>
+                {% endif %}
+            {% endfor %}
         {% endif %}
-        {% endfor %}
     </div>
     <div class="card-body">
         <div class="row">
@@ -60,7 +54,9 @@
                     <th scope="col">Id Outbound Data</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
+                    {% if role != 'OPR' %}
                     <th scope="col" style="width: 165px;">Action</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -70,6 +66,7 @@
                     <td>{{itdt.id}}</td>
                     <td>{{itdt.itemid.name}}</td>
                     <td>{{itdt.quantity}}</td>
+                    {% if role != 'OPR' %}
                     <td>
                         <a href="{% url 'update_outbounddata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
@@ -80,12 +77,12 @@
                             </button>
                         </form>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-warning">Back</button></a>
-
     </div>
 </div>
 
