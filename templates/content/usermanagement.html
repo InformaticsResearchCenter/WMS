@@ -15,7 +15,7 @@
         <hr>
         <div class="card">
           <div class="card-header">
-             <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+             <a href="{% url 'add_user' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             User</a>
           </div>
           <div class="card-body">
@@ -47,7 +47,7 @@
               <td>{{ list.email }}</td>
               <td><a href="#">View</a></td>
               <td>
-                  <a href="#" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
+                  <a href="{% url 'update_user' list.id %}" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
                   <a href="{% url 'delete_user' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
               </td>
             </tr>

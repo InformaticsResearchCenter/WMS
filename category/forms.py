@@ -82,3 +82,18 @@ class InbounddataForm(forms.ModelForm):
             'confirm',
             'created',
         ]
+# --------------------- Userdata ------------
+
+class UserdataForm(forms.ModelForm):
+    class Meta:
+        model = Userdata
+        fields = [
+            'id',
+            'username',
+            'password',
+            'roleid',
+            'name',
+            'address',
+            'phonenumber',
+            'email',
+        ]
