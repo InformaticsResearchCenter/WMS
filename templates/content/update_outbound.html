@@ -12,11 +12,11 @@
         <h2 class="mb-4">Ini Role OPR</h2>
         {% endif %}
 
-        <h2>Input Outbound</h2>
+        <h2>Input Supllier</h2>
         <hr>
         <div class="card">
             <div class="card-header">
-                Add Outbound
+                Update Outbound
             </div>
             <div class="card-body">
                 <form method="POST" action="">
@@ -24,19 +24,19 @@
                     <div class="row justify-content-center">
                         <div class="col-8">
                             <div class="form-group">
-                                <input type="hidden" class="form-control" name="id" id="id" value="{{id_outbound}}">
+                                <input type="hidden" class="form-control" name="id" id="id" value="{{outbound.id}}">
                             </div>
                             <div class="form-group">
                                 <label for="supplier">Customer Name</label>
-                                <input type="text" class="form-control" name="customername" id="customername" placeholder="Customer Name">
+                                <input type="text" class="form-control" name="customername" id="customername" value="{{outbound.customername}}">
                             </div>
                             <div class="form-group">
                                 <label for="supplier">Address</label>
-                                <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+                                <input type="text" class="form-control" name="address" id="address" value="{{outbound.address}}">
                             </div>
                             <div class="form-group">
                                 <label for="supplier">Phone Number</label>
-                                <input type="text" class="form-control" name="phonenumber" id="phonenumber" placeholder="Phone Number">
+                                <input type="text" class="form-control" name="phonenumber" id="phonenumber" value="{{outbound.phonenumber}}">
                             </div>
                             <div class="form-group">
                                 <label for="supplier">Date</label>
@@ -44,8 +44,8 @@
                                     value="{{date}}" readonly="true">
                             </div>
                             <input type="hidden" class="form-control" name="status" id="status"
-                                    value="On - Progress">
-                            <button type="submit" class="btn btn-primary">Add</button>
+                                    value="{{outbound.status}}">
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </div>
                 </form>
