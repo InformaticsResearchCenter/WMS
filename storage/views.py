@@ -217,15 +217,16 @@ def delete_rack(request, id):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-<<<<<<< HEAD
         rack = Rack.objects.get(pk=id)
         rack.delete()
         return redirect('rack')
+
 '''
 =========================================================================================
 Bagian cetak pdf || status complete
 =========================================================================================
 '''
+
 class PdfRack(View):
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Rack, pk=kwargs['pk'])
@@ -233,7 +234,6 @@ class PdfRack(View):
         datas = list(Binlocation.objects.all().select_related(
             'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
 
-=======
         role = request.session['2']
         if role == 'OPR':
             raise PermissionDenied
@@ -249,7 +249,6 @@ class PdfRack(View):
         obj = get_object_or_404(Rack, pk=kwargs['pk'])
         datas = list(Binlocation.objects.all().select_related(
             'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
->>>>>>> 3a17df5755a8385d4167d10e0f597bb8f60336dc
         pdf = render_to_pdf('content/pdf_rack.html',
                             {'datas': datas, 'obj': obj, 'rack': rack})
         if pdf:
