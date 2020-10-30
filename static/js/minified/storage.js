@@ -11,6 +11,7 @@ function removeItem(a, id) {
 
 $(document).ready(function () {
 
+
 	// var lastResultContainer = '';
 	// var lastResult,
 	// 	countResults = 0;
@@ -34,6 +35,22 @@ $(document).ready(function () {
 		}
 
 	}
+	$(".overlay").hide();
+	$("#ajaxTesting").click(function (e) {
+		e.preventDefault();
+		$.ajax({
+			type: 'post',
+			url: '/storage/testing/',
+			data: {
+				itemCode: "lol",
+				csrfmiddlewaretoken: csrf
+			},
+			success: function (response) {
+				alert("Success")
+			}
+		});
+
+	});
 	$("#action").change(function (e) {
 		e.preventDefault();
 		if ($("#action").val() == "move" || $("#action").val() == "inbound") {

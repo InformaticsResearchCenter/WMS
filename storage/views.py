@@ -241,14 +241,6 @@ class PdfRack(View):
             rack = Rack.objects.get(pk=id)
             rack.delete()
             return redirect('rack')
-
-
-# -----------------------------PDF ALL Data Rack-------------------------
-class PdfRack(View):
-    def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Rack, pk=kwargs['pk'])
-        datas = list(Binlocation.objects.all().select_related(
-            'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
         pdf = render_to_pdf('content/pdf_rack.html',
                             {'datas': datas, 'obj': obj, 'rack': rack})
         if pdf:
@@ -272,3 +264,6 @@ def getItemBatch(request):
     item = list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')) 
     itembatch = list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
     return JsonResponse({'item': item, 'itembatch': itembatch}, status=200)
+
+def testing(request):
+    return JsonResponse({'good':'Always'}, status=200)

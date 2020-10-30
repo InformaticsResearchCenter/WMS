@@ -22,6 +22,7 @@ $(document).ready(function () {
 	$("#move").hide();
 	$(".flex-item").hide();
 	$("#storageOverlay").hide();
+
 	function onScanSuccess(qrCodeMessage) {
 		var itemlist = JSON.parse(document.getElementById('itemlist').value);
 		// if (qrCodeMessage !== lastResult) {
@@ -46,30 +47,27 @@ $(document).ready(function () {
 		// 		name.classList.remove('bounce-top');
 		// 	}
 		// }
-		if(scanPoint == "inboundBinlocation"){
+		if (scanPoint == "inboundBinlocation") {
 			$("#inboundBinlocation").val(qrCodeMessage);
-		}
-		else if(scanPoint == "inboundItemCode"){
+		} else if (scanPoint == "inboundItemCode") {
 			$("#inboundItemCode").val(qrCodeMessage);
 		}
-		if(scanPoint == "moveBinlocation"){
+		if (scanPoint == "moveBinlocation") {
 			$("#moveBinlocation").val(qrCodeMessage);
-		}
-		else if(scanPoint == "moveItemCode"){
+		} else if (scanPoint == "moveItemCode") {
 			$("#moveItemCode").val(qrCodeMessage);
 		}
-		if(scanPoint == "outboundId"){
+		if (scanPoint == "outboundId") {
 			$("#outboundId").val(qrCodeMessage);
-		}
-		else if(scanPoint == "outboundItemCode"){
+		} else if (scanPoint == "outboundItemCode") {
 			$("#outboundItemCode").val(qrCodeMessage);
 		}
 	}
-	 
+
 
 
 	// input item
-	$("#inboundInputButton").click(function (e) { 
+	$("#inboundInputButton").click(function (e) {
 		e.preventDefault();
 		var scannedCode = $("#inboundItemCode").val();
 		if ($("#inboundScannedItem").val().includes(scannedCode)) {
@@ -78,14 +76,14 @@ $(document).ready(function () {
 			code.push({
 				code: scannedCode
 			});
-			$("#inboundScannedItem").val($("#inboundScannedItem").val()+scannedCode + "\n");
+			$("#inboundScannedItem").val($("#inboundScannedItem").val() + scannedCode + "\n");
 			console.log("scanned item")
 			console.log(code)
 		}
 		// resultContainer.value = '';
-		
+
 	});
-	$("#outboundInputButton").click(function (e) { 
+	$("#outboundInputButton").click(function (e) {
 		e.preventDefault();
 		var scannedCode = $("#outboundItemCode").val();
 		if ($("#outboundScannedItem").val().includes(scannedCode)) {
@@ -94,14 +92,14 @@ $(document).ready(function () {
 			code.push({
 				code: scannedCode
 			});
-			$("#outboundScannedItem").val($("#outboundScannedItem").val()+scannedCode + "\n");
+			$("#outboundScannedItem").val($("#outboundScannedItem").val() + scannedCode + "\n");
 			console.log("scanned item")
 			console.log(code)
 		}
 		// resultContainer.value = '';
-		
+
 	});
-	$("#moveInputButton").click(function (e) { 
+	$("#moveInputButton").click(function (e) {
 		e.preventDefault();
 		var scannedCode = $("#moveItemCode").val();
 		if ($("#moveScannedItem").val().includes(scannedCode)) {
@@ -110,67 +108,65 @@ $(document).ready(function () {
 			code.push({
 				code: scannedCode
 			});
-			$("#moveScannedItem").val($("#moveScannedItem").val()+scannedCode + "\n");
+			$("#moveScannedItem").val($("#moveScannedItem").val() + scannedCode + "\n");
 			console.log(code)
 		}
 		// resultContainer.value = '';
-		
+
 	});
-	
+
 	// Scanner button toggle
-	$("#inboundItemCodeButton").click(function (e) { 
+	$("#inboundItemCodeButton").click(function (e) {
 		e.preventDefault();
 		scanPoint = "inboundItemCode"
 		console.log(scanPoint)
-		
+
 	});
-	$("#inboundBinlocationButton").click(function (e) { 
+	$("#inboundBinlocationButton").click(function (e) {
 		e.preventDefault();
 		scanPoint = "inboundBinlocation"
 		console.log(scanPoint)
-		
+
 	});
-	$("#outboundItemCodeButton").click(function (e) { 
+	$("#outboundItemCodeButton").click(function (e) {
 		e.preventDefault();
 		scanPoint = "outboundItemCode"
 		console.log(scanPoint)
 	});
-	$("#moveItemCodeButton").click(function (e) { 
+	$("#moveItemCodeButton").click(function (e) {
 		e.preventDefault();
 		scanPoint = "moveItemCode"
 		console.log(scanPoint)
-		
+
 	});
-	$("#moveBinlocationButton").click(function (e) { 
+	$("#moveBinlocationButton").click(function (e) {
 		e.preventDefault();
 		scanPoint = "moveBinlocation"
 		console.log(scanPoint)
-		
+
 	});
-	$("#outboundIdButton").click(function (e) { 
+	$("#outboundIdButton").click(function (e) {
 		e.preventDefault();
 		scanPoint = "outboundId"
 		console.log(scanPoint)
 
 	});
- 
+
 	$("#opt").change(function (e) {
 		console.log($("#opt").val())
 		html5QrcodeScanner.render(onScanSuccess);
 		$(".flex-item").show();
-		if($("#opt").val() == "inbound"){
+		if ($("#opt").val() == "inbound") {
 			$("#cardStorage").text("Storage - Inbound");
 			$("#inbound").show();
 			$("#outbound").hide();
 			$("#move").hide();
-		}
-		else if($("#opt").val() == "outbound"){
+		} else if ($("#opt").val() == "outbound") {
 			$("#cardStorage").text("Storage - Outbound");
 			$("#inbound").hide();
 			$("#outbound").show();
 			$("#move").hide();
-		}
-		else if($("#opt").val() == "move"){
+		} else if ($("#opt").val() == "move") {
 			$("#cardStorage").text("Storage - Move");
 			$("#inbound").hide();
 			$("#outbound").hide();
@@ -228,28 +224,28 @@ $(document).ready(function () {
 		$("#systeminfo").val("Loading data");
 		$("#storageOverlay").show();
 
-			$.ajax({
-				type: 'post',
-				url: '/storage/checkOutbound/',
-				data: {
-					outboundId: $("#outboundId").val(),
-					csrfmiddlewaretoken: csrf
-				},
-				success: function (response) {
-					costumer = response['costumer']
-					items = response['items']
-					console.log(costumer)
-					console.log(items)
-					$("#systeminfo").val("Data Loaded");
-					$("#storageOverlay").hide();
-				}
-			});
+		$.ajax({
+			type: 'post',
+			url: '/storage/checkOutbound/',
+			data: {
+				outboundId: $("#outboundId").val(),
+				csrfmiddlewaretoken: csrf
+			},
+			success: function (response) {
+				costumer = response['costumer']
+				items = response['items']
+				console.log(costumer)
+				console.log(items)
+				$("#systeminfo").val("Data Loaded");
+				$("#storageOverlay").hide();
+			}
+		});
 	});
-	$("#dummy").click(function (e) { 
+	$("#dummy").click(function (e) {
 		e.preventDefault();
 		alert(costumer[0])
 		alert(items)
-		
+
 	});
 	// button.addEventListener('click', function () {
 	// 	var resultValue = resultContainer.value;
@@ -269,8 +265,7 @@ $(document).ready(function () {
 	// ---------------- Scanner area --------------------------
 	// --------------------------------------------------------
 
-	
+
 
 
 });
-

@@ -10,6 +10,7 @@ urlpatterns = [
     path('getItemBatch', views.getItemBatch, name="getItemBatch"),
     path('checkItem', views.checkItem, name="checkItem"),
     path('put/', views.put, name="put"),    
+    path('testing/', views.testing, name="testing"),    
     path('out/', views.out, name="out"),    
     path('checkOutbound/', views.checkOutbound, name="checkOutbound"),    
     path('move/', views.move, name="move"),    
