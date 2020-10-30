@@ -219,9 +219,9 @@
             </li>
             {% if role == 'ADM' %}
             <li class="nav-item">
-              <a href="https://adminlte.io/docs/3.0/" class="nav-link">
+              <a href="{% url 'user' %}" class="nav-link">
                 <i class="nav-icon fas fa-file"></i>
-                <p>Management User</p>
+                <p>Management User</p>  
               </a>
             </li>
             {% endif %}

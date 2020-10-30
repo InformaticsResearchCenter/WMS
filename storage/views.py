@@ -15,7 +15,7 @@ from django.db.models import Count
 from django.db.models import Max
 
 from datetime import datetime
-from json import dumps,loads
+from json import dumps, loads
 
 
 # -------- PDF -----------
@@ -27,47 +27,73 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 
 # Create your views here.
 
+'''
+=========================================================================================
+Bagian load scanner || status complete
+=========================================================================================
+'''
 
 def scanner(request):
     data = {
         "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name'))
     }
     datas = dumps(data)
-    # if request.is_ajax():
-    #     text = request.GET.get('data')
-    #     return JsonResponse({'Da})
     return render(request, 'storage/index.html', {"datas": datas})
 
-def dummy(request):
+def index(request):
     data = {
-        "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name'))
+        "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')), "itembatch":list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
     }
     datas = dumps(data)
     return render(request, 'storage/index2.html', {"datas": datas})
+
+'''
+=========================================================================================
+Bagian checking system || status on-progress
+=========================================================================================
+'''
+
 def checkItem(request):
-    itemCode = list(Itembatch.objects.filter(id=request.POST.get('itemCode', None)))
-    return JsonResponse({'itemData': itemCode}, status=200)
-
-def put(request):
-    itemCode = loads(request.POST.get('itemCode', None))
-    binlocation = request.POST.get('binlocation', None)
-    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
-
-def move(request):
-    itemCode = loads(request.POST.get('itemCode', None))
-    binlocation = request.POST.get('binlocation', None)
-    print("yo")
-    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    itemCode = list(Itembatch.objects.filter(id=request.POST.get('itemCode', None)).select_related('itemdataid').values_list('binid','itemdataid__itemid'))
+    return JsonResponse({'itemData': itemCode }, status=200)
 
 def checkOutbound(request):
     outboundid = request.POST.get('outboundId', None)
     print(outboundid)
-    # print(Outbound.objects.filter(id="16102020205558").values())
     customer = list(Outbound.objects.filter(id=str(outboundid)).values_list('customername','address','phonenumber','date','status'))
     items = list(Outbounddata.objects.filter(outboundid=str(outboundid)).values_list('itemid','quantity'))
     print(items)
     print(Outbound.objects.filter(id="16102020231158").values_list('customername','address','phonenumber','date','status'))
     return JsonResponse({'costumer': customer, 'items' : items} ,status=200)
+
+'''
+=========================================================================================
+Bagian update itembatch Put, Move, Out || status on-progress
+=========================================================================================
+'''
+
+def put(request):
+    itemCode = loads(request.POST.get('itemCode', None))
+    binlocation = request.POST.get('binlocation', None)
+    listput = []
+    for i in itemCode:
+        data = (binlocation, i["code"])
+        listput.append(data)
+
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listput)
+
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
+
+def move(request):
+    itemCode = loads(request.POST.get('itemCode', None))
+    binlocation = request.POST.get('binlocation', None)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
 
 def out(request):
     itemCode = loads(request.POST.get('itemCode', None))
@@ -75,6 +101,24 @@ def out(request):
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 
+    listmove = []
+    for i in itemCode:
+        data = (binlocation, i["code"])
+        listmove.append(data)
+
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listmove)
+
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+
+'''
+=========================================================================================
+Bagian racking || status complete
+=========================================================================================
+'''
 def rack(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
@@ -145,24 +189,17 @@ def delete_rack(request, id):
         rack = Rack.objects.get(pk=id)
         rack.delete()
         return redirect('rack')
-
-
-# -----------------------------PDF ALL Data Rack-------------------------
+'''
+=========================================================================================
+Bagian cetak pdf || status complete
+=========================================================================================
+'''
 class PdfRack(View):
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Rack, pk=kwargs['pk'])
-        # inbound = Inbounddata.objects.filter(pk=kwargs['pk'])
 
         datas = list(Binlocation.objects.all().select_related(
             'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
-
-        # print(datas)
-        # print(itembatchs)
-        # for data in datas:
-        #     print(data[1])
-        #     for itembatch in itembatchs:
-        #         for item in itembatch:
-        #             print(item)
 
         pdf = render_to_pdf('content/pdf_rack.html',
                             {'datas': datas, 'obj': obj, 'rack': rack})
@@ -176,3 +213,14 @@ class PdfRack(View):
             response['Content-Disposition'] = content
             return response
         return HttpResponse("Not Found")
+
+'''
+=========================================================================================
+function yang masih tahap percobaan
+=========================================================================================
+'''
+
+def getItemBatch(request):
+    item = list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')) 
+    itembatch = list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
+    return JsonResponse({'item': item, 'itembatch': itembatch}, status=200)

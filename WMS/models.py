@@ -42,8 +42,8 @@ class Inbounddata(models.Model):
     supplierid = models.ForeignKey('Supplier', models.DO_NOTHING, db_column='supplierid')
     status = models.CharField(max_length=20)
     date = models.DateField()
-    confirm = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='confirm', blank=True, null=True)
-    created = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='created', blank=True, null=True)
+    confirm = models.ForeignKey('Userdata', models.DO_NOTHING,related_name='i_confirm', db_column='confirm', blank=True, null=True)
+    created = models.ForeignKey('Userdata', models.DO_NOTHING,related_name='i_created', db_column='created', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -124,8 +124,8 @@ class Returndata(models.Model):
     itemid = models.ForeignKey(Item, models.DO_NOTHING, db_column='itemid')
     status = models.CharField(max_length=20)
     date = models.DateField()
-    confirm = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='confirm', blank=True, null=True)
-    created = models.ForeignKey('Userdata', models.DO_NOTHING, db_column='created', blank=True, null=True)
+    confirm = models.ForeignKey('Userdata', models.DO_NOTHING,related_name='confirm', db_column='confirm', blank=True, null=True)
+    created = models.ForeignKey('Userdata', models.DO_NOTHING,related_name='crated', db_column='created', blank=True, null=True)
     itemdataid = models.ForeignKey(Itemdata, models.DO_NOTHING, db_column='itemdataid', blank=True, null=True)
 
     class Meta:

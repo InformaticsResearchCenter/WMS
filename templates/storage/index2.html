@@ -15,18 +15,33 @@
     <div id="qr-reader" class=""></div>
     <form id="qr-reader-results" action="#" methods="post" class="">
         {% csrf_token %}
-        <h4>item</h4>
+
         <select id="action">
             <option value="" disabled selected>-</option>
             <option value="inbound">Inbound</option>
             <option value="outbound">Outbound</option>
             <option value="move">Move</option>
         </select>
-        <input type="text" name="" id="binLocation" placeholder="Click to Scan - Bin Location" readonly>
-        <input type="text" name="" id="itemCode" placeholder="Click to Scan - Item code" readonly>
-        <input type="button" name="" id="inputItem">
-        <input type="text" name="" id="outboundId" placeholder="Click to Scan - outbound ID" readonly>
+        <div id="outboundIdContainer">
+            <input type="text" name="" id="outboundId" placeholder="Click to Scan - outbound ID" readonly>
+            <input type="button" name="" value="check" id="inputItem">
+            <input type="button" name="" value="view" id="inputItem">
+        </div>
+        <div id="binLocationContainer">
+            <input type="text" name="" id="binLocation" placeholder="Click to Scan - Bin Location" readonly>
+            <input type="button" name="" value="select bin" id="inputItem">
+        </div>
+        <div id="itemCodeContainer">
+            <input type="text" name="" id="itemCode" placeholder="Click to Scan - Item code" readonly>
+            <input type="button" name="" value="Input Item" id="inputItem">
+        </div>
+        <input type="hidden" id="itemlist">
     </form>
+    <h4>item
+        <ul id="data">
+
+        </ul>
+    </h4>
 </div>
 
 <script type="text/javascript">

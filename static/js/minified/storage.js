@@ -1,9 +1,19 @@
+var code = [];
+
+
+function removeItem(a, id) {
+	if (confirm('hapus ga ni ?')) {
+		$("#" + id).remove()
+		code.splice(code.indexOf(a), 1)
+		console.log(code)
+	}
+}
+
 $(document).ready(function () {
-	var lastResultContainer = '';
-	var lastResult,
-		countResults = 0;
-	var code = [];
-	var itemlist = document.getElementById('itemlist');
+
+	// var lastResultContainer = '';
+	// var lastResult,
+	// 	countResults = 0;
 	var csrf = $("input[name='csrfmiddlewaretoken']").val();
 	var scanPoint = null;
 	var costumer = []
@@ -13,27 +23,29 @@ $(document).ready(function () {
 		qrbox: 250
 	});
 	html5QrcodeScanner.render(onScanSuccess);
-	var pointer, action, itemCode = null
+	var pointer, action, itemCode, exist = null;
+	var itemlist = JSON.parse($("#itemlist").val())
 
 	function onScanSuccess(qrCodeMessage) {
-		// var itemlist = JSON.parse(document.getElementById('itemlist').value);
 		if (pointer == "binLocation") {
 			$("#binLocation").val("BinLocation - " + qrCodeMessage);
 		} else if (pointer == "itemCode") {
 			$("#itemCode").val(qrCodeMessage);
 		}
+
 	}
 	$("#action").change(function (e) {
 		e.preventDefault();
 		if ($("#action").val() == "move" || $("#action").val() == "inbound") {
-			$("#outboundId").hide();
+			$("#outboundIdContainer").hide();
 		} else {
-			$("#outboundId").show();
+			$("#outboundIdContainer").show();
 		}
 	});
 	$("#binLocation").click(function (e) {
 		e.preventDefault();
 		pointer = "binLocation"
+
 	});
 	$("#itemCode").click(function (e) {
 		e.preventDefault();
@@ -45,17 +57,26 @@ $(document).ready(function () {
 	});
 	$("#inputItem").click(function (e) {
 		e.preventDefault();
-		$.ajax({
-			type: "post",
-			url: "/storage/checkItem",
-			data: {
-				itemCode: $("#itemCode").val(),
-				csrfmiddlewaretoken: csrf
-			},
-			success: function (response) {
-				console.log(response)
+
+		for (i = 0; i < itemlist['itembatch'].length; i++) {
+			if (itemlist['itembatch'][i].includes($("#itemCode").val())) {
+				if (code.includes($("#itemCode").val())) {
+					alert("Item telah di scan")
+				} else {
+					$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()}</li>`);
+					code.push($("#itemCode").val())
+					console.log(code)
+				}
+				exist = 1;
+				break;
+			} else {
+				exist = null
 			}
-		});
+		}
+		if (!exist) {
+			alert("Item tidak tersedia")
+		}
+
 	});
 
 });
