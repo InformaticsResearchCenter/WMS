@@ -1,0 +1,70 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Page Content  -->
+    <div id="content" width="80%">
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+
+        <h2>Input User</h2>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                Add User
+            </div>
+            <div class="card-body">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="id" id="id" value="{{user_id}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Username</label>
+                                <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Password</label>
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemdata">Roleid</label>
+                                <select class="form-control" name="roleid" id="roleid">
+                                    {% for role in roleid %}
+                                    <option value='{{role.roleid}}'>{{role.role}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Name</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Address</label>
+                                <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Phonenumber</label>
+                                <input type="text" class="form-control" name="phonenumber" id="phonenumber" placeholder="Phonenumber">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Email</label>
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Email">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+                <a href="#"><button type="submit" class="btn btn-success">Back</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

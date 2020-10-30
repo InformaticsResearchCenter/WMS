@@ -2,17 +2,7 @@
 {% load static %}
 
 {% block content %}
-<!-- <div class="wrapper d-flex align-items-stretch">
- -->    <!-- Page Content  -->
     <div id="content" class="p-4 p-md-5">
-        {% if role == 'ADM' %}
-        <h2 class="mb-4">Ini Role ADM</h2>
-        {% elif role == 'MAN' %}
-        <h2 class="mb-4">Ini Role MAN</h2>
-        {% elif role == 'OPR' %}
-        <h2 class="mb-4">Ini Role OPR</h2>
-        {% endif %}
-
         <h2>Input Item</h2>
         <hr>
         <div class="card">
@@ -31,10 +21,6 @@
                                 <label for="category">Item</label>
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Input Item">
                             </div>
-                            <!-- <div class="form-group">
-                        <label for="category">Subcategory</label>
-                        <input type="text" class="form-control" name="subcategoryid" id="subcategoryid" placeholder="Input subcategoryid">
-                    </div> -->
                             <div class="form-group">
                                 <label for="category">Subcategory</label>
                                 <select class="form-control" name="subcategoryid">
@@ -47,5 +33,8 @@
                         </div>
                     </div>
                 </form>
-                <a href="{% url 'item' %}"><button type="submit" class="btn btn-success">Back</button></a </div> </div>
-                    </div> </div> {% endblock content %}
+                <a href="{% url 'item' %}"><button type="submit" class="btn btn-success">Back</button></a> 
+            </div> 
+        </div>
+    </div> 
+</div> {% endblock content %}

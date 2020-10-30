@@ -4,16 +4,7 @@
 {% block content %}
 <!-- <div class="wrapper d-flex align-items-stretch"> -->
 <!-- Page Content  -->
-<div id="content" class="p-4 p-md-5">
-    {% if role == 'ADM' %}
-    <h2 class="mb-4">Ini Role ADM</h2>
-    {% elif role == 'MAN' %}
-    <h2 class="mb-4">Ini Role MAN</h2>
-    {% elif role == 'OPR' %}
-    <h2 class="mb-4">Ini Role OPR</h2>
-    {% endif %}
-
-    <h2>Input ItemData</h2>
+    <h2>Input Item Data</h2>
     <hr>
     <div class="card">
         <div class="card-header">
@@ -66,7 +57,6 @@
                     rjt.addEventListener("change", function () {
                         pass.value = qty.value - rjt.value;
                     });
-                    // document.getElementById('pass_field').value = qty - rjt;
                 </script>
             </form>
             <a href="#"><button type="submit" class="btn btn-success">Back</button></a>

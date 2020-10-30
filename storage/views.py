@@ -4,10 +4,11 @@ from .forms import *
 from WMS.models import *
 
 from django.http import HttpResponseRedirect, JsonResponse
+from django.core.exceptions import PermissionDenied
 
 from pprint import pprint
 
-from sequences import get_next_value, get_last_value, Sequence
+#from sequences import get_next_value, get_last_value, Sequence
 
 from django.db import connection
 from django.db import models
@@ -34,11 +35,18 @@ Bagian load scanner || status complete
 '''
 
 def scanner(request):
-    data = {
-        "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name'))
-    }
-    datas = dumps(data)
-    return render(request, 'storage/index.html', {"datas": datas})
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        role = request.session['2']
+        if role != 'MAN':
+            raise PermissionDenied
+        else:
+            data = {
+                "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name'))
+            }
+            datas = dumps(data)
+            return render(request, 'storage/index.html', {"datas": datas})
 
 def index(request):
     data = {
@@ -73,45 +81,58 @@ Bagian update itembatch Put, Move, Out || status on-progress
 '''
 
 def put(request):
-    itemCode = loads(request.POST.get('itemCode', None))
-    binlocation = request.POST.get('binlocation', None)
-    listput = []
-    for i in itemCode:
-        data = (binlocation, i["code"])
-        listput.append(data)
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        role = request.session['2']
+        if role != 'MAN':
+            raise PermissionDenied
+        else:
+            itemCode = loads(request.POST.get('itemCode', None))
+            binlocation = request.POST.get('binlocation', None)
 
-    cursor = connection.cursor()
-    query = """UPDATE Itembatch
-                SET binid=%s
-                WHERE id=%s"""
-    cursor.executemany(query, listput)
+            listput = []
+            for i in itemCode:
+                data = (binlocation, i["code"])
+                listput.append(data)
 
-    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+            cursor = connection.cursor()
+            query = """UPDATE Itembatch
+                        SET binid=%s
+                        WHERE id=%s"""
+            cursor.executemany(query, listput)
+
+            return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 
 def move(request):
-    itemCode = loads(request.POST.get('itemCode', None))
-    binlocation = request.POST.get('binlocation', None)
-    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        role = request.session['2']
+        if role != 'MAN':
+            raise PermissionDenied
+        else:
+            itemCode = loads(request.POST.get('itemCode', None))
+            binlocation = request.POST.get('binlocation', None)
+
+            listmove = []
+            for i in itemCode:
+                data = (binlocation, i["code"])
+                listmove.append(data)
+
+            cursor = connection.cursor()
+            query = """UPDATE Itembatch
+                        SET binid=%s
+                        WHERE id=%s"""
+            cursor.executemany(query, listmove)
+
+            return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 
 def out(request):
     itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
-    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
-
-
-    listmove = []
-    for i in itemCode:
-        data = (binlocation, i["code"])
-        listmove.append(data)
-
-    cursor = connection.cursor()
-    query = """UPDATE Itembatch
-                SET binid=%s
-                WHERE id=%s"""
-    cursor.executemany(query, listmove)
-
     return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 '''
@@ -123,48 +144,58 @@ def rack(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
-        if request.method == "GET":
-            if id == 0:
-                form = RackForm()
-                username = request.session['1']
-                context = {
-                    'form': form,
-                    'title': 'Add Rack',
-                    'username': username,
-                }
-                return render(request, 'storage/rack.html', context)
+        role = request.session['2']
+        if role == 'OPR':
+            raise PermissionDenied
         else:
-            if id == 0:
-                form = RackForm(request.POST)
-            if form.is_valid():
-                form.save()
-                cursor = connection.cursor()
-                row = request.POST['row']
-                col = request.POST['col']
-                numberbin = int(row) * int(col)
-                rack_id = request.POST['id']
-                capacity = request.POST['capacity']
-                data_bin = []
-                for i in range(int(numberbin)):
-                    bin_id = rack_id+(str(i+1))
-                    data = (bin_id, rack_id, capacity)
-                    data_bin.append(data)
+            if request.method == "GET":
+                if id == 0:
+                    form = RackForm()
+                    username = request.session['1']
+                    context = {
+                        'form': form,
+                        'title': 'Add Rack',
+                        'username': username,
+                    }
+                    return render(request, 'storage/rack.html', context)
+            else:
+                if id == 0:
+                    form = RackForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    cursor = connection.cursor()
+                    row = request.POST['row']
+                    col = request.POST['col']
+                    numberbin = int(row) * int(col)
+                    rack_id = request.POST['id']
+                    capacity = request.POST['capacity']
+                    data_bin = []
+                    for i in range(int(numberbin)):
+                        bin_id = rack_id+(str(i+1))
+                        data = (bin_id, rack_id, capacity)
+                        data_bin.append(data)
 
-                query = """INSERT INTO Binlocation(id, rackid, capacity)
-                 VALUES
-                 (%s, %s, %s) """
-                cursor.executemany(query, data_bin)
-                return redirect('rack')
+                    query = """INSERT INTO Binlocation(id, rackid, capacity)
+                    VALUES
+                    (%s, %s, %s) """
+                    cursor.executemany(query, data_bin)
+                    return redirect('rack')
 
-        return render(request, 'storage/rack.html')
+            return render(request, 'storage/rack.html')
 
 
 def main_rack(request):
-    rack = Rack.objects.annotate(numbin=Count('binlocation')).order_by('id')
-    context = {
-        'rack': rack,
-    }
-    return render(request, 'storage/main_rack.html', context)
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        role = request.session['2']
+        rack = Rack.objects.annotate(
+            numbin=Count('binlocation')).order_by('id')
+        context = {
+            'rack': rack,
+            'role': role,
+        }
+        return render(request, 'storage/main_rack.html', context)
 
 
 def view_rack(request, id):
@@ -186,6 +217,7 @@ def delete_rack(request, id):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:
         return redirect('login')
     else:
+<<<<<<< HEAD
         rack = Rack.objects.get(pk=id)
         rack.delete()
         return redirect('rack')
@@ -201,6 +233,23 @@ class PdfRack(View):
         datas = list(Binlocation.objects.all().select_related(
             'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
 
+=======
+        role = request.session['2']
+        if role == 'OPR':
+            raise PermissionDenied
+        else:
+            rack = Rack.objects.get(pk=id)
+            rack.delete()
+            return redirect('rack')
+
+
+# -----------------------------PDF ALL Data Rack-------------------------
+class PdfRack(View):
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Rack, pk=kwargs['pk'])
+        datas = list(Binlocation.objects.all().select_related(
+            'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
+>>>>>>> 3a17df5755a8385d4167d10e0f597bb8f60336dc
         pdf = render_to_pdf('content/pdf_rack.html',
                             {'datas': datas, 'obj': obj, 'rack': rack})
         if pdf:

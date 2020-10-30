@@ -82,6 +82,5 @@ urlpatterns = [
     path('inbound/<int:pk>/', views.PdfInbound.as_view(),),
 
 
-
-
+    
 ]
