@@ -39,7 +39,7 @@
                   aria-pressed="true">Update</a>
                 <form action="{% url 'delete_item' item.0 %}" method="POST" class="d-inline">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                  <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px; width: 50px;">
                     <i class="text-white">Delete</i>
                   </button>
                 </form>

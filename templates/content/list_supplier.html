@@ -30,7 +30,7 @@
               <th scope="row">1</th>
               <td>{{ list.id }}</td>
               <td>{{ list.name }}</td>
-              <td><a href="{% url 'detail_supplier' list.id %}">View</a></td>
+              <td><a href="{% url 'detail_supplier' list.id %}" class="btn btn-primary btn-sm"role="button">View</a></td>
               {% if role != 'OPR' %}
               <td>
                   <a href="{% url 'update_supplier' list.id %}" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>

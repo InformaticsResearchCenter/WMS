@@ -13,7 +13,7 @@
             {% if inb.status == "On - Check" %}
             <form action="{% url 'confirm' %}" method="POST" class="d-inline">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;">
+                <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 70px;">
                     <i class="text-white">Confirm</i>
                 </button>
             </form>
@@ -81,7 +81,7 @@
                         {% endfor %}
                         <form action="{% url 'delete_itemdata' itdt.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 50px;">
                                 <i class="text-white">Delete</i>
                             </button>
                         </form>

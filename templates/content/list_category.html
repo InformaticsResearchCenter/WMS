@@ -34,7 +34,7 @@
                                 aria-pressed="true">Update</a>
                             <form action="{% url 'delete_category' cat.id %}" method="POST" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 60px;">
                                     <i class="text-white">Delete</i>
                                 </button>
                             </form>
@@ -44,7 +44,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'home' %}" class="btn btn-primary btn-sm" style="float: left;" role="button"
+            <a href="{% url 'item' %}" class="btn btn-primary btn-sm" style="float: left;" role="button"
                 aria-pressed="true">Back</a>
         </div>
     </div>
