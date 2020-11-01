@@ -67,12 +67,11 @@ def checkItem(request):
 
 def checkOutbound(request):
     outboundid = request.POST.get('outboundId', None)
-    print(outboundid)
     customer = list(Outbound.objects.filter(id=str(outboundid)).values_list('customername','address','phonenumber','date','status'))
-    items = list(Outbounddata.objects.filter(outboundid=str(outboundid)).values_list('itemid','quantity'))
+    items = list(Outbounddata.objects.filter(outboundid=str(outboundid)).select_related('itemid').values_list('itemid','quantity','itemid__name'))
     print(items)
-    print(Outbound.objects.filter(id="16102020231158").values_list('customername','address','phonenumber','date','status'))
-    return JsonResponse({'costumer': customer, 'items' : items} ,status=200)
+    print(customer)
+    return JsonResponse({'customer': customer, 'items' : items} ,status=200)
 
 '''
 =========================================================================================
@@ -260,10 +259,12 @@ function yang masih tahap percobaan
 =========================================================================================
 '''
 
-def getItemBatch(request):
+def getScannerData(request):
     item = list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')) 
     itembatch = list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
-    return JsonResponse({'item': item, 'itembatch': itembatch}, status=200)
+    binlocation = list(Binlocation.objects.all().values_list('id','rackid','capacity'))
+    print(binlocation)
+    return JsonResponse({'item': item, 'itembatch': itembatch, 'binlocation' : binlocation}, status=200)
 
 def testing(request):
     return JsonResponse({'good':'Always'}, status=200)
