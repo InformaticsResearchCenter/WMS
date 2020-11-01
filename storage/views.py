@@ -96,11 +96,13 @@ def put(request):
                 data = (binlocation, i["code"])
                 listput.append(data)
 
-            cursor = connection.cursor()
-            query = """UPDATE Itembatch
-                        SET binid=%s
-                        WHERE id=%s"""
-            cursor.executemany(query, listput)
+            pprint(listput)
+
+            # cursor = connection.cursor()
+            # query = """UPDATE Itembatch
+            #             SET binid=%s
+            #             WHERE id=%s"""
+            # cursor.executemany(query, listput)
 
             return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
@@ -131,9 +133,36 @@ def move(request):
 
 
 def out(request):
-    itemCode = loads(request.POST.get('itemCode', None))
-    binlocation = request.POST.get('binlocation', None)
-    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        role = request.session['2']
+        if role != 'MAN':
+            raise PermissionDenied
+        else:
+            # itemCode = loads(request.POST.get('itemCode', None))
+            # binlocation = request.POST.get('binlocation', None)
+            OutId = '16102020205558'
+
+            date_time = datetime.now()
+            date = date_time.strftime("%Y-%m-%d")
+
+            itemCode = ['1010202007365191ITM3', '1010202007365188ITM3', '1010202007365186ITM3']
+
+            listout = []
+            for i in itemCode:
+                data = (date, i)
+                listout.append(data)
+
+            Outbound.objects.filter(id=OutId).update(status='Done')
+
+            cursor = connection.cursor()
+            query = """UPDATE Itembatch
+                        SET out=%s
+                        WHERE id=%s"""
+            cursor.executemany(query, listout)
+
+            return JsonResponse({'bin': OutId, 'itemCode': itemCode}, status=200)
 
 '''
 =========================================================================================
@@ -194,6 +223,7 @@ def main_rack(request):
         context = {
             'rack': rack,
             'role': role,
+            'title': 'Rack | WMS Poltekpos'
         }
         return render(request, 'storage/main_rack.html', context)
 
@@ -229,30 +259,25 @@ Bagian cetak pdf || status complete
 
 class PdfRack(View):
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Rack, pk=kwargs['pk'])
-
-        datas = list(Binlocation.objects.all().select_related(
-            'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
-
         role = request.session['2']
         if role == 'OPR':
             raise PermissionDenied
         else:
-            rack = Rack.objects.get(pk=id)
-            rack.delete()
-            return redirect('rack')
-        pdf = render_to_pdf('content/pdf_rack.html',
-                            {'datas': datas, 'obj': obj, 'rack': rack})
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Rack_Invoice_%s.pdf" % (12341231)
-            content = "inline; filename=%s" % (filename)
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename=%s" % (filename)
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not Found")
+            obj = get_object_or_404(Rack, pk=kwargs['pk'])
+            datas = list(Binlocation.objects.all().select_related(
+                'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
+            pdf = render_to_pdf('content/pdf_rack.html',
+                                {'datas': datas, 'obj': obj, 'rack': rack})
+            if pdf:
+                response = HttpResponse(pdf, content_type='application/pdf')
+                filename = "RackInvoice_%s.pdf" % (12341231)
+                content = "inline; filename=%s" % (filename)
+                download = request.GET.get("download")
+                if download:
+                    content = "attachment; filename=%s" % (filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not Found")
 
 '''
 =========================================================================================

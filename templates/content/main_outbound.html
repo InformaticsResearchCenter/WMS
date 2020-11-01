@@ -38,12 +38,14 @@
                         <td>
                             <a href="{% url 'view_outbound' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
                             {% if role != 'OPR' %}
-                             <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
-                            {% if onb.status != "Complete" %}
-                            <a href="{% url 'update_outbound' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
+                              {% if onb.status != "Done" %}
+                              <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
+                              {% endif %}
+                              {% if onb.status != "Ready" and onb.status != "Done" %}
+                              <a href="{% url 'update_outbound' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
+                              {% endif %}
                             {% endif %}
-                            {% endif %}
-                            {% if onb.status == "Complete" %}
+                            {% if onb.status == "Ready" or onb.status == "Done" %}
                             <a href="{{onb.id}}"><button class="btn-success btn-sm">PDF</button></a>
                             {% endif %}
                         </td>
