@@ -6,7 +6,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
 class Binlocation(models.Model):
     id = models.TextField(primary_key=True)
     rackid = models.ForeignKey('Rack', models.DO_NOTHING, db_column='rackid')
