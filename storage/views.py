@@ -52,6 +52,7 @@ def index(request):
     data = {
         "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')), "itembatch":list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
     }
+    print(data)
     datas = dumps(data)
     return render(request, 'storage/index2.html', {"datas": datas})
 
@@ -69,8 +70,6 @@ def checkOutbound(request):
     outboundid = request.POST.get('outboundId', None)
     customer = list(Outbound.objects.filter(id=str(outboundid)).values_list('customername','address','phonenumber','date','status'))
     items = list(Outbounddata.objects.filter(outboundid=str(outboundid)).select_related('itemid').values_list('itemid','quantity','itemid__name'))
-    print(items)
-    print(customer)
     return JsonResponse({'customer': customer, 'items' : items} ,status=200)
 
 '''
@@ -80,88 +79,98 @@ Bagian update itembatch Put, Move, Out || status on-progress
 '''
 
 def put(request):
-    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
-        return redirect('login')
-    else:
-        role = request.session['2']
-        if role != 'MAN':
-            raise PermissionDenied
-        else:
-            itemCode = loads(request.POST.get('itemCode', None))
-            binlocation = request.POST.get('binlocation', None)
+    # if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+    #     return redirect('login')
+    # else:
+    #     role = request.session['2']
+    #     if role != 'MAN':
+    #         raise PermissionDenied
+    #     else:
+    itemCode = loads(request.POST.get('itemCode', None))
+    binlocation = request.POST.get('binlocation', None)
 
-            listput = []
-            for i in itemCode:
-                data = (binlocation, i["code"])
-                listput.append(data)
+    print(request.POST.get('itemCode', None))
+    print(request.POST.get('binlocation', None))
 
-            pprint(listput)
+    listput = []
+    for i in range(len(itemCode)):
+        data = (binlocation, itemCode[i])
+        listput.append(data)
 
-            # cursor = connection.cursor()
-            # query = """UPDATE Itembatch
-            #             SET binid=%s
-            #             WHERE id=%s"""
-            # cursor.executemany(query, listput)
+    pprint(listput)
 
-            return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listput)
+
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 
 def move(request):
-    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
-        return redirect('login')
-    else:
-        role = request.session['2']
-        if role != 'MAN':
-            raise PermissionDenied
-        else:
-            itemCode = loads(request.POST.get('itemCode', None))
-            binlocation = request.POST.get('binlocation', None)
+    # if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+    #     return redirect('login')
+    # else:
+    #     role = request.session['2']
+    #     if role != 'MAN':
+    #         raise PermissionDenied
+    #     else:
+    itemCode = loads(request.POST.get('itemCode', None))
+    binlocation = request.POST.get('binlocation', None)
+    print(itemCode)
+    print(binlocation)
 
-            listmove = []
-            for i in itemCode:
-                data = (binlocation, i["code"])
-                listmove.append(data)
+    listmove = []
+    for i in range(len(itemCode)):
+        data = (binlocation, itemCode[i])
+        listmove.append(data)
 
-            cursor = connection.cursor()
-            query = """UPDATE Itembatch
-                        SET binid=%s
-                        WHERE id=%s"""
-            cursor.executemany(query, listmove)
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listmove)
 
-            return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 
 def out(request):
-    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
-        return redirect('login')
-    else:
-        role = request.session['2']
-        if role != 'MAN':
-            raise PermissionDenied
-        else:
-            # itemCode = loads(request.POST.get('itemCode', None))
-            # binlocation = request.POST.get('binlocation', None)
-            OutId = '16102020205558'
+    # if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+    #     return redirect('login')
+    # else:
+    #     role = request.session['2']
+    #     if role != 'MAN':
+    #         raise PermissionDenied
+    #     else:
+    # itemCode = loads(request.POST.get('itemCode', None))
+    # binlocation = request.POST.get('binlocation', None)
+    itemCode = loads(request.POST.get('itemCode', None))
+    outboundId = request.POST.get('outboundId', None)
+    print(itemCode)
+    print(outboundId)
+    #================================VVV right code
+    # OutId = '16102020205558'
 
-            date_time = datetime.now()
-            date = date_time.strftime("%Y-%m-%d")
+    date_time = datetime.now()
+    date = date_time.strftime("%Y-%m-%d")
 
-            itemCode = ['1010202007365191ITM3', '1010202007365188ITM3', '1010202007365186ITM3']
+    # itemCode = ['1010202007365191ITM3', '1010202007365188ITM3', '1010202007365186ITM3']
 
-            listout = []
-            for i in itemCode:
-                data = (date, i)
-                listout.append(data)
+    listout = []
+    for i in itemCode:
+        data = (date, i)
+        listout.append(data)
 
-            Outbound.objects.filter(id=OutId).update(status='Done')
+    Outbound.objects.filter(id=outboundId).update(status='Done')
 
-            cursor = connection.cursor()
-            query = """UPDATE Itembatch
-                        SET out=%s
-                        WHERE id=%s"""
-            cursor.executemany(query, listout)
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET out=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listout)
 
-            return JsonResponse({'bin': OutId, 'itemCode': itemCode}, status=200)
+    return JsonResponse({'outboundId': outboundId, 'itemCode': itemCode}, status=200)
 
 '''
 =========================================================================================
@@ -288,7 +297,6 @@ def getScannerData(request):
     item = list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')) 
     itembatch = list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
     binlocation = list(Binlocation.objects.all().values_list('id','rackid','capacity'))
-    print(binlocation)
     return JsonResponse({'item': item, 'itembatch': itembatch, 'binlocation' : binlocation}, status=200)
 
 def testing(request):

@@ -1,8 +1,8 @@
-#qr-reader, .card {
+#qr-reader{
 	width: 400px;
 }
-#content{
-	width: 90%;
+.card{
+	width: 200px;
 }
 
 form>input,
@@ -11,7 +11,9 @@ form>button {
  }
 .flex-item{
 	display: flex;
-	width: 90%;
+	margin:auto;
+	width: 70%;
+	padding-top: 100px;
 }
 /* form {
 	width: 400px;
@@ -28,6 +30,11 @@ form>button {
 	}
 	.flex-item{
 		display: block;
+		width: 95%;
+		margin: auto;
+	}
+	#content{
+		width: 100%;
 	}
 	/* 
 	form {

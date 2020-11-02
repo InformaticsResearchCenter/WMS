@@ -43,7 +43,8 @@ $(document).ready(function () {
 			$(".overlay").hide();
 		},
 		fail: function (xhr, textStatus, errorThrown) {
-			alert(textStatus);
+			alert('request failed');
+			$(".overlay").hide();
 		}
 	});
 
@@ -240,12 +241,11 @@ $(document).ready(function () {
 					for (let i = 0; i < items.length; i++) {
 						$("#outboundData").append(`<tr><td>` + items[i][2] + `</td><td>` + items[i][1] + `</td></tr>`);
 					}
-					$("#itemCode").show();
 				} catch (err) {
 					$("#outboundData").empty();
 					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
 				}
-
+				$("#itemCodeContainer").show();
 				$(".overlay").hide();
 			}
 		});
@@ -260,15 +260,86 @@ $(document).ready(function () {
 	*/
 	$("#confirmButton").click(function (e) {
 		e.preventDefault();
-		$.ajax({
-			type: "method",
-			url: "url",
-			data: "data",
-			dataType: "dataType",
-			success: function (response) {
+		$(".overlay").show();
+		if ($("#action").val() == "inbound") {
+			$.ajax({
+				type: 'post',
+				url: '/storage/put/',
+				data: {
+					binlocation: $("#binLocation").val(),
+					itemCode: JSON.stringify(code),
+					csrfmiddlewaretoken: csrf
+				},
+				success: function (response) {
+					if (response['binlocation'] == "" || response['itemCode'] == "") {
+						$(".overlay").hide();
+						alert("error data kosong/tidak ditemukan")
+					} else {
+						$(".overlay").hide();
+						alert("inbound berhasil")
+					}
+				},
+				fail: function (xhr, textStatus, errorThrown) {
+					alert('request failed');
+					$(".overlay").hide();
+				}
+			});
+			code = [];
+			$("#binLocation").val("");
 
-			}
-		});
+		} else if ($("#action").val() == "move") {
+			$.ajax({
+				type: 'post',
+				url: '/storage/move/',
+				data: {
+					binlocation: $("#binLocation").val(),
+					itemCode: JSON.stringify(code),
+					csrfmiddlewaretoken: csrf
+				},
+				success: function (response) {
+					if (response['binlocation'] == "" || response['itemCode'] == "") {
+						$(".overlay").hide();
+						alert("error data kosong/tidak ditemukan")
+					} else {
+						$(".overlay").hide();
+						alert("move barang berhasil")
+					}
+				},
+				fail: function (xhr, textStatus, errorThrown) {
+					alert('request failed');
+					$(".overlay").hide();
+				}
+			});
+			code = [];
+			$("#binLocation").val("");
+
+		} else if ($("#action").val() == "outbound") {
+			$.ajax({
+				type: 'post',
+				url: '/storage/out/',
+				data: {
+					outboundId: $("#outboundId").val(),
+					itemCode: JSON.stringify(code),
+					csrfmiddlewaretoken: csrf
+				},
+				success: function (response) {
+					if (response['outboundId'] == "" || response['itemCode'] == "") {
+						$(".overlay").hide();
+						alert("error data kosong/tidak ditemukan")
+					} else {
+						$(".overlay").hide();
+						alert("Outbound berhasil")
+					}
+				},
+				fail: function (xhr, textStatus, errorThrown) {
+					alert('request failed');
+					$(".overlay").hide();
+				}
+			});
+			code = [];
+		} else {
+			alert("Select option")
+		}
 
 	});
 	$("#clearButton").click(function (e) {
