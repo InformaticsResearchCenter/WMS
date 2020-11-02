@@ -39,7 +39,7 @@ def scanner(request):
         return redirect('login')
     else:
         role = request.session['2']
-        if role != 'MAN':
+        if role == 'ADM':
             raise PermissionDenied
         else:
             data = {
@@ -49,12 +49,19 @@ def scanner(request):
             return render(request, 'storage/index.html', {"datas": datas})
 
 def index(request):
-    data = {
-        "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')), "itembatch":list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
-    }
-    print(data)
-    datas = dumps(data)
-    return render(request, 'storage/index2.html', {"datas": datas})
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        role = request.session['2']
+        if role == 'ADM':
+            raise PermissionDenied
+        else:
+            data = {
+                "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')), "itembatch":list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
+            }
+            print(data)
+            datas = dumps(data)
+            return render(request, 'storage/index2.html', {"datas": datas})
 
 '''
 =========================================================================================
