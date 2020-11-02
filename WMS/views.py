@@ -90,7 +90,7 @@ def delete_user(request, id):
         return redirect('user')
 
 
- #------------------------- User --------       
+#------------------------- User --------       
 
 def userdata(request, id=0):
     if '0' not in request.session and '1' not in request.session and '2' not in request.session:

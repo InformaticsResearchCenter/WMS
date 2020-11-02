@@ -186,6 +186,17 @@
                     <p>Rack</p>
                   </a>
                 </li>
+            {% if role != 'ADM' %}
+            <li class="nav-item">
+                  <a href="{% url 'index' %}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Scanner</p>
+                  </a>
+                </li>
+              </a>
+            </li>
+            {% endif %}
+
               </ul>
             </li>
             <li class="nav-item">
@@ -214,7 +225,7 @@
             </li>
             {% endif %}
             <li class="nav-item">
-              <a href="https://adminlte.io/docs/3.0/" class="nav-link">
+              <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-file"></i>
                 <p>Report</p>
               </a>

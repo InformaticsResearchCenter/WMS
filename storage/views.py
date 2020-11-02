@@ -39,7 +39,7 @@ def scanner(request):
         return redirect('login')
     else:
         role = request.session['2']
-        if role != 'MAN':
+        if role == 'ADM':
             raise PermissionDenied
         else:
             data = {
@@ -49,11 +49,19 @@ def scanner(request):
             return render(request, 'storage/index.html', {"datas": datas})
 
 def index(request):
-    data = {
-        "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')), "itembatch":list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
-    }
-    datas = dumps(data)
-    return render(request, 'storage/index2.html', {"datas": datas})
+    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+        return redirect('login')
+    else:
+        role = request.session['2']
+        if role == 'ADM':
+            raise PermissionDenied
+        else:
+            data = {
+                "item": list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')), "itembatch":list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
+            }
+            print(data)
+            datas = dumps(data)
+            return render(request, 'storage/index2.html', {"datas": datas})
 
 '''
 =========================================================================================
@@ -67,12 +75,9 @@ def checkItem(request):
 
 def checkOutbound(request):
     outboundid = request.POST.get('outboundId', None)
-    print(outboundid)
     customer = list(Outbound.objects.filter(id=str(outboundid)).values_list('customername','address','phonenumber','date','status'))
-    items = list(Outbounddata.objects.filter(outboundid=str(outboundid)).values_list('itemid','quantity'))
-    print(items)
-    print(Outbound.objects.filter(id="16102020231158").values_list('customername','address','phonenumber','date','status'))
-    return JsonResponse({'costumer': customer, 'items' : items} ,status=200)
+    items = list(Outbounddata.objects.filter(outboundid=str(outboundid)).select_related('itemid').values_list('itemid','quantity','itemid__name'))
+    return JsonResponse({'customer': customer, 'items' : items} ,status=200)
 
 '''
 =========================================================================================
@@ -81,59 +86,98 @@ Bagian update itembatch Put, Move, Out || status on-progress
 '''
 
 def put(request):
-    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
-        return redirect('login')
-    else:
-        role = request.session['2']
-        if role != 'MAN':
-            raise PermissionDenied
-        else:
-            itemCode = loads(request.POST.get('itemCode', None))
-            binlocation = request.POST.get('binlocation', None)
+    # if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+    #     return redirect('login')
+    # else:
+    #     role = request.session['2']
+    #     if role != 'MAN':
+    #         raise PermissionDenied
+    #     else:
+    itemCode = loads(request.POST.get('itemCode', None))
+    binlocation = request.POST.get('binlocation', None)
 
-            listput = []
-            for i in itemCode:
-                data = (binlocation, i["code"])
-                listput.append(data)
+    print(request.POST.get('itemCode', None))
+    print(request.POST.get('binlocation', None))
 
-            cursor = connection.cursor()
-            query = """UPDATE Itembatch
-                        SET binid=%s
-                        WHERE id=%s"""
-            cursor.executemany(query, listput)
+    listput = []
+    for i in range(len(itemCode)):
+        data = (binlocation, itemCode[i])
+        listput.append(data)
 
-            return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    pprint(listput)
+
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listput)
+
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 
 def move(request):
-    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
-        return redirect('login')
-    else:
-        role = request.session['2']
-        if role != 'MAN':
-            raise PermissionDenied
-        else:
-            itemCode = loads(request.POST.get('itemCode', None))
-            binlocation = request.POST.get('binlocation', None)
+    # if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+    #     return redirect('login')
+    # else:
+    #     role = request.session['2']
+    #     if role != 'MAN':
+    #         raise PermissionDenied
+    #     else:
+    itemCode = loads(request.POST.get('itemCode', None))
+    binlocation = request.POST.get('binlocation', None)
+    print(itemCode)
+    print(binlocation)
 
-            listmove = []
-            for i in itemCode:
-                data = (binlocation, i["code"])
-                listmove.append(data)
+    listmove = []
+    for i in range(len(itemCode)):
+        data = (binlocation, itemCode[i])
+        listmove.append(data)
 
-            cursor = connection.cursor()
-            query = """UPDATE Itembatch
-                        SET binid=%s
-                        WHERE id=%s"""
-            cursor.executemany(query, listmove)
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET binid=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listmove)
 
-            return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
 
 
 def out(request):
+    # if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+    #     return redirect('login')
+    # else:
+    #     role = request.session['2']
+    #     if role != 'MAN':
+    #         raise PermissionDenied
+    #     else:
+    # itemCode = loads(request.POST.get('itemCode', None))
+    # binlocation = request.POST.get('binlocation', None)
     itemCode = loads(request.POST.get('itemCode', None))
-    binlocation = request.POST.get('binlocation', None)
-    return JsonResponse({'bin': binlocation, 'itemCode': itemCode}, status=200)
+    outboundId = request.POST.get('outboundId', None)
+    print(itemCode)
+    print(outboundId)
+    #================================VVV right code
+    # OutId = '16102020205558'
+
+    date_time = datetime.now()
+    date = date_time.strftime("%Y-%m-%d")
+
+    # itemCode = ['1010202007365191ITM3', '1010202007365188ITM3', '1010202007365186ITM3']
+
+    listout = []
+    for i in itemCode:
+        data = (date, i)
+        listout.append(data)
+
+    Outbound.objects.filter(id=outboundId).update(status='Done')
+
+    cursor = connection.cursor()
+    query = """UPDATE Itembatch
+                SET out=%s
+                WHERE id=%s"""
+    cursor.executemany(query, listout)
+
+    return JsonResponse({'outboundId': outboundId, 'itemCode': itemCode}, status=200)
 
 '''
 =========================================================================================
@@ -194,6 +238,7 @@ def main_rack(request):
         context = {
             'rack': rack,
             'role': role,
+            'title': 'Rack | WMS Poltekpos'
         }
         return render(request, 'storage/main_rack.html', context)
 
@@ -229,30 +274,25 @@ Bagian cetak pdf || status complete
 
 class PdfRack(View):
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Rack, pk=kwargs['pk'])
-
-        datas = list(Binlocation.objects.all().select_related(
-            'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
-
         role = request.session['2']
         if role == 'OPR':
             raise PermissionDenied
         else:
-            rack = Rack.objects.get(pk=id)
-            rack.delete()
-            return redirect('rack')
-        pdf = render_to_pdf('content/pdf_rack.html',
-                            {'datas': datas, 'obj': obj, 'rack': rack})
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Rack_Invoice_%s.pdf" % (12341231)
-            content = "inline; filename=%s" % (filename)
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename=%s" % (filename)
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not Found")
+            obj = get_object_or_404(Rack, pk=kwargs['pk'])
+            datas = list(Binlocation.objects.all().select_related(
+                'rackid').filter(rackid=obj).values_list('id', 'rackid__id', 'capacity'))
+            pdf = render_to_pdf('content/pdf_rack.html',
+                                {'datas': datas, 'obj': obj, 'rack': rack})
+            if pdf:
+                response = HttpResponse(pdf, content_type='application/pdf')
+                filename = "RackInvoice_%s.pdf" % (12341231)
+                content = "inline; filename=%s" % (filename)
+                download = request.GET.get("download")
+                if download:
+                    content = "attachment; filename=%s" % (filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not Found")
 
 '''
 =========================================================================================
@@ -260,10 +300,11 @@ function yang masih tahap percobaan
 =========================================================================================
 '''
 
-def getItemBatch(request):
+def getScannerData(request):
     item = list(Item.objects.all().select_related('subcategoryid').values_list('id', 'name', 'subcategoryid__name')) 
     itembatch = list(Itembatch.objects.all().select_related('itemdataid').values_list('binid','id','itemdataid__itemid'))
-    return JsonResponse({'item': item, 'itembatch': itembatch}, status=200)
+    binlocation = list(Binlocation.objects.all().values_list('id','rackid','capacity'))
+    return JsonResponse({'item': item, 'itembatch': itembatch, 'binlocation' : binlocation}, status=200)
 
 def testing(request):
     return JsonResponse({'good':'Always'}, status=200)

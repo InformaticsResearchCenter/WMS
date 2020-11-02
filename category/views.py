@@ -545,9 +545,9 @@ def confirm(request):
             date_time = datetime.now()
             date = date_time.strftime("%Y-%m-%d")
             data_fix = []
-            rackid = "Rack 1"
+            rackid = None
             entry = date
-            out = date
+            out = None
             # ----------------------------------------
 
             # Looping insert data ke Itembatch
@@ -561,7 +561,7 @@ def confirm(request):
                     data_fix.append(data)
                 index += 1
             cursor = connection.cursor()
-            query = """INSERT INTO Itembatch(id, rackid, entry, out, itemdataid)
+            query = """INSERT INTO Itembatch(id, binid, entry, out, itemdataid)
                         VALUES
                         (%s, %s, %s, %s, %s) """
             cursor.executemany(query, data_fix)
@@ -626,9 +626,9 @@ def done(request):
                 itemdata.values_list('quantity', flat=True))
             date_time = datetime.now()
             date = date_time.strftime("%Y-%m-%d")
-            rackid = "Rack 1"
+            rackid = None
             entry = date
-            out = date
+            out = None
             # -------------------- Looping Data ---------------------
             data_fix = []
             for i in list_itemdata_reject:
@@ -641,7 +641,7 @@ def done(request):
                     data_fix.append(data)
                 index += 1
             cursor = connection.cursor()
-            query = """INSERT INTO Itembatch(id, rackid, entry, out, itemdataid)
+            query = """INSERT INTO Itembatch(id, binid, entry, out, itemdataid)
                         VALUES
                         (%s, %s, %s, %s, %s) """
             cursor.executemany(query, data_fix)

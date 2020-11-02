@@ -3,10 +3,8 @@
 #   * Rearrange models' order
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
 
 class Binlocation(models.Model):
     id = models.TextField(primary_key=True)
@@ -14,7 +12,6 @@ class Binlocation(models.Model):
     capacity = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'binlocation'
 
 
@@ -23,18 +20,7 @@ class Category(models.Model):
     name = models.CharField(max_length=30)
 
     class Meta:
-        managed = False
         db_table = 'category'
-
-
-class DjangoSession(models.Model):
-    session_key = models.CharField(primary_key=True, max_length=40)
-    session_data = models.TextField()
-    expire_date = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_session'
 
 
 class Inbounddata(models.Model):
@@ -46,7 +32,6 @@ class Inbounddata(models.Model):
     created = models.ForeignKey('Userdata', models.DO_NOTHING,related_name='i_created', db_column='created', blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'inbounddata'
 
 
@@ -56,7 +41,6 @@ class Item(models.Model):
     subcategoryid = models.ForeignKey('Subcategory', models.DO_NOTHING, db_column='subcategoryid')
 
     class Meta:
-        managed = False
         db_table = 'item'
 
 
@@ -69,7 +53,6 @@ class Itembatch(models.Model):
     qr_code = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'itembatch'
 
 
@@ -82,7 +65,6 @@ class Itemdata(models.Model):
     reject = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 'itemdata'
 
 
@@ -95,7 +77,6 @@ class Outbound(models.Model):
     status = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'outbound'
 
 
@@ -106,7 +87,6 @@ class Outbounddata(models.Model):
     outboundid = models.ForeignKey(Outbound, models.DO_NOTHING, db_column='outboundid')
 
     class Meta:
-        managed = False
         db_table = 'outbounddata'
 
 
@@ -114,7 +94,6 @@ class Rack(models.Model):
     id = models.TextField(primary_key=True)
 
     class Meta:
-        managed = False
         db_table = 'rack'
 
 
@@ -129,7 +108,6 @@ class Returndata(models.Model):
     itemdataid = models.ForeignKey(Itemdata, models.DO_NOTHING, db_column='itemdataid', blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'returndata'
 
 
@@ -138,17 +116,7 @@ class Role(models.Model):
     role = models.CharField(max_length=10)
 
     class Meta:
-        managed = False
         db_table = 'role'
-
-
-class SequencesSequence(models.Model):
-    name = models.CharField(primary_key=True, max_length=100)
-    last = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'sequences_sequence'
 
 
 class Subcategory(models.Model):
@@ -157,7 +125,6 @@ class Subcategory(models.Model):
     categoryid = models.ForeignKey(Category, models.DO_NOTHING, db_column='categoryid')
 
     class Meta:
-        managed = False
         db_table = 'subcategory'
 
 
@@ -170,7 +137,6 @@ class Supplier(models.Model):
     postalcode = models.CharField(max_length=6)
 
     class Meta:
-        managed = False
         db_table = 'supplier'
 
 
@@ -185,7 +151,6 @@ class Userdata(models.Model):
     email = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'userdata'
 
 
