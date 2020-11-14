@@ -1,10 +1,5 @@
 from django.db import models
 
-class softdelete(models.Model):
-    deleted = models.CharField(max_length=1, default=0)
-    class Meta:
-        abstract = True
-
 class External(models.Model):
     name = models.CharField(max_length=50,default="NULL")
     address = models.TextField(default="NULL")
