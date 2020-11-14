@@ -30,9 +30,9 @@ urlpatterns = [
     path('update_user/<slug:id>/',
          views.userdata, name="update_user"),
     path('user/delete_user/<slug:id>/', views.delete_user, name="delete_user"),
-    path('category/', include('category.urls')),
-    path('storage/', include('storage.urls')),
-    path('outbound/', include('outbound.urls')),
+    # path('category/', include('category.urls')),
+    # path('storage/', include('storage.urls')),
+    # path('outbound/', include('outbound.urls')),
 ]
 
 

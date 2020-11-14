@@ -96,15 +96,12 @@ def put(request):
     itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
 
-    print(request.POST.get('itemCode', None))
-    print(request.POST.get('binlocation', None))
 
     listput = []
     for i in range(len(itemCode)):
         data = (binlocation, itemCode[i])
         listput.append(data)
 
-    pprint(listput)
 
     cursor = connection.cursor()
     query = """UPDATE Itembatch
@@ -125,8 +122,7 @@ def move(request):
     #     else:
     itemCode = loads(request.POST.get('itemCode', None))
     binlocation = request.POST.get('binlocation', None)
-    print(itemCode)
-    print(binlocation)
+
 
     listmove = []
     for i in range(len(itemCode)):
@@ -154,8 +150,7 @@ def out(request):
     # binlocation = request.POST.get('binlocation', None)
     itemCode = loads(request.POST.get('itemCode', None))
     outboundId = request.POST.get('outboundId', None)
-    print(itemCode)
-    print(outboundId)
+
     #================================VVV right code
     # OutId = '16102020205558'
 

@@ -3,7 +3,7 @@
 #   * Rearrange models' order
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-# Feel free to rename the models, but don't rename db_table values or field names.
+# Feel free to rename the models, but don't rename db_table values or field names
 from django.db import models
 
 class Binlocation(models.Model):
@@ -14,14 +14,12 @@ class Binlocation(models.Model):
     class Meta:
         db_table = 'binlocation'
 
-
 class Category(models.Model):
     id = models.TextField(primary_key=True)
     name = models.CharField(max_length=30)
 
     class Meta:
         db_table = 'category'
-
 
 class Inbounddata(models.Model):
     id = models.TextField(primary_key=True)
@@ -34,7 +32,6 @@ class Inbounddata(models.Model):
     class Meta:
         db_table = 'inbounddata'
 
-
 class Item(models.Model):
     id = models.TextField(primary_key=True)
     name = models.CharField(max_length=50)
@@ -42,7 +39,6 @@ class Item(models.Model):
 
     class Meta:
         db_table = 'item'
-
 
 class Itembatch(models.Model):
     id = models.TextField(primary_key=True)
@@ -55,7 +51,6 @@ class Itembatch(models.Model):
     class Meta:
         db_table = 'itembatch'
 
-
 class Itemdata(models.Model):
     id = models.TextField(primary_key=True)
     inboundid = models.ForeignKey(Inbounddata, models.DO_NOTHING, db_column='inboundid')
@@ -66,7 +61,6 @@ class Itemdata(models.Model):
 
     class Meta:
         db_table = 'itemdata'
-
 
 class Outbound(models.Model):
     id = models.TextField(primary_key=True)
@@ -79,23 +73,11 @@ class Outbound(models.Model):
     class Meta:
         db_table = 'outbound'
 
-
-class Outbounddata(models.Model):
-    id = models.TextField(primary_key=True)
-    itemid = models.ForeignKey(Item, models.DO_NOTHING, db_column='itemid')
-    quantity = models.IntegerField()
-    outboundid = models.ForeignKey(Outbound, models.DO_NOTHING, db_column='outboundid')
-
-    class Meta:
-        db_table = 'outbounddata'
-
-
 class Rack(models.Model):
     id = models.TextField(primary_key=True)
 
     class Meta:
         db_table = 'rack'
-
 
 class Returndata(models.Model):
     id = models.TextField(primary_key=True)
@@ -109,7 +91,6 @@ class Returndata(models.Model):
 
     class Meta:
         db_table = 'returndata'
-
 
 class Role(models.Model):
     roleid = models.CharField(primary_key=True, max_length=3)
@@ -154,24 +135,13 @@ class Userdata(models.Model):
         db_table = 'userdata'
 
 
-class Outbound(models.Model):
-    id = models.TextField(primary_key=True)
-    customername = models.CharField(max_length=50)
-    address = models.CharField(max_length=50)
-    phonenumber = models.CharField(max_length=13)
-    date = models.DateField()
-    status = models.CharField(max_length=20)
 
-    class Meta:
-        db_table = 'outbound'
 
 class Outbounddata(models.Model):
     id = models.TextField(primary_key=True)
-    itemid = models.ForeignKey(
-        Item, models.DO_NOTHING, db_column='itemid')
+    itemid = models.ForeignKey(Item, models.DO_NOTHING, db_column='itemid')
     quantity = models.IntegerField()
-    outboundid = models.ForeignKey(
-        Outbound, models.DO_NOTHING, db_column='outboundid')
+    outboundid = models.ForeignKey(Outbound, models.DO_NOTHING, db_column='outboundid')
 
     class Meta:
         db_table = 'outbounddata'
