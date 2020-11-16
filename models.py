@@ -28,7 +28,6 @@ class Role(models.Model):
 class UserGroup(External):
     limit = models.DateField(default="1000-10-10")
 
-
 class Category(models.Model):
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -80,6 +79,12 @@ class InboundData(models.Model):
     quantity = models.IntegerField(default=0)
     reject = models.IntegerField(default=0)
     rejectCounter = models.IntegerField(default=0)
+    
+    def condition(self):
+        if self.rejectCounter > 0:
+            return "REJECT"
+        else:
+            return "COMPLETE"
 
 class Outbound(External):
     status_choices = [
@@ -104,6 +109,7 @@ class Borrow(Employee):
     status_choices = [
         ('1','Open document'),
         ('2','Complete'),
+        ('3','Returned')
     ]
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -119,12 +125,10 @@ class BorrowData(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=0)
 
-
 class SupplierReturn(models.Model):
     status_choices = [
         ('1','Open document'),
         ('2','Complete'),
-        ('3','Returned')
     ]
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -133,7 +137,6 @@ class SupplierReturn(models.Model):
     status = models.CharField(max_length=2, choices=status_choices, default=1)
     confirm = models.ForeignKey(User, related_name="srConfirm", on_delete=models.CASCADE, null=True)
     create = models.ForeignKey(User, related_name="srCreate", on_delete=models.CASCADE, null=True)
-
 
 class SupplierReturnData(models.Model):
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)

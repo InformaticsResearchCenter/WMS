@@ -1,16 +1,17 @@
 from django import forms
-from WMS.models import *
+from WMS.models import User
 
-class UserdataForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
     class Meta:
-        model = Userdata
+        model = User
         fields = [
             'id',
             'username',
             'password',
-            'roleid',
+            'role',
+            'userGroup',
             'name',
             'address',
-            'phonenumber',
-            'email',
+            'postalCode',
+            'phoneNumber',
         ]

@@ -39,10 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'category',
     'WMS',
-    'storage',
-    'outbound',
+    'wmsInbound',
+    'wmsOutbound',
+    'wmsStorage',
+    # 'category',
+    # 'storage',
+    # 'outbound',
 ]
 
 INSTALLED_APPS += ['sequences.apps.SequencesConfig']

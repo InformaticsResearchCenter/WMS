@@ -21,15 +21,15 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.index, name="home"),
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
-    path('user/', views.usermanagement, name="user"),
-    path('add_user/', views.userdata, name="add_user"),
-    path('update_user/<slug:id>/',
-         views.userdata, name="update_user"),
-    path('user/delete_user/<slug:id>/', views.delete_user, name="delete_user"),
+    path('user/', include('wmsUser.urls')),
+    # path('user/', views.usermanagement, name="user"),
+    # path('add_user/', views.userdata, name="add_user"),
+    # path('update_user/<slug:id>/',
+    #      views.userdata, name="update_user"),
+    # path('user/delete_user/<slug:id>/', views.delete_user, name="delete_user"),
     # path('category/', include('category.urls')),
     # path('storage/', include('storage.urls')),
     # path('outbound/', include('outbound.urls')),
