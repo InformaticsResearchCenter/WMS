@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
-from WMS.models import User,UserGroup, Role
+from WMS.models import User, UserGroup, Role
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 import datetime
 from django.db import IntegrityError
 from django.contrib import messages
-
 
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
@@ -15,7 +14,6 @@ def index(request):
             raise PermissionDenied
         else:
             user = User.objects.filter(userGroup=request.session['usergroup']).values('username','name','address','postalCode','phoneNumber', 'role_id')
-            print(user)
         context = {
             'title': 'Home | WMS Poltekpos',
             'role': request.session['role'],

@@ -194,6 +194,10 @@ class ItemData(models.Model):
     borrow = models.ForeignKey(Borrow, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=2,choices=status_list, default=0)
 
+class Admin(External):
+    username = models.CharField(max_length=50, unique=True, null=True)
+    password = models.CharField(max_length=50, null=True)
+    deleted = models.CharField(max_length=1, default=0)
 
 class SequencesSequence(models.Model):
     name = models.CharField(primary_key=True, max_length=100)
