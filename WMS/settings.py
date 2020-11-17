@@ -43,12 +43,11 @@ INSTALLED_APPS = [
     'wmsInbound',
     'wmsOutbound',
     'wmsStorage',
+    'sequences.apps.SequencesConfig'
     # 'category',
     # 'storage',
     # 'outbound',
 ]
-
-INSTALLED_APPS += ['sequences.apps.SequencesConfig']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,7 +72,7 @@ ROOT_URLCONF = 'WMS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,16 +1,51 @@
-{% extends 'core/index.html' %}
-{% load static %}
-
-{%  block content %}
-          {% for message in messages %}
-          <div class="alert alert-danger">
-            <a class="close" href="#" data-dismiss="alert">×</a>
-            {{ message }}
-          </div>
-          {% endfor %}
-{{form}}
-{% for u in user %}
-    {{u}}
-{% endfor %}
-{{title}}
-{%  endblock content %}
+{% extends 'core/index.html' %} {% load static %} {% block content %}
+<h2>Data User</h2>
+<hr>
+<div class="card">
+    <div class="card-header">
+        <a href="{% url 'userCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add User</a>
+    </div>
+    {% for message in messages %}
+    <div class="alert alert-danger">
+        <a class="close" href="#" data-dismiss="alert">×</a> {{ message }}
+    </div>
+    {% endfor %}
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Postal Code</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Detail</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in user %} {% if list.deleted != '1' %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ list.name }}</td>
+                    <td>{{ list.address }}</td>
+                    <td>{{ list.phoneNumber }}</td>
+                    <td>{{ list.postalCode }}</td>
+                    <td>{{ list.username }}</td>
+                    <td>{{ list.role_id }}</td>
+                    <td><a href="#">View</a></td>
+                    <td>
+                        <a href="{% url 'userUpdate' list.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
+                        <a href="{% url 'userDelete' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
+                    </td>
+                </tr>
+                {% endif %} {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</div>
+{% endblock content %}

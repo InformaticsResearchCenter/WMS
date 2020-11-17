@@ -1,11 +1,11 @@
 {% extends 'base/master.html' %} {% load static %} {% block content %}
 <!-- Page Content  -->
 <div id="content" width="80%">
-    <h2>Update User</h2>
+    <h2>Input User</h2>
     <hr>
     <div class="card">
         <div class="card-header">
-            Update User
+            Add User
         </div>
         <div class="card-body">
             <form method="POST" action="">
@@ -13,47 +13,51 @@
                 <div class="row justify-content-center">
                     <div class="col-8">
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name="id" id="id" value="{{user.id}}">
+                            <input type="hidden" class="form-control" name="id" id="id" value="{{id}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier">Name</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Name">
                         </div>
                         <div class="form-group">
                             <label for="supplier">Username</label>
-                            <input type="text" class="form-control" name="username" id="username" value="{{user.username}}" placeholder="Username">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Username">
                         </div>
                         <div class="form-group">
                             <label for="supplier">Password</label>
-                            <input type="password" class="form-control" name="password" value="{{user.password}}" id="password" placeholder="Password">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Roleid</label>
-                            <select class="form-control" name="roleid" id="roleid">
-                                    {% for role in roleid %}
-                                    <option value='{{role.roleid}}'>{{role.role}}</option>
+                            <select class="form-control" name="role" id="role">
+                                    {% for r in role_data %}
+                                    {% if r.role != 'MAN' %}
+                                    <option value='{{r.role}}'>{{r.role}}</option>
+                                    {% endif %}
                                     {% endfor %}
                                 </select>
                         </div>
                         <div class="form-group">
-                            <label for="supplier">Name</label>
-                            <input type="text" class="form-control" name="name" id="name" value="{{user.name}}" placeholder="Name">
+                            <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{group_id}}">
                         </div>
                         <div class="form-group">
                             <label for="supplier">Address</label>
-                            <input type="text" class="form-control" name="address" id="address" value="{{user.address}}" placeholder="Address">
+                            <input type="text" class="form-control" name="address" id="address" placeholder="Address">
                         </div>
                         <div class="form-group">
                             <label for="supplier">Phonenumber</label>
-                            <input type="text" class="form-control" name="phonenumber" id="phonenumber" value="{{user.phonenumber}}" placeholder="Phonenumber">
+                            <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Phonenumber">
                         </div>
                         <div class="form-group">
-                            <label for="supplier">Email</label>
-                            <input type="text" class="form-control" name="email" id="email" value="{{user.email}}" placeholder="Email">
+                            <label for="supplier">Postal Code</label>
+                            <input type="text" class="form-control" name="postalCode" id="postalCode" placeholder="Postal Code">
                         </div>
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
             </form>
-            <a href="{% url 'user' %}"><button type="submit" class="btn btn-success">Back</button></a>
+            <a href="{% url 'userIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
         </div>
     </div>
-</div>
 </div>
 {% endblock content %}
