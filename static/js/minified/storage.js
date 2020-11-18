@@ -24,7 +24,6 @@ $(document).ready(function () {
 	$(".card-body").hide();
 
 
-
 	/*
 	============================================================
 		fungsi untuk mengambil data yang dibutuhkan scanner

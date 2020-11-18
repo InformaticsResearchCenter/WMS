@@ -1,0 +1,16 @@
+{% extends 'core/index.html' %}
+{% load static %}
+
+{%  block content %}
+          {% for message in messages %}
+          <div class="alert alert-danger">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
+          </div>
+          {% endfor %}
+{{form}}
+{% for u in user %}
+    {{u}}
+{% endfor %}
+{{title}}
+{%  endblock content %}

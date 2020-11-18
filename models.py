@@ -159,7 +159,7 @@ class CostumerReturn(models.Model):
     confirm = models.ForeignKey(User, related_name="crConfirm", on_delete=models.CASCADE, null=True)
     create = models.ForeignKey(User, related_name="crCreate", on_delete=models.CASCADE, null=True)
 
-class CostumerReturnData(models.Model):
+class costumerReturnData(models.Model):
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
     costumerReturn = models.ForeignKey(CostumerReturn, on_delete=models.CASCADE, null=True)

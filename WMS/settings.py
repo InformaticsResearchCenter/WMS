@@ -39,10 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'category',
     'WMS',
-    'storage',
-    'outbound',
+    'wmsInbound',
+    'wmsOutbound',
+    'wmsStorage',
+    # 'category',
+    # 'storage',
+    # 'outbound',
 ]
 
 INSTALLED_APPS += ['sequences.apps.SequencesConfig']
@@ -56,7 +59,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -90,16 +92,25 @@ WSGI_APPLICATION = 'WMS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd699g0o727nj4n',
+#         'USER': 'nogtyfdvvarzgu',
+#         'PASSWORD': '5f3a888811135823c86716b44c6c40bd93aee46161ce83ff94ed275746039eee',
+#         'HOST': 'ec2-34-238-26-109.compute-1.amazonaws.com'
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd699g0o727nj4n',
-        'USER': 'nogtyfdvvarzgu',
-        'PASSWORD': '5f3a888811135823c86716b44c6c40bd93aee46161ce83ff94ed275746039eee',
-        'HOST': 'ec2-34-238-26-109.compute-1.amazonaws.com'
+        'NAME': 'd636rfnio6olin',
+        'USER': 'tltgafsivdcprs',
+        'PASSWORD': '1fbf8b847b21a32bbe6aef2f6c1c9286fd1c5dce58ac703f7081d2e0ac319262',
+        'HOST': 'ec2-54-243-67-199.compute-1.amazonaws.com'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
