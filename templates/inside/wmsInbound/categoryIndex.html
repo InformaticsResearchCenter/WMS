@@ -25,7 +25,7 @@
                     <td scope="col">{{cat.id}}</td>
                     <td scope="col">{{cat.category}}</td>
                     <td>
-                        <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">View</a> {% if role != 'OPR' %}
+                        <a href="{% url 'subcategoryIndex' cat.id %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">View</a> {% if role != 'OPR' %}
                         <a href="{% url 'categoryUpdate' cat.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
                         <form action="{% url 'categoryDelete' cat.id %}" method="POST" class="d-inline">
                             {% csrf_token %}

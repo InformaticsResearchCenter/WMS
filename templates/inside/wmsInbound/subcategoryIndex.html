@@ -1,0 +1,41 @@
+{% extends 'base/master.html' %} {% load static %} {% block content %}
+<h2>View Category - Subcategory - {{id.category}}</h2>
+<div class="card">
+    <div class="card-header">
+        <a href="{% url 'subcategoryCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+          Subcategory</a>
+    </div>
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Subcategory ID</th>
+                    <th scope="col">Subcategory</th>
+                    <th scope="col" style="width: 150px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subcat in subcategory %}
+                <tr>
+                    <td scope="col">{{forloop.counter}}</td>
+                    <td scope="col">{{subcat.id}}</td>
+                    <td scope="col">{{subcat.subcategory}}</td>
+                    <td>
+                        <a href="{% url 'subcategoryUpdate' subcat.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
+                        <form action="{% url 'subcategoryDelete' subcat.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                    <i class="text-white">Delete</i>
+                                </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="#" class="btn btn-primary btn-sm" style="float: left;" role="button" aria-pressed="true">Back</a>
+    </div>
+</div>
+</div>
+{% endblock content %}
