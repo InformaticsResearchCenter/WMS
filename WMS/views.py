@@ -9,6 +9,8 @@ from django.core.exceptions import PermissionDenied
 from pprint import pprint
 import datetime
 
+def dummy(request):
+    return render(request, "inside/wmshomepage/index.html")
 
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):

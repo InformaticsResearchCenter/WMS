@@ -21,11 +21,14 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
+
     path('', views.index, name="home"),
+    path('dummy', views.dummy, name="dummy"),
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
     path('user/', include('wmsUser.urls')),
     path('admin/', include('wmsAdmin.urls')),
+    path('group/', include('wmsGroup.urls')),
     # path('user/', views.usermanagement, name="user"),
     # path('add_user/', views.userdata, name="add_user"),
     # path('update_user/<slug:id>/',
