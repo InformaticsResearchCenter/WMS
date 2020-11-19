@@ -25,6 +25,9 @@ urlpatterns = [
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
     path('user/', include('wmsUser.urls')),
+    path('inbound/', include('wmsInbound.urls')),
+    path('outbound/', include('wmsOutbound.urls')),
+    
     # path('user/', views.usermanagement, name="user"),
     # path('add_user/', views.userdata, name="add_user"),
     # path('update_user/<slug:id>/',
@@ -32,7 +35,6 @@ urlpatterns = [
     # path('user/delete_user/<slug:id>/', views.delete_user, name="delete_user"),
     # path('category/', include('category.urls')),
     # path('storage/', include('storage.urls')),
-    # path('outbound/', include('outbound.urls')),
 ]
 
 
