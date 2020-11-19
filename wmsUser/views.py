@@ -68,7 +68,8 @@ def user(request, id=0):
                     if form.is_valid():
                         if request.POST['role'] != "MAN":
                             form.save()
-                            get_next_value('user_seq')
+                            if id == 0:
+                                get_next_value('user_seq')
                             return redirect('userIndex')
                         else:
                             messages.error(

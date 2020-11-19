@@ -1,0 +1,46 @@
+{% extends 'base/master.html' %} {% load static %} {% block content %}
+<br>
+<h2>List Category</h2>
+<hr>
+<div class="card">
+    <div class="card-header">
+        {% if role != 'OPR' %}
+        <a href="{% url 'categoryCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            Category</a> {% endif %}
+    </div>
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Category ID</th>
+                    <th scope="col">Category</th>
+                    <th scope="col" style="width: 202px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in category %}
+                <tr>
+                    <td scope="col">{{forloop.counter}}</td>
+                    <td scope="col">{{cat.id}}</td>
+                    <td scope="col">{{cat.category}}</td>
+                    <td>
+                        <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">View</a> {% if role != 'OPR' %}
+                        <a href="{% url 'categoryUpdate' cat.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
+                        <form action="{% url 'categoryDelete' cat.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 60px;">
+                                    <i class="text-white">Delete</i>
+                                </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'itemIndex' %}" class="btn btn-primary btn-sm" style="float: left;" role="button" aria-pressed="true">Back</a>
+    </div>
+</div>
+</div>
+{% endblock content %}

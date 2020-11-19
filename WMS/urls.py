@@ -27,8 +27,12 @@ urlpatterns = [
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
     path('user/', include('wmsUser.urls')),
+<<<<<<< HEAD
     path('admin/', include('wmsAdmin.urls')),
     path('group/', include('wmsGroup.urls')),
+=======
+    path('inbound/', include('wmsInbound.urls')),
+>>>>>>> 57b28011c7297c493966f9a7e5d19fec8001bc9a
     # path('user/', views.usermanagement, name="user"),
     # path('add_user/', views.userdata, name="add_user"),
     # path('update_user/<slug:id>/',
