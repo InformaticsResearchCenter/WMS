@@ -10,6 +10,7 @@ from pprint import pprint
 import datetime
 
 
+
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
@@ -25,7 +26,8 @@ def index(request):
 
 def login(request):
     context = {
-        'title': 'Welcome | WMS Poltekpos'
+        'title': 'Welcome | WMS Poltekpos',
+        'login' : 'Member',
     }
     if 'is_login' in request.session:
         return redirect('home')
@@ -71,7 +73,8 @@ def logout(request):
         del request.session['is_login']
         return redirect('login')
     except KeyError:
-        pass
+        return redirect('login')
+        
 
 
 # def usermanagement(request):

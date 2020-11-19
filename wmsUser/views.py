@@ -7,7 +7,6 @@ from django.db import IntegrityError
 from django.contrib import messages
 from WMS.forms import UserForm
 
-
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')

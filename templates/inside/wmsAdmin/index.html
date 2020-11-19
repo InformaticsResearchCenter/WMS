@@ -1,0 +1,58 @@
+{% extends 'core/admin.html' %}
+{% load static %}
+{%  block content %}
+<div class="card-body">
+<button class="btn-primary btn-sm">Create Usergroup</button>
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    {% comment %} <th scope="col">No</th> {% endcomment %}
+                    <th scope="col">usergroup Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Postal Code</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Limit</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in data %}
+                    <tr>
+                        {% comment %} <th scope="row">1</th> {% endcomment %}
+                        <td>{{i.id}}</td>
+                        <td>{{i.name}}</td>
+                        <td>{{i.address}}</td>
+                        <td>{{i.postalCode}}</td>
+                        <td>{{i.phoneNumber}}</td>
+                        <td>
+                            <form method="POST" action="{% url 'limit' i.id %}">
+                            {%csrf_token%}
+                            <input type="date" id="limit" name="limit" value="{{i.limit}}" min="{{limit}}">
+                            <input type="hidden" id="id" name="id" value="{{i.id}}" >
+                            <input type="submit" value="change">
+                            </form>
+                        <td>
+                              <a href="{% url 'deactive' i.id %}"><button class="btn-danger btn-sm" >deactive</button></a>
+                              <a href=""><button class="btn-default btn-sm">Update</button></a>
+                              <a href=""><button class="btn-danger btn-sm">Delete</button></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                  {% comment %} <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Inbound Id</th>
+                    <th scope="col">Supplier</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                  </tr>
+                  </tfoot> {% endcomment %}
+                </table>
+              </div>
+              <script>
+              
+              </script>
+{%  endblock content %}
