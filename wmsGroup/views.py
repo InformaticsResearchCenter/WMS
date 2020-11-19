@@ -9,14 +9,14 @@ from django.contrib import messages
 # Create your views here.
 def index(request):
     if 'group_is_login' in request.session:
-        return render(request,"inside/wmsgroup/content/index.html")
+        return render(request,"inside/wmsGroup/content/index.html")
     else:
         return redirect('groupLogin')
 
 
 def login(request):
     if request.method == "GET":
-        return render(request, "inside/wmsgroup/form/login.html")
+        return render(request, "inside/wmsGroup/form/login.html")
     elif request.method == "POST":
         try:
             UserGroup.objects.get(email=request.POST['email'])
@@ -33,11 +33,11 @@ def login(request):
             request.session['group_is_login'] = True
         return redirect('groupIndex')
     else:
-        return render(request, "inside/wmsgroup/form/login.html")
+        return render(request, "inside/wmsGroup/form/login.html")
 
 def register(request):
     if request.method == "GET":
-        return render(request, "inside/wmsgroup/form/register.html")
+        return render(request, "inside/wmsGroup/form/register.html")
     elif request.method == "POST":
         try:
             data = UserGroup.objects.create(
@@ -55,7 +55,7 @@ def register(request):
             return redirect('groupRegister')
             
     else:
-        return render(request, "inside/wmsgroup/form/register.html")
+        return render(request, "inside/wmsGroup/form/register.html")
     
 
 def logout(request):
