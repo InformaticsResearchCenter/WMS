@@ -21,10 +21,13 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
+
     path('', views.index, name="home"),
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
     path('user/', include('wmsUser.urls')),
+    path('admin/', include('wmsAdmin.urls')),
+    path('group/', include('wmsGroup.urls')),
     path('inbound/', include('wmsInbound.urls')),
     path('outbound/', include('wmsOutbound.urls')),
     

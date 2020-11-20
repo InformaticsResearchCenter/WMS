@@ -2,8 +2,12 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 import datetime
 from WMS.models import *
+<<<<<<< HEAD
 from WMS.forms import *
 from sequences import get_next_value
+=======
+from WMS.forms import CategoryForm, SubcategoryForm
+>>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
 
 from django.db import connection
 # Create your views here.
@@ -11,6 +15,8 @@ from django.db import connection
 
 def itemIndex(request):
     return render(request, 'inside/wmsInbound/itemIndex.html')
+
+# ==================== CATEGORY ======================
 
 
 def categoryIndex(request):
@@ -37,7 +43,6 @@ def category(request, id=0):
                 if id == 0:
                     context = {
                         'form': CategoryForm(),
-                        'id': get_last_value('category_seq'),
                         'group_id': request.session['usergroup'],
                         'role': request.session['role'],
                         'username': request.session['username'],
@@ -63,8 +68,6 @@ def category(request, id=0):
                     form = CategoryForm(request.POST, instance=category)
                 if form.is_valid():
                     form.save()
-                    if id == 0:
-                        get_next_value('category_seq')
                     return redirect('categoryIndex')
 
 
@@ -79,6 +82,7 @@ def category_delete(request, id):
             return redirect('categoryIndex')
 
 
+<<<<<<< HEAD
 # ------------------------------ SUPLIER -------------------
 
 def list_supplier(request):
@@ -94,6 +98,26 @@ def list_supplier(request):
         return render(request, 'content/list_supplier.html', context)
 
 def supplier(request, id=0):
+=======
+# ============================= SUBCATEGORY =================================
+
+def subcategoryIndex(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        request.session['category'] = id
+        context = {
+            'id': Category.objects.get(pk=id),
+            'role': request.session['role'],
+            'username': request.session['username'],
+            'title': 'Subcategory | Inbound',
+            'subcategory': Subcategory.objects.filter(deleted=0, userGroup=request.session['usergroup'], category=id).values('id', 'subcategory', 'category_id')
+        }
+        return render(request, 'inside/wmsInbound/subcategoryIndex.html', context)
+
+
+def subcategory(request, id=0):
+>>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
@@ -102,6 +126,7 @@ def supplier(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
+<<<<<<< HEAD
                     form = SupplierForm()
                     #username = request.session['1']
                     context = {
@@ -135,12 +160,47 @@ def supplier(request, id=0):
             return render(request, 'content/supplier.html')
                     
 def supplier_delete(request, id):
+=======
+                    context = {
+                        'form': SubcategoryForm(),
+                        'category': Category.objects.get(pk=request.session['category']),
+                        'group_id': request.session['usergroup'],
+                        'role': request.session['role'],
+                        'username': request.session['username'],
+                        'title': 'Add Subcategory | Inbound'
+                    }
+                    return render(request, 'inside/wmsInbound/subcategoryCreate.html', context)
+                else:
+                    subcategory = Subcategory.objects.get(pk=id)
+                    context = {
+                        'form': SubcategoryForm(instance=subcategory),
+                        'subcategory': subcategory,
+                        'role': request.session['role'],
+                        'group_id': request.session['usergroup'],
+                        'username': request.session['username'],
+                        'title': 'Update Subcategory | Inbound'
+                    }
+                    return render(request, 'inside/wmsInbound/subcategoryUpdate.html', context)
+            else:
+                if id == 0:
+                    form = SubcategoryForm(request.POST)
+                else:
+                    subcategory = Subcategory.objects.get(pk=id)
+                    form = SubcategoryForm(request.POST, instance=subcategory)
+                if form.is_valid():
+                    form.save()
+                    return redirect('subcategoryIndex', id=request.session['category'])
+
+
+def subcategoryDelete(request, id):
+>>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
+<<<<<<< HEAD
             Supplier.objects.filter(pk=id).update(deleted=1)
             return redirect('list_supplier')
 
@@ -158,3 +218,7 @@ def supplier_detail(request, id):
         }
         return render(request, 'content/detail_supplier.html', context)
 
+=======
+            Subcategory.objects.filter(pk=id).update(deleted=1)
+            return redirect('subcategoryIndex', id=request.session['category'])
+>>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf

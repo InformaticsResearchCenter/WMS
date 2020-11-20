@@ -1,0 +1,33 @@
+{% extends 'base/master.html' %} {% load static %} {% block content %}
+<!-- Page Content  -->
+<div id="content" width="80%">
+    <h2>Update Subcategory</h2>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Update Category
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label for="supplier">Subccategory</label>
+                            <input type="text" class="form-control" name="subcategory" id="subcategory" placeholder="Name" value="{{subcategory.subcategory}}">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="category" id="category" value="{{subcategory.category.id}}">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{subcategory.userGroup_id}}">
+                        </div>
+                        <button type="submit " class="btn btn-primary ">Update</button>
+                    </div>
+                </div>
+            </form>
+            <a href="#"><button type="submit " class="btn btn-success ">Back</button></a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

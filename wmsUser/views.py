@@ -48,7 +48,6 @@ def user(request, id=0):
                     if id == 0:
                         context = {
                             'form': UserForm(),
-                            'id': get_last_value('user_seq'),
                             'group_id': request.session['usergroup'],
                             'role_data': Role.objects.all(),
                             'role': request.session['role'],
@@ -77,8 +76,6 @@ def user(request, id=0):
                     if form.is_valid():
                         if request.POST['role'] != "MAN":
                             form.save()
-                            if id == 0:
-                                get_next_value('user_seq')
                             return redirect('userIndex')
                         else:
                             messages.error(
