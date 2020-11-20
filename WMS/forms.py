@@ -1,5 +1,5 @@
 from django import forms
-from WMS.models import User, Category
+from WMS.models import *
 
 
 class UserForm(forms.ModelForm):
@@ -24,5 +24,18 @@ class CategoryForm(forms.ModelForm):
         fields = [
             'id',
             'category',
+            'userGroup',
+        ]
+
+class SupplierForm(forms.ModelForm):
+    class Meta:
+        model = Supplier
+        fields = [
+            'id',
+            'name',
+            'address',
+            'phoneNumber',
+            'postalCode',
+            'email',
             'userGroup',
         ]
