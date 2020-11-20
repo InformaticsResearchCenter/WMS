@@ -4,7 +4,7 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    path('', views.main_outbound, name="outboundd"),
+    path('', views.main_outbound, name="outbound"),
     path('add_outbound', views.outbound, name="add_outbound"),
     path('view_outbound/<slug:id>/', views.view_outbound, name="view_outbound"),
     path('delete_outbound/<slug:id>/', views.delete_outbound, name="delete_outbound"),

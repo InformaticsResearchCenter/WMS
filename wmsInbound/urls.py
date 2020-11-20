@@ -13,6 +13,7 @@ urlpatterns = [
          views.category, name="categoryUpdate"),
     path('item/category/category_delete/<slug:id>/',
          views.category_delete, name="categoryDelete"),
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     # -------------------- Inbound --------------------------
@@ -38,4 +39,6 @@ urlpatterns = [
     path('item/category/subcategory/subcategory_delete/<slug:id>/',
          views.subcategoryDelete, name="subcategoryDelete"),
 >>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
+=======
+>>>>>>> parent of f4c45a4... supplier
 ]

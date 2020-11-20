@@ -17,7 +17,7 @@
         <hr>
         <div class="card">
             <div class="card-header">
-                update data supplier
+                update date supplier
             </div>
             <div class="card-body">
                 <form method="POST" action="">
@@ -41,7 +41,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="category">Phone</label>
-                                <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" value="{{supplier.phoneNumber}}"
+                                <input type="text" class="form-control" name="phone" id="phone" value="phone"
                                     placeholder="Input Phone">
                             </div>
                             <div class="form-group">
@@ -51,11 +51,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="category">PostalCode</label>
-                                <input type="text" class="form-control" name="postalCode" id="postalCode"
-                                    value="{{supplier.postalCode}}" placeholder="Input PostalCode">
-                            </div>
-                             <div class="form-group">
-                                <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{supplier.userGroup_id}}">
+                                <input type="text" class="form-control" name="postalcode" id="postalcode"
+                                    value="{{supplier.postalcode}}" placeholder="Input PostalCode">
                             </div>
                             <button type="submit" class="btn btn-primary">Update</button>
                         </div>

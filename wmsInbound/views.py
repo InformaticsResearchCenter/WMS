@@ -2,14 +2,11 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 import datetime
 from WMS.models import *
-<<<<<<< HEAD
 from WMS.forms import *
+from WMS.forms import CategoryForm
 from sequences import get_next_value
-=======
 from WMS.forms import CategoryForm, SubcategoryForm
->>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
 
-from django.db import connection
 # Create your views here.
 
 
@@ -81,8 +78,6 @@ def category_delete(request, id):
             Category.objects.filter(pk=id).update(deleted=1)
             return redirect('categoryIndex')
 
-
-<<<<<<< HEAD
 # ------------------------------ SUPLIER -------------------
 
 def list_supplier(request):
@@ -117,7 +112,6 @@ def subcategoryIndex(request, id):
 
 
 def subcategory(request, id=0):
->>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
@@ -126,7 +120,6 @@ def subcategory(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
-<<<<<<< HEAD
                     form = SupplierForm()
                     #username = request.session['1']
                     context = {
@@ -160,7 +153,6 @@ def subcategory(request, id=0):
             return render(request, 'content/supplier.html')
                     
 def supplier_delete(request, id):
-=======
                     context = {
                         'form': SubcategoryForm(),
                         'category': Category.objects.get(pk=request.session['category']),
@@ -193,14 +185,12 @@ def supplier_delete(request, id):
 
 
 def subcategoryDelete(request, id):
->>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-<<<<<<< HEAD
             Supplier.objects.filter(pk=id).update(deleted=1)
             return redirect('list_supplier')
 
@@ -217,8 +207,5 @@ def supplier_detail(request, id):
             'title': 'Detail Supplier'
         }
         return render(request, 'content/detail_supplier.html', context)
-
-=======
             Subcategory.objects.filter(pk=id).update(deleted=1)
             return redirect('subcategoryIndex', id=request.session['category'])
->>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
