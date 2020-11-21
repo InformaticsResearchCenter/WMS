@@ -6,10 +6,48 @@ from WMS.forms import CategoryForm, SubcategoryForm
 
 # Create your views here.
 
-
+# ========================= ITEM ================================
 def itemIndex(request):
     return render(request, 'inside/wmsInbound/itemIndex.html')
 
+
+def item(request, id=0):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            if request.method == "GET":
+                if id == 0:
+                    context = {
+                        'form': CategoryForm(),
+                        'group_id': request.session['usergroup'],
+                        'role': request.session['role'],
+                        'username': request.session['username'],
+                        'title': 'Add Category | Inbound'
+                    }
+                    return render(request, 'inside/wmsInbound/categoryCreate.html', context)
+                else:
+                    category = Category.objects.get(pk=id)
+                    context = {
+                        'form': CategoryForm(instance=category),
+                        'category': category,
+                        'role': request.session['role'],
+                        'group_id': request.session['usergroup'],
+                        'username': request.session['username'],
+                        'title': 'Update Category | Inbound'
+                    }
+                    return render(request, 'inside/wmsInbound/categoryUpdate.html', context)
+            else:
+                if id == 0:
+                    form = CategoryForm(request.POST)
+                else:
+                    category = Category.objects.get(pk=id)
+                    form = CategoryForm(request.POST, instance=category)
+                if form.is_valid():
+                    form.save()
+                    return redirect('categoryIndex')
 # ==================== CATEGORY ======================
 
 

@@ -17,6 +17,15 @@ class UserForm(forms.ModelForm):
         ]
 
 
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = [
+            'name',
+            'subcategory',
+            'userGroup',
+        ]
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
