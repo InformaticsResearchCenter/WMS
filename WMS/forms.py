@@ -1,13 +1,9 @@
 from django import forms
-<<<<<<< HEAD
-<<<<<<< HEAD
 from WMS.models import *
-=======
 from WMS.models import User, Category, Subcategory
->>>>>>> 3d75e840509d729c04323b70b1a17b7606074bcf
-=======
+
 from WMS.models import User, Category
->>>>>>> parent of f4c45a4... supplier
+from WMS.models import User, Category
 
 
 class UserForm(forms.ModelForm):
@@ -42,3 +38,16 @@ class SubcategoryForm(forms.ModelForm):
             'category',
             'userGroup',
         ]
+
+class SupplierForm(forms.ModelForm):
+    class Meta:
+        model = Supplier
+        fields = [
+            'id',
+            'name',
+            'email',
+            'phoneNumber',
+            'address',
+            'postalCode',
+            'userGroup',
+        ]        
