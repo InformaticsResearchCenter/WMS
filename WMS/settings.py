@@ -101,13 +101,23 @@ WSGI_APPLICATION = 'WMS.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd636rfnio6olin',
+#         'USER': 'tltgafsivdcprs',
+#         'PASSWORD': '1fbf8b847b21a32bbe6aef2f6c1c9286fd1c5dce58ac703f7081d2e0ac319262',
+#         'HOST': 'ec2-54-243-67-199.compute-1.amazonaws.com'
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd636rfnio6olin',
-        'USER': 'tltgafsivdcprs',
-        'PASSWORD': '1fbf8b847b21a32bbe6aef2f6c1c9286fd1c5dce58ac703f7081d2e0ac319262',
-        'HOST': 'ec2-54-243-67-199.compute-1.amazonaws.com'
+        'NAME': 'DBWMSLoc',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': '127.0.0.1'
     }
 }
 

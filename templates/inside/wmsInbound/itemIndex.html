@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+        <a href="{% url 'itemCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Item</a> {% endif %}
         <a href="{% url 'categoryIndex' %}" class="btn btn-primary btn-sm" style="margin-left:20px;" role="button" aria-pressed="true">Category</a>
     </div>
@@ -25,13 +25,13 @@
                 {% for item in Item %}
                 <tr>
                     <th scope="row">1</th>
-                    <td>{{item.0}}</td>
-                    <td>{{item.1}}</td>
-                    <td>{{item.2}}</td>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.subcategory}}</td>
                     {% if role != 'OPR' %}
                     <td>
-                        <a href="#" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
-                        <form action="#" method="POST" class="d-inline">
+                        <a href="{% url 'itemUpdate' item.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
+                        <form action="{% url 'itemDelete' item.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px; width: 50px;">
                             <i class="text-white">Delete</i>

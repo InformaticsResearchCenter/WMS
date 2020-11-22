@@ -5,6 +5,8 @@ from django.http import HttpResponse
 import datetime
 from django.db import IntegrityError
 from django.contrib import messages
+# from sequences import Sequence
+from sequences import get_next_value
 from WMS.forms import UserForm
 
 def index(request):
@@ -34,6 +36,14 @@ def user(request, id=0):
             raise PermissionDenied
         else:
             try:
+                data = User(
+                    name="Administrator",address='jl. kemana',phoneNumber='08679584738', postalCode='712739', username="administrator1", password="administrator1", role=Role.objects.get(pk="ADM"), userGroup=UserGroup.objects.get(pk=request.session['usergroup'])
+                    )
+                data.save()
+                last = get_next_value('user_seq')
+                print(last)
+                next('user_seq')
+                print(last)
                 if request.method == "GET":
                     if id == 0:
                         context = {

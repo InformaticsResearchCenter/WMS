@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-# from .forms import *
+from .forms import *
 from WMS.models import *
 
 from django.http import HttpResponseRedirect
@@ -17,7 +17,7 @@ from datetime import datetime
 
 # -------- PDF -----------
 from django.template.loader import get_template
-# from category.utils import render_to_pdf
+from category.utils import render_to_pdf
 from django.http import HttpResponse
 from django.views.generic import View
 from django.shortcuts import get_list_or_404, get_object_or_404
