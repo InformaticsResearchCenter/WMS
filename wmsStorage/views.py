@@ -49,14 +49,32 @@ def rack(request):
                     for i in range(int(numberbin)):
                         bin_id = request.POST['id']+(str(i+1))
                         data_bin.append(Binlocation(id=bin_id, rack=Rack.objects.get(pk=request.POST['id']),
-                                                    capacity=request.POST['capacity']))
+                                                    capacity=request.POST['capacity'], userGroup=UserGroup.objects.get(pk=request.session['usergroup'])))
                     Binlocation.objects.bulk_create(data_bin)
-                    print(data_bin)
                     return redirect('rackIndex')
-                # query = """INSERT INTO Binlocation(id, rackid, capacity)
-                # VALUES
-                # (%s, %s, %s) """
-                # cursor.executemany(query, data_bin)
-                # return redirect('rack')
 
-            return render(request, 'storage/rack.html')
+            return render(request, 'inside/wmsStorage/rackIndex.html')
+
+
+def rackDelete(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            Rack.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+            Binlocation.objects.filter(
+                rack=id, userGroup=request.session['usergroup']).update(deleted=1)
+            return redirect('rackIndex')
+
+
+def rackView(request, id):
+    context = {
+        'binlocation': Binlocation.objects.filter(rack=id, userGroup=request.session['usergroup']),
+        'bin_len': Binlocation.objects.filter(rack=id, userGroup=request.session['usergroup']).count(),
+        'rack': id,
+        'title': 'View Rack',
+    }
+    return render(request, 'inside/wmsStorage/rackView.html', context)

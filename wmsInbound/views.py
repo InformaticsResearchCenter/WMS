@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 import datetime
 from WMS.models import *
-from WMS.forms import CategoryForm, SubcategoryForm, ItemForm
+from WMS.forms import CategoryForm, SubcategoryForm, ItemForm, SupplierForm
 
 # Create your views here.
 
@@ -67,7 +67,7 @@ def itemDelete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Item.objects.filter(pk=id).update(deleted=1)
+            Item.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('itemIndex')
 
 # ==================== CATEGORY ======================
@@ -132,7 +132,7 @@ def categoryDelete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Category.objects.filter(pk=id).update(deleted=1)
+            Category.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('categoryIndex')
 
 
@@ -200,7 +200,7 @@ def subcategoryDelete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Subcategory.objects.filter(pk=id).update(deleted=1)
+            Subcategory.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('subcategoryIndex', id=request.session['category'])
 
 
@@ -232,7 +232,6 @@ def supplier(request, id=0):
                     #username = request.session['1']
                     context = {
                         'form': form,
-                        'id': get_next_value('supplier_seq'),
                         'group_id': request.session['usergroup'],
                         'title': 'Add Supplier'
                     }
@@ -255,8 +254,6 @@ def supplier(request, id=0):
                     form = SupplierForm(request.POST, instance=supplier)
                 if form.is_valid():
                     form.save()
-                    if id == 0:
-                        get_next_value('supplier_seq')
                     return redirect('list_supplier')
             return render(request, 'content/supplier.html')
 
@@ -268,7 +265,7 @@ def supplier_delete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Supplier.objects.filter(pk=id).update(deleted=1)
+            Supplier.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('list_supplier')
 
 

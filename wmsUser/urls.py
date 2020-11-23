@@ -8,4 +8,5 @@ urlpatterns = [
     path('user_create', views.user, name="userCreate"),
     path('user_update/<slug:id>/', views.user, name="userUpdate"),
     path('user_delete/<slug:id>/', views.user_delete, name="userDelete"),
+    
 ]

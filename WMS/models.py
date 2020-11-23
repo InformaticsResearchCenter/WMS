@@ -228,6 +228,7 @@ class Rack(models.Model):
 
 
 class Binlocation(models.Model):
+    id=models.CharField(primary_key=True, max_length=5, default="NULL")
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
