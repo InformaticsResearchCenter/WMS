@@ -58,11 +58,5 @@ def register(request):
     
 
 def logout(request):
-    try:
-        del request.session['groupId']
-        del request.session['groupName']
-        del request.session['groupLimit']
-        del request.session['group_is_login']
-        return redirect('groupLogin')
-    except:
-        return redirect('groupLogin')
+    request.session.flush()
+    return redirect('groupLogin')
