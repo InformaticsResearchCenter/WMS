@@ -21,6 +21,16 @@ class UserForm(forms.ModelForm):
         ]
 
 
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = [
+            'name',
+            'subcategory',
+            'userGroup',
+        ]
+
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
@@ -39,6 +49,7 @@ class SubcategoryForm(forms.ModelForm):
             'userGroup',
         ]
 
+
 class SupplierForm(forms.ModelForm):
     class Meta:
         model = Supplier
@@ -50,4 +61,4 @@ class SupplierForm(forms.ModelForm):
             'address',
             'postalCode',
             'userGroup',
-        ]        
+        ]

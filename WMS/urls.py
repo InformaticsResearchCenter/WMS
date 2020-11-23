@@ -11,7 +11,6 @@ path('', views.index, name="homepage"),
     path('app/', include('wmsApp.urls')),
     path('admin/', include('wmsAdmin.urls')),
     path('group/', include('wmsGroup.urls')),
-
 ]
 
 

@@ -12,6 +12,5 @@ import datetime
 
 
 def index(request):
-
     return render(request, 'inside/wmsHomepage/indexs.html')
 
