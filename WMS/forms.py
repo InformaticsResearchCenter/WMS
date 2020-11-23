@@ -62,3 +62,12 @@ class SupplierForm(forms.ModelForm):
             'postalCode',
             'userGroup',
         ]
+
+
+class RackForm(forms.ModelForm):
+    class Meta:
+        model = Rack
+        fields = [
+            'id',
+            'userGroup',
+        ]
