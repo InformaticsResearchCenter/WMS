@@ -53,7 +53,6 @@ def register(request):
         except:
             messages.error(request, 'email sudah terdaftar')
             return redirect('groupRegister')
-            
     else:
         return render(request, "inside/wmsGroup/form/register.html")
     
