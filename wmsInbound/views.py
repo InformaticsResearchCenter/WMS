@@ -5,8 +5,16 @@ from WMS.models import *
 from WMS.forms import *
 from sequences import get_next_value
 from WMS.forms import CategoryForm, SubcategoryForm
-
+from django.db import connection
+import datetime
 # Create your views here.
+
+# -------- PDF -----------
+from django.template.loader import get_template
+from category.utils import render_to_pdf
+from django.http import HttpResponse
+from django.views.generic import View
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 # ========================= ITEM ================================
@@ -264,5 +272,162 @@ def supplier_detail(request, id):
             'title': 'Detail Supplier'
         }
         return render(request, 'content/detail_supplier.html', context)
-            # Supplier.objects.filter(pk=id).update(deleted=1)
-            # return redirect('subcategoryIndex', id=request.session['category'])
+
+# ======================================= Inbound ============================================
+
+def inbound(request, id=0):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            if request.method == "GET":
+                if id == 0:
+                    form = InboundForm()
+                    date_time = datetime.datetime.now()
+                    date_id = date_time.strftime("%d%m%Y%H%M%S")
+                    date = date_time.strftime("%Y-%m-%d")
+                    id_inbound = date_id
+                    #username = request.session['1']
+                    con_cre = request.session['id']
+                    context = {
+                        'form': form,
+                        'supplier': Supplier.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name'),
+                        'title': 'Add Item',
+                        'group_id': request.session['usergroup'],
+                        'date': date,
+                        'id_inbound': id_inbound,
+                        'con_cre': con_cre
+                    }
+                    return render(request, 'content/inbound.html', context)
+            else:
+                if id == 0:
+                    form = InboundForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    if id == 0:
+                        get_next_value('inbound_seq')
+                    return redirect('inboundIndex')    
+            return render(request, 'content/inbound.html')
+
+
+def main_inbound(request):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        context = {
+            'inbound': Inbound.objects.filter(deleted=0),
+            # 'username': username,
+            # 'role': role,
+            'title': 'Inbound | WMS Poltekpos'
+        }
+        return render(request, 'content/main_inbound.html', context)
+
+
+def view_inbound(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        inbound = Inbound.objects.filter(pk=id)
+        results2 = InboundData.objects.filter(inbound=id, deleted=0)
+        request.session['inbound_id'] = id
+        context = {
+            'Inbound': inbound,
+            'Itemdata': results2,
+            'title': 'View Inbound',
+        }
+        return render(request, 'content/view_inbound.html', context)
+
+
+def delete_inbound(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            Inbound.objects.filter(pk=id).update(deleted=1)
+            return redirect('inboundIndex')
+
+# ====================================== InboundData ====================================
+
+def inbound_data(request, id=0):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            item = Item.objects.all()
+            if request.method == "GET":
+                if id == 0:
+                    form = InboundDataForm()
+                    context = {
+                        'form': form,
+                        'item': item,
+                        'group_id': request.session['usergroup'],
+                        'inbound_id': Inbound.objects.get(pk=request.session['id']),
+                        'title': 'Add InboundData',
+                    }
+                    return render(request, 'content/inbounddata.html', context)
+                else:
+                    inbounddata = InboundData.objects.get(pk=id)
+                    inboundid = request.session['inbound_id']
+                    form = InboundDataForm(instance=inbounddata)
+                    context = {
+                        'form': form,
+                        'item': item,
+                        'title': 'Update ItemData',
+                        'inboundid': inboundid,
+                        'inbounddata': inbounddata,
+                    }
+                    return render(request, 'content/update_inbounddata.html', context)
+            else:
+                if id == 0:
+                    form = InboundDataForm(request.POST)
+                else:
+                    inbounddata = InboundData.objects.get(pk=id)
+                    form = InboundDataForm(request.POST, instance=inbounddata)
+                if form.is_valid():
+                    form.save()
+                    return redirect('view_inbound', id=request.session['inbound_id'])
+            return render(request, 'content/view_inbound.html')
+
+def delete_inbounddata(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            InboundData.objects.filter(pk=id).update(deleted=1)
+            return redirect('view_inbound', id=request.session['inbound_id'])
+
+
+# -----------------------------PDF ALL Data-------------------------
+class PdfInbound(View):
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Inbound, pk=kwargs['pk'])
+        if obj.status == '1':
+            raise PermissionDenied
+        else:
+            datas = list(InboundData.objects.all().select_related(
+                'inbound').filter(inbound=obj).values_list('id', 'item__name', 'quantity', 'rejectCounter', 'reject'))
+            itemdata = []
+            for e in datas:
+                itemdata.append(list(ItemData.objects.all().select_related(
+                    'id').filter(id=e[0]).values_list('id', flat='true')))
+            datacollect = zip(datas, itemdata)
+            pdf = render_to_pdf('content/pdf_inbound.html', {
+                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect':datacollect})
+            if pdf:
+                response = HttpResponse(pdf, content_type='application/pdf')
+                filename = "Invoice_%s.pdf" % (12341231)
+                content = "inline; filename=%s" % (filename)
+                download = request.GET.get("download")
+                if download:
+                    content = "attachment; filename=%s" % (filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not Found")

@@ -15,7 +15,26 @@ urlpatterns = [
          views.category_delete, name="categoryDelete"),
 
     # -------------------- Inbound --------------------------
-    # path('inbound/', views.main_inbound, name="inboundIndex"),
+    path('inbound/', views.main_inbound, name="inboundIndex"),
+    path('inbound/add_inbound', views.inbound, name="add_inbound"),
+    path('inbound/delete_inbound/<slug:id>/',
+         views.delete_inbound, name="delete_inbound"),
+    path('inbound/view_inbound/<slug:id>/',
+         views.view_inbound, name="view_inbound"),
+    # path('inbound/confirm/',
+    #      views.confirm, name="confirm"),
+
+
+    # -------------------- Itemdata --------------------------
+    path('inbound/add_inbounddata', views.inbound_data, name="add_inbounddata"),
+    path('inbound/update_inbounddata/<slug:id>/',
+         views.inbound_data, name="update_inbounddata"),
+    path('inbound/delete_inbounddata/<slug:id>/',
+         views.delete_inbounddata, name="delete_inbounddata"),
+
+    # -------------------- PDFInbound --------------------------
+    #path('inbound/<int:pk>/', views.PdfInbound.as_view(),),
+    path('inbound/<slug:pk>/', views.PdfInbound.as_view(),),
 
     # --------------------- SUPPLIER ------------------
     path('supplier/', views.list_supplier, name="list_supplier"),

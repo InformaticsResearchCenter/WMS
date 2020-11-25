@@ -50,4 +50,30 @@ class SupplierForm(forms.ModelForm):
             'address',
             'postalCode',
             'userGroup',
-        ]        
+        ]
+
+class InboundForm(forms.ModelForm):
+    class Meta:
+        model = Inbound
+        fields = [
+            'id',
+            'date',
+            'status',
+            'confirm',
+            'create',
+            'supplier',
+            'userGroup',
+        ]                
+
+class InboundDataForm(forms.ModelForm):
+    class Meta:
+        model = InboundData
+        fields = [
+            'id',
+            'inbound',
+            'item',
+            'quantity',
+            'reject',
+            'rejectCounter',
+            'userGroup',
+        ]
