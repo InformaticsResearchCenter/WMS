@@ -2,16 +2,16 @@
 {% load static %}
 
 {% block content %}
-<h2>Data Item</h2>
+<h2>Data Inbound Data</h2>
 <hr>
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        <a href="{% url 'add_itemdata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-            Item</a>
+        <a href="{% url 'add_inbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            Inbound Data</a>
             {% for inb in Inbound %}
-            {% if inb.status == "On - Check" %}
-            <form action="{% url 'confirm' %}" method="POST" class="d-inline">
+            {% if inb.status == "1" %}
+            <form action="" method="POST" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 70px;">
                     <i class="text-white">Confirm</i>
@@ -34,11 +34,18 @@
             {% for inb in Inbound %}
             <div class="col">
                 <h6><b>: {{inb.id}}</b></h6>
-                <h6><b>: {{inb.supplierid.id}}</b></h6>
-                <h6><b>: {{inb.supplierid.name}}</b></h6>
+                <h6><b>: {{inb.supplier.id}}</b></h6>
+                <h6><b>: {{inb.supplier.name}}</b></h6>
                 <h6><b>: {{inb.date}}</b></h6>
-                <h6><b>: {{inb.status}}</b></h6>
-                <h6><b>: {{inb.created.username}}</b></h6>
+                <h6><b>:  {% if inb.status == "1" %}
+                    <td>Open Document</td>
+                    {% elif inb.status == "2" %}
+                    <td>Complete with reject</td>
+                    {% elif inb.status == "3" %}
+                    <td>Complete</td>
+                    {% endif %}
+                </b></h6>
+                <h6><b>: {{inb.create.name}}</b></h6>
             </div>
             {% endfor %}
         </div>
@@ -66,20 +73,20 @@
                 {% for itdt in Itemdata %}
                 <tr>
                     <th scope="row">1</th>
-                    <td>{{itdt.itemid.name}}</td>
+                    <td>{{itdt.item.name}}</td>
                     <td>{{itdt.quantity}}</td>
-                    <td>{{itdt.pass_field}}</td>
+                    <td>{{itdt.rejectCounter}}</td>
                     <td>{{itdt.reject}}</td>
                     <td>-</td>
                     {% if role != 'OPR' %}
                     <td>
                         {% for inb in Inbound %}
-                            {% if inb.status == "On - Check" %}
-                            <a href="{% url 'update_itemdata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
+                            {% if inb.status == "1" %}
+                            <a href="{% url 'update_inbounddata' itdt.id  %}" class=" btn btn-success btn-sm" role="button"
                                 aria-pressed="true">Update</a>
                             {% endif %}
                         {% endfor %}
-                        <form action="{% url 'delete_itemdata' itdt.id %}" method="POST" class="d-inline">
+                        <form action="{% url 'delete_inbounddata' itdt.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 50px;">
                                 <i class="text-white">Delete</i>
@@ -91,7 +98,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-warning">Back</button></a>
+        <a href="{% url 'inboundIndex' %}"><button type="submit" class="btn btn-warning">Back</button></a>
     </div>
 </div>
 

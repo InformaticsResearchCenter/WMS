@@ -12,28 +12,29 @@
     <h2 class="mb-4">Ini Role OPR</h2>
     {% endif %}
 
-    <h2>Update ItemData</h2>
+    <h2>Update InboundData</h2>
     <hr>
     <div class="card">
         <div class="card-header">
-            Update ItemData
+            Update InboundData
         </div>
         <div class="card-body">
             <form method="POST" action="">
                 {%csrf_token%}
                 <div class="row justify-content-center">
                     <div class="col-8">
-                        <div class="form-group">
+                       <!--  <div class="form-group">
                             <input type="text" readonly="true" class="form-control" name="id" id="id"
                                 value="{{itd.id}}">
-                        </div>
+                        </div> -->
                         <div class="form-group">
-                            <input type="text" readonly="true" class="form-control" name="inboundid" id="inboundid"
+                            <label for="itemdata">InboundId</label>
+                            <input type="text" readonly="true" class="form-control" name="inbound" id="inbound"
                                 value="{{inboundid}}">
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Item</label>
-                            <select class="form-control" name="itemid">
+                            <select class="form-control" name="item" id="item">
                                 {% for itm in item %}
                                 <option value='{{itm.id}}'>{{itm.name}}</option>
                                 {% endfor %}
@@ -41,18 +42,20 @@
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Quantity</label>
-                            <input type="text" class="form-control" name="quantity" id="quantity"
-                                placeholder="Input Quantity" value="{{itd.quantity}}">
+                            <input type="text" class="form-control" name="quantity" id="quantity" value="{{inbounddata.quantity}}">
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Pass</label>
-                            <input type="text" class="form-control" name="pass_field" id="pass_field" readonly
-                                value="{{itd.pass_field}}">
+                            <input type="text" class="form-control" name="rejectCounter" id="rejectCounter" readonly
+                                value="{{inbounddata.rejectCounter}}">
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Reject</label>
                             <input type="text" class="form-control" name="reject" id="reject" placeholder="Input Reject"
-                                value="{{itd.reject}}">
+                                value="{{inbounddata.reject}}">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{inbounddata.userGroup_id}}">
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
@@ -60,7 +63,7 @@
                 <script type="text/javascript">
                     var qty = document.getElementById('quantity');
                     var rjt = document.getElementById('reject');
-                    var pass = document.getElementById('pass_field');
+                    var pass = document.getElementById('rejectCounter');
                     qty.addEventListener("change", function () {
                         pass.value = qty.value - rjt.value;
                     });
@@ -70,7 +73,7 @@
                     // document.getElementById('pass_field').value = qty - rjt;
                 </script>
             </form>
-            <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-success">Back</button></a>
+            <a href="{% url 'inboundIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
         </div>
     </div>
 </div>
