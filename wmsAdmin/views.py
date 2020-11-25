@@ -58,13 +58,16 @@ def login(request):
 
 
 def logout(request):
-    try:
-        del request.session['adminId']
-        del request.session['adminUsername']
-        del request.session['admin_is_login']
-        return redirect('adminLogin')
-    except KeyError as e:
-        return HttpResponse(e)
+    request.session.flush()
+    return redirect('adminLogin')
+
+    # try:
+    #     del request.session['adminId']
+    #     del request.session['adminUsername']
+    #     del request.session['admin_is_login']
+    #     return redirect('adminLogin')
+    # except KeyError as e:
+    #     return HttpResponse(e)
 
 def limit(request,id):
     if 'admin_is_login' not in request.session:
