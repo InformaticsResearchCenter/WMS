@@ -16,8 +16,6 @@ urlpatterns = [
          views.borrowDelete, name="borrowDelete"),
     path('borrowdata_create/', views.borrowdata, name="borrowdataCreate"),
     path('borrowdata_confirm/', views.borrowdataConfirm, name="borrowdataConfirm"),
-    path('borrowdata_complete/', views.borrowdataComplete,
-         name="borrowdataComplete"),
     path('borrowdata_return/', views.borrowdataReturn, name="borrowdataReturn"),
     path('borrowdata_update/<slug:id>/',
          views.borrowdata, name="borrowdataUpdate"),

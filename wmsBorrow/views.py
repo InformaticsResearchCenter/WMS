@@ -105,43 +105,49 @@ def borrowdata(request, id=0):
         if request.session['role'] == 'OPR':
             raise PermissionDenied
         else:
-            if request.method == "GET":
-                if id == 0:
-                    context = {
-                        'form': BorrowdataForm(),
-                        'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
-                        'borrow_id': request.session['borrow'],
-                        'id': request.session['id'],
-                        'role': request.session['role'],
-                        'group_id': request.session['usergroup'],
-                        'username': request.session['username'],
-                        'title': 'Add List Borrow Data',
-                    }
-                    return render(request, 'inside/wmsBorrow/borrowdataCreate.html', context)
-                else:
-                    borrowdata = BorrowData.objects.get(pk=id)
-                    context = {
-                        'form': BorrowdataForm(instance=borrowdata),
-                        'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
-                        'borrowdata': borrowdata,
-                        'borrow_id': request.session['borrow'],
-                        'id': request.session['id'],
-                        'role': request.session['role'],
-                        'group_id': request.session['usergroup'],
-                        'username': request.session['username'],
-                        'title': 'Update List Borrow Data',
-                    }
-                    return render(request, 'inside/wmsBorrow/borrowdataUpdate.html', context)
+            borrowdata = BorrowData.objects.filter(
+                pk=request.session['borrow'], userGroup=request.session['usergroup'])
+            borrowstatus = borrowdata.first()
+            if borrowstatus.borrow.status != '1':
+                raise PermissionDenied
             else:
-                if id == 0:
-                    form = BorrowdataForm(request.POST)
+                if request.method == "GET":
+                    if id == 0:
+                        context = {
+                            'form': BorrowdataForm(),
+                            'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
+                            'borrow_id': request.session['borrow'],
+                            'id': request.session['id'],
+                            'role': request.session['role'],
+                            'group_id': request.session['usergroup'],
+                            'username': request.session['username'],
+                            'title': 'Add List Borrow Data',
+                        }
+                        return render(request, 'inside/wmsBorrow/borrowdataCreate.html', context)
+                    else:
+                        borrowdata = BorrowData.objects.get(pk=id)
+                        context = {
+                            'form': BorrowdataForm(instance=borrowdata),
+                            'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
+                            'borrowdata': borrowdata,
+                            'borrow_id': request.session['borrow'],
+                            'id': request.session['id'],
+                            'role': request.session['role'],
+                            'group_id': request.session['usergroup'],
+                            'username': request.session['username'],
+                            'title': 'Update List Borrow Data',
+                        }
+                        return render(request, 'inside/wmsBorrow/borrowdataUpdate.html', context)
                 else:
-                    borrowdata = BorrowData.objects.get(pk=id)
-                    form = BorrowdataForm(
-                        request.POST, instance=borrowdata)
-                if form.is_valid():
-                    form.save()
-                    return redirect('borrowView', id=request.session['borrow'])
+                    if id == 0:
+                        form = BorrowdataForm(request.POST)
+                    else:
+                        borrowdata = BorrowData.objects.get(pk=id)
+                        form = BorrowdataForm(
+                            request.POST, instance=borrowdata)
+                    if form.is_valid():
+                        form.save()
+                        return redirect('borrowView', id=request.session['borrow'])
 
 
 def borrowdataDelete(request, id):
@@ -173,23 +179,6 @@ def borrowdataConfirm(request):
             if borrow.status == '1':
                 Borrow.objects.filter(
                     pk=request.session['borrow']).update(status='2', date=datetime.datetime.now())
-                return redirect('borrowView', id=request.session['borrow'])
-            else:
-                raise PermissionDenied
-
-
-def borrowdataComplete(request):
-    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
-        return redirect('login')
-    else:
-        if request.session['role'] == 'OPR':
-            raise PermissionDenied
-        else:
-            borrow = Borrow.objects.filter(
-                pk=request.session['borrow']).first()
-            if borrow.status == '2':
-                Borrow.objects.filter(
-                    pk=request.session['borrow']).update(status='3')
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied

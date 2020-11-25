@@ -3,11 +3,10 @@
 <hr>
 <div class="card">
     <div class="card-header">
-        {% if role != 'OPR' %}
+        {% if role != 'OPR' %} {% if borrowstatus.borrow.status == '1' %}
         <a href="{% url 'borrowdataCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-          Borrow Data</a> {% if borrowstatus.borrow.status == '1' %}
-        <a href="{% url 'borrowdataConfirm' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true" style="float: right;">Confirm</a> {% endif %} {% if borrowstatus.borrow.status == '2' %}
-        <a href="{% url 'borrowdataComplete' %}" class="btn btn-success btn-sm" role="button" aria-pressed="true" style="float: right;">Complete</a> {% endif %} {% if borrowstatus.borrow.status == '3' %}
+          Borrow Data</a>{% endif %} {% if borrowstatus.borrow.status == '1' %}
+        <a href="{% url 'borrowdataConfirm' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true" style="float: right;">Confirm</a> {% endif %}{% if borrowstatus.borrow.status == '3' %}
         <a href="{% url 'borrowdataReturn' %}" class="btn btn-danger btn-sm" role="button" aria-pressed="true" style="float: right;">Returned</a> {% endif %} {% endif %}
     </div>
     <div class="card-body">
