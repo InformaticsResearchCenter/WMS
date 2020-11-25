@@ -26,14 +26,13 @@ def rack(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
-        role = request.session['role']
-        if role == 'OPR':
+        if request.session['role'] == 'OPR':
             raise PermissionDenied
         else:
             if request.method == "GET":
                 context = {
                     'form': RackForm(),
-                    'role': role,
+                    'role': request.session['role'],
                     'group_id': request.session['usergroup'],
                     'username': request.session['username'],
                     'title': 'Add Rack',

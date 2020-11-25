@@ -197,7 +197,7 @@ class SupplierReturnData(models.Model):
 class CostumerReturn(models.Model):
     status_choices = [
         ('1', 'Open document'),
-        ('2', 'Document ready')
+        ('2', 'Document ready'),
         ('3', 'Complete'),
     ]
     userGroup = models.ForeignKey(

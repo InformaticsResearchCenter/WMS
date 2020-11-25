@@ -2,8 +2,9 @@
 <h2>View Category - Subcategory - {{id.category}}</h2>
 <div class="card">
     <div class="card-header">
+        {% if role != 'OPR' %}
         <a href="{% url 'subcategoryCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-          Subcategory</a>
+          Subcategory</a> {% endif %}
     </div>
     <div class="card-body">
         <table id="example1" class="table table-bordered table-striped">

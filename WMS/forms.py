@@ -71,3 +71,26 @@ class RackForm(forms.ModelForm):
             'id',
             'userGroup',
         ]
+
+
+class BorrowForm(forms.ModelForm):
+    class Meta:
+        model = Borrow
+        fields = [
+            'name',
+            'phoneNumber',
+            'confirm',
+            'create',
+            'userGroup',
+        ]
+
+
+class BorrowdataForm(forms.ModelForm):
+    class Meta:
+        model = BorrowData
+        fields = [
+            'quantity',
+            'borrow',
+            'item',
+            'userGroup',
+        ]
