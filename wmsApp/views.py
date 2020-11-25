@@ -63,13 +63,6 @@ def login(request):
 
 
 def logout(request):
-    try:
-        del request.session['id']
-        del request.session['username']
-        del request.session['role']
-        del request.session['usergroup']
-        del request.session['is_login']
-        return redirect('login')
-    except KeyError:
-        return redirect('login')
+    request.session.flush()
+    return redirect('login')
         

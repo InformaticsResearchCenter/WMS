@@ -212,8 +212,8 @@ def list_supplier(request):
     else:
         context = {
             'list_supplier': Supplier.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name'),
-            'username': username,
-            'role': role,
+            'username': request.session['username'],
+            'role': request.session['role'],
             'title': 'Supplier | WMS Poltekpos'
         }
         return render(request, 'content/list_supplier.html', context)

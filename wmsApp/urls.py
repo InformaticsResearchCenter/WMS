@@ -14,6 +14,7 @@ urlpatterns = [
     path('user/', include('wmsUser.urls')),
     path('inbound/', include('wmsInbound.urls')),
     path('outbound/', include('wmsOutbound.urls')),
+    path('storage/', include('wmsStorage.urls')),
     
 ]
 

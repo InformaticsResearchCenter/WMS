@@ -89,7 +89,8 @@ class InboundData(models.Model):
 class Outbound(External):
     status_choices = [
         ('1','Open document'),
-        ('2','Complete'),
+        ('2','Document ready'),
+        ('3','Complete'),
     ]
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -108,8 +109,9 @@ class OutboundData(models.Model):
 class Borrow(Employee):
     status_choices = [
         ('1','Open document'),
-        ('2','Complete'),
-        ('3','Returned')
+        ('2','Document ready'),
+        ('3','Complete'),
+        ('4','Returned')
     ]
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -181,12 +183,13 @@ class Binlocation(models.Model):
 class ItemData(models.Model):
     status_list=[
         ('0','unidentified'),
-        ('1','sold'),
-        ('2','avaible'),
+        ('1','avaible'),
+        ('2','sold'),
         ('3','borrowed'),
         ('4','broken'),
         ('5','lost'),
     ]
+    binlocation = models.ForeignKey(Binlocation, on_delete=models.CASCADE, null=True)
     userGroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
     inbound = models.ForeignKey(InboundData, on_delete=models.CASCADE, null=True)
