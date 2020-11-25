@@ -63,7 +63,6 @@ class SupplierForm(forms.ModelForm):
             'userGroup',
         ]
 
-<<<<<<< HEAD
 class InboundForm(forms.ModelForm):
     class Meta:
         model = Inbound
@@ -89,7 +88,6 @@ class InboundDataForm(forms.ModelForm):
             'rejectCounter',
             'userGroup',
         ]
-=======
 
 class RackForm(forms.ModelForm):
     class Meta:
@@ -98,4 +96,3 @@ class RackForm(forms.ModelForm):
             'id',
             'userGroup',
         ]
->>>>>>> 1668112d9474a2dada38b26e8d362d9f0825b305
