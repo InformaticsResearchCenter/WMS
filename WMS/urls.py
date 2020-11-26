@@ -10,7 +10,7 @@ urlpatterns = [
 path('', views.index, name="homepage"),
 path('admin/', include('wmsAdmin.urls')),
 path('group/', include('wmsGroup.urls')),
-path('app/', include('wmsApp.urls')),
+path('app/', include('wmsApp.urls')),6666
 ]
 
 
