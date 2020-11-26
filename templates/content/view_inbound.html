@@ -11,7 +11,7 @@
             Inbound Data</a>
             {% for inb in Inbound %}
             {% if inb.status == "1" %}
-            <form action="" method="POST" class="d-inline">
+            <form action="{% url 'confirm' %}" method="POST" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 70px;">
                     <i class="text-white">Confirm</i>

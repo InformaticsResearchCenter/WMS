@@ -23,12 +23,12 @@
                     {% csrf_token %}
                     <div class="row justify-content-center">
                         <div class="col-8">
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <input type="hidden" class="form-control" name="id" id="id" value="{{id_outbound}}">
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="supplier">Customer Name</label>
-                                <input type="text" class="form-control" name="customername" id="customername" placeholder="Customer Name">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Name">
                             </div>
                             <div class="form-group">
                                 <label for="supplier">Address</label>
@@ -36,20 +36,36 @@
                             </div>
                             <div class="form-group">
                                 <label for="supplier">Phone Number</label>
-                                <input type="text" class="form-control" name="phonenumber" id="phonenumber" placeholder="Phone Number">
+                                <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Phone Number">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Postal Code</label>
+                                <input type="text" class="form-control" name="postalCode" id="postalCode" placeholder="Postal Code">
                             </div>
                             <div class="form-group">
                                 <label for="supplier">Date</label>
                                 <input type="text" class="form-control" name="date" id="date"
                                     value="{{date}}" readonly="true">
                             </div>
-                            <input type="hidden" class="form-control" name="status" id="status"
-                                    value="On - Progress">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{group_id}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="confirm" id="confirm"
+                                    value="{{con_cre}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="create" id="create"
+                                    value="{{con_cre}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="status" id="status" value="1">
+                            </div>
                             <button type="submit" class="btn btn-primary">Add</button>
                         </div>
                     </div>
                 </form>
-                <a href="#"><button type="submit" class="btn btn-success">Back</button></a>
+                <a href="{% url 'outbound' %}"><button type="submit" class="btn btn-success">Back</button></a>
             </div>
         </div>
     </div>

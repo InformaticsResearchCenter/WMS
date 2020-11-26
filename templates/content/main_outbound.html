@@ -6,13 +6,13 @@
         <h2>Data Outbound</h2>
         <hr>
         <div class="card">
-            <div class="card-header">
+            <!-- <div class="card-header">
               {% if role != 'OPR' %}
                 <a href="{% url 'add_outbound' %}" class="btn btn-primary btn-sm" role="button"
                     aria-pressed="true">Create
                     Outbound</a>
               {% endif %}
-            </div>
+            </div> -->
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
@@ -31,21 +31,27 @@
                     <tr>
                         <th scope="row">1</th>
                         <td>{{onb.id}}</td>
-                        <td>{{onb.customername}}</td>
+                        <td>{{onb.name}}</td>
                         <td>{{onb.address}}</td>
                         <td>{{onb.date}}</td>
-                        <td>{{onb.status}}</td>
+                        {% if onb.status == "1" %}
+                        <td>Open Document</td>
+                        {% elif onb.status == "2" %}
+                        <td>Document ready</td>
+                        {% elif onb.status == "3" %}
+                        <td>Complete</td>
+                        {% endif %}
                         <td>
                             <a href="{% url 'view_outbound' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
                             {% if role != 'OPR' %}
-                              {% if onb.status != "Done" %}
+                              {% if onb.status != "3" %}
                               <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
                               {% endif %}
-                              {% if onb.status != "Ready" and onb.status != "Done" %}
+                              {% if onb.status != "2" and onb.status != "3" %}
                               <a href="{% url 'update_outbound' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
                               {% endif %}
                             {% endif %}
-                            {% if onb.status == "Ready" or onb.status == "Done" %}
+                            {% if onb.status == "2" or onb.status == "3" %}
                             <a href="{{onb.id}}"><button class="btn-success btn-sm">PDF</button></a>
                             {% endif %}
                         </td>

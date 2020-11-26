@@ -390,7 +390,7 @@ def inbound_data(request, id=0):
                         'form': form,
                         'item': item,
                         'group_id': request.session['usergroup'],
-                        'inbound_id': Inbound.objects.get(pk=request.session['id']),
+                        'inbound_id': request.session['inbound_id'],
                         'title': 'Add InboundData',
                     }
                     return render(request, 'content/inbounddata.html', context)
@@ -454,3 +454,65 @@ class PdfInbound(View):
                 response['Content-Disposition'] = content
                 return response
             return HttpResponse("Not Found")
+
+
+#-------------------------- Confirm --------------------------------
+
+def confirm(request):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            index = 0
+            inbound_id = request.session['inbound_id']
+            inbounddata = InboundData.objects.all().filter(
+                inboundid=inbound_id)
+            inbounddata_id_list = list(inbounddata.values_list('id', flat=True))
+            inbound_id_list = list(inbounddata.values_list('inboundid', flat=True))
+            pass_field_list = list(
+                inbounddata.values_list('pass_field', flat=True))
+
+            # Memanggil Value Reject yang lebih dari 0
+            inbounddata2 = InboundData.objects.all().filter(
+                inboundid=inbound_id).exclude(reject=0)
+            rejectlist = list(inbounddata2.values_list('reject', flat=True))
+            # -----------------------------------------
+
+            # Isi field Itembatch
+            date_time = datetime.now()
+            date = date_time.strftime("%Y-%m-%d")
+            data_fix = []
+            rackid = None
+            entry = date
+            out = None
+            # ----------------------------------------
+
+            # Looping insert data ke Itembatch
+            for i in pass_field_list:
+                inboundid = inbound_id_list[index]
+                inbounddataid = inbounddata_id_list[index]
+                for x in range(i):
+                    confirm_id = str(get_next_value('confirm_seq'))
+                    id_batch = inbound_id+confirm_id+inboundid
+                    data = (id_batch, rackid, entry, out, inbounddataid)
+                    data_fix.append(data)
+                index += 1
+            cursor = connection.cursor()
+            query = """INSERT INTO ItemData(id, binid, entry, out, inbounddataid)
+                        VALUES
+                        (%s, %s, %s, %s, %s) """
+            cursor.executemany(query, data_fix)
+            # --------------------------------------------
+
+            # Update status Inbound data
+            if len(rejectlist) > 0:
+                Inbounddata.objects.filter(
+                    id=inbound_id).update(status="Rejected")
+            else:
+                Inbounddata.objects.filter(
+                    id=inbound_id).update(status="Succes")
+            # -------------------------------------------------
+
+            return redirect('inbound')             

@@ -27,8 +27,8 @@ urlpatterns = [
          views.delete_inbound, name="delete_inbound"),
     path('inbound/view_inbound/<slug:id>/',
          views.view_inbound, name="view_inbound"),
-    # path('inbound/confirm/',
-    #      views.confirm, name="confirm"),
+    path('inbound/confirm/',
+         views.confirm, name="confirm"),
 
 
     # -------------------- Itemdata --------------------------

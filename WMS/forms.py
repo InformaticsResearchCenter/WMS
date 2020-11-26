@@ -96,3 +96,30 @@ class RackForm(forms.ModelForm):
             'id',
             'userGroup',
         ]
+
+class OutboundForm(forms.ModelForm):
+    class Meta:
+        model = Outbound
+        fields = [
+            'id',
+            'name',
+            'address',
+            'phoneNumber',
+            'postalCode',
+            'date',
+            'confirm',
+            'create',
+            'userGroup',
+        ]
+
+class OutboundDataForm(forms.ModelForm):
+    class Meta:
+        model = OutboundData
+        fields = [
+            'id',
+            'quantity',
+            'item',
+            'outbound',
+            'userGroup',
+        ]
+        
