@@ -28,10 +28,42 @@
                 </tr>
             </thead>
             <tbody>
-                {% for inb in Inbound %}
+                {% for inb in inbound %}
                 <tr>
                     <th scope="row">1</th>
-                    <td>{{inb.0}}</td>
+                    <td>{{inb.id}}</td>
+                    <td>{{inb.supplier.name}}</td>
+                    
+                    {% if inb.status == "1" %}
+                    <td>Open Document</td>
+                    {% elif inb.status == "2" %}
+                    <td>Complete with reject</td>
+                    {% elif inb.status == "3" %}
+                    <td>Complete</td>
+                    {% endif %}
+                    
+                    <td>{{inb.date}}</td>
+                    <td>
+                        <a href="{% url 'view_inbound' inb.id %}" class="btn btn-primary btn-sm" role="button"
+                            aria-pressed="true">View</a>
+                        {% if role != 'OPR' %}
+                        <form action="{% url 'delete_inbound' inb.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 50px;">
+                                <i class="text-white">Delete</i>
+                            </button>
+                        </form>
+                        {% endif %}
+                        {% if inb.status != "1" %}
+                        <a href="{{inb.id}}"><button class="btn btn-success btn-sm">PDF</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- {% for inb in Inbound %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>{{inb.name}}</td>
                     <td>{{inb.1}}</td>
                     <td>{{inb.2}}</td>
                     <td>{{inb.3}}</td>
@@ -64,7 +96,7 @@
                     <th scope="col" style="width: 165px;">Action</th>
                 </tr>
                 {% endcomment %}
-            </tfoot> 
+            </tfoot>  -->
         </table>
     </div>
 </div>

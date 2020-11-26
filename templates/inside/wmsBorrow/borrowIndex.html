@@ -1,0 +1,54 @@
+{% extends 'base/master.html' %} {% load static %} {% block content %}
+<h2>Data Borrow</h2>
+<hr>
+<div class="card">
+
+    <div class="card-header">
+        {% if role != 'OPR' %}
+        <a href="{% url 'borrowCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Create
+            Borrow Data</a> {% endif %}
+    </div>
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 100px;">No</th>
+                    <th scope="col">Borrow Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Borrow Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in borrow %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{b.id}}</td>
+                    <td>{{b.name}}</td>
+                    <td>{{b.phoneNumber}}</td>
+                    <td>{{b.date}}</td>
+                    <td>{{b.get_status_display}}</td>
+                    <td>
+                        <a href="{% url 'borrowView' b.id %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">View</a> {% if b.status != '1' %}
+                        <a href="#"><button class="btn btn-warning btn-sm">PDF</button></a> {% endif %} {% if role != 'OPR' %} {% if b.status == '1' %}
+                        <a href="{% url 'borrowUpdate' b.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
+                        <form action="{% url 'borrowDelete' b.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                    <i class="text-white">Delete</i>
+                                </button>
+                        </form>
+                        {% endif %} {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+{% endblock content %}

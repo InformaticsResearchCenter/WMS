@@ -4,27 +4,27 @@
 {% block content %}
 <!-- <div class="wrapper d-flex align-items-stretch"> -->
 <!-- Page Content  -->
-    <h2>Input Item Data</h2>
+    <h2>Input Inbound Data</h2>
     <hr>
     <div class="card">
         <div class="card-header">
-            Add ItemData
+            Add InboundData
         </div>
         <div class="card-body">
             <form method="POST" action="">
                 {%csrf_token%}
                 <div class="row justify-content-center">
                     <div class="col-8">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <input type="hidden" class="form-control" name="id" id="id" value="ITD{{itd_id}}">
-                        </div>
+                        </div> -->
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name="inboundid" id="inboundid"
+                            <input type="hidden" class="form-control" name="inbound" id="inbound"
                                 value="{{inbound_id}}">
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Item</label>
-                            <select class="form-control" name="itemid">
+                            <select class="form-control" name="item" name="item">
                                 {% for itm in item %}
                                 <option value='{{itm.id}}'>{{itm.name}}</option>
                                 {% endfor %}
@@ -37,20 +37,23 @@
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Pass</label>
-                            <input type="text" readonly class="form-control" name="pass_field" id="pass_field">
+                            <input type="text" readonly class="form-control" name="rejectCounter" id="rejectCounter">
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Reject</label>
                             <input type="text" class="form-control" name="reject" id="reject"
                                 placeholder="Input Reject">
                         </div>
+                         <div class="form-group">
+                                <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{group_id}}">
+                            </div>
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
                 <script type="text/javascript">
                     var qty = document.getElementById('quantity');
                     var rjt = document.getElementById('reject');
-                    var pass = document.getElementById('pass_field');
+                    var pass = document.getElementById('rejectCounter');
                     qty.addEventListener("change", function () {
                         pass.value = qty.value - rjt.value;
                     });
@@ -59,7 +62,7 @@
                     });
                 </script>
             </form>
-            <a href="{% url 'inbound' %}"><button type="submit" class="btn btn-success">Back</button></a>
+            <a href="{% url 'inboundIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
         </div>
     </div>
 </div>

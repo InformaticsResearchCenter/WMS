@@ -61,17 +61,25 @@
                 <tr>
                     <td width="100px">Supplier ID</td>
                     <td>:</td>
-                    <td width="200px">{{obj.supplierid.id}}</td>
+                    <td width="200px">{{obj.supplier.id}}</td>
                 </tr>
                 <tr>
                     <td width="100px">Supplier Name</td>
                     <td>:</td>
-                    <td width="200px">{{obj.supplierid.name}}</td>
+                    <td width="200px">{{obj.supplier.name}}</td>
                 </tr>
                 <tr>
                     <td width="100px">Status</td>
                     <td>:</td>
-                    <td width="200px">{{obj.status}}</td>
+                    <td width="400px">
+                        {% if obj.status == "1" %}
+                         <p>Open Document</p>
+                        {% elif obj.status == "2" %}
+                        <p>Complete with reject</p>
+                        {% elif obj.status == "3" %}
+                        <p>Complete</p>
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <td width="100px">Date</td>
@@ -81,11 +89,11 @@
                 <tr>
                     <td width="100px">Confirm</td>
                     <td>:</td>
-                    <td width="200px">{{obj.created.username}}</td>
+                    <td width="200px">{{obj.create.name}}</td>
                 </tr>
             </table>
             <hr class='hrItem' />
-            <h2>Itemdata</h2>
+            <h2>Inbounddata</h2>
             <table class="table" border="1" style="text-align: center;padding-top: 5px;">
                 <thead class="thead-dark">
                     <tr>
@@ -109,7 +117,7 @@
                 </tbody>
             </table>
             <hr class='hrItem' />
-            <h2>Itembatch</h2>
+            <h2>Itemdata</h2>
             {% for itbc,itdt in datacollect %}
             <hr>
             <b>{{itbc.1}}</b>
@@ -117,14 +125,14 @@
             <table class="table" border="1" style="text-align: center;padding-top: 5px;">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col" width="200px">No</th>
+                        <th scope="col" width="200px">Kode</th>
                         <th scope="col">QRCode</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for u in itdt %}
                     <tr>
-                        <th scope="row">{{u}}</th>
+                        <th scope="row">{{u}} <br> ({{itbc.1}})</th>
                         <td><img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{u}}'></td>
                         <!-- 
                             <input type="text" id="qr-data" onchange="generateQR()">

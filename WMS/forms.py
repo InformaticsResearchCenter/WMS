@@ -63,11 +63,59 @@ class SupplierForm(forms.ModelForm):
             'userGroup',
         ]
 
+class InboundForm(forms.ModelForm):
+    class Meta:
+        model = Inbound
+        fields = [
+            'id',
+            'date',
+            'status',
+            'confirm',
+            'create',
+            'supplier',
+            'userGroup',
+        ]                
+
+class InboundDataForm(forms.ModelForm):
+    class Meta:
+        model = InboundData
+        fields = [
+            'id',
+            'inbound',
+            'item',
+            'quantity',
+            'reject',
+            'rejectCounter',
+            'userGroup',
+        ]
 
 class RackForm(forms.ModelForm):
     class Meta:
         model = Rack
         fields = [
             'id',
+            'userGroup',
+        ]
+
+
+class BorrowForm(forms.ModelForm):
+    class Meta:
+        model = Borrow
+        fields = [
+            'name',
+            'phoneNumber',
+            'confirm',
+            'create',
+            'userGroup',
+        ]
+
+
+class BorrowdataForm(forms.ModelForm):
+    class Meta:
+        model = BorrowData
+        fields = [
+            'quantity',
+            'borrow',
+            'item',
             'userGroup',
         ]
