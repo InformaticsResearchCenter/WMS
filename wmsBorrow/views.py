@@ -33,6 +33,7 @@ def borrow(request, id=0):
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
+                        'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'title': 'Add Borrow Data',
                     }
                     return render(request, 'inside/wmsBorrow/borrowCreate.html', context)
@@ -88,8 +89,10 @@ def borrowView(request, id):
             request.session['borrow'] = id
             borrow = BorrowData.objects.filter(
                 deleted=0, borrow=id, userGroup=request.session['usergroup'])
+            borrowstatus = Borrow.objects.get(pk=id)
             context = {
                 'borrowdata': borrow,
+                'borrowstats': borrowstatus,
                 'borrowstatus': borrow.first(),
                 'title': 'View Borrow Data',
             }
@@ -105,10 +108,8 @@ def borrowdata(request, id=0):
         if request.session['role'] == 'OPR':
             raise PermissionDenied
         else:
-            borrowdata = BorrowData.objects.filter(
-                pk=request.session['borrow'], userGroup=request.session['usergroup'])
-            borrowstatus = borrowdata.first()
-            if borrowstatus.borrow.status != '1':
+            borrow = Borrow.objects.get(pk=request.session['borrow'])
+            if borrow.status != '1':
                 raise PermissionDenied
             else:
                 if request.method == "GET":
@@ -178,7 +179,7 @@ def borrowdataConfirm(request):
                 pk=request.session['borrow']).first()
             if borrow.status == '1':
                 Borrow.objects.filter(
-                    pk=request.session['borrow']).update(status='2', date=datetime.datetime.now())
+                    pk=request.session['borrow'], userGroup=request.session['usergroup']).update(status='2')
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied
@@ -195,7 +196,7 @@ def borrowdataReturn(request):
                 pk=request.session['borrow']).first()
             if borrow.status == '3':
                 Borrow.objects.filter(
-                    pk=request.session['borrow']).update(status='4')
+                    pk=request.session['borrow'], userGroup=request.session['usergroup']).update(status='4')
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied

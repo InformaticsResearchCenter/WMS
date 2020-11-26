@@ -63,6 +63,7 @@ class SupplierForm(forms.ModelForm):
             'userGroup',
         ]
 
+
 class InboundForm(forms.ModelForm):
     class Meta:
         model = Inbound
@@ -74,7 +75,8 @@ class InboundForm(forms.ModelForm):
             'create',
             'supplier',
             'userGroup',
-        ]                
+        ]
+
 
 class InboundDataForm(forms.ModelForm):
     class Meta:
@@ -88,6 +90,7 @@ class InboundDataForm(forms.ModelForm):
             'rejectCounter',
             'userGroup',
         ]
+
 
 class RackForm(forms.ModelForm):
     class Meta:
@@ -106,6 +109,7 @@ class BorrowForm(forms.ModelForm):
             'phoneNumber',
             'confirm',
             'create',
+            'date',
             'userGroup',
         ]
 
