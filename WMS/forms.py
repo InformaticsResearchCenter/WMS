@@ -100,7 +100,6 @@ class RackForm(forms.ModelForm):
             'userGroup',
         ]
 
-<<<<<<< HEAD
 class OutboundForm(forms.ModelForm):
     class Meta:
         model = Outbound
@@ -126,8 +125,7 @@ class OutboundDataForm(forms.ModelForm):
             'outbound',
             'userGroup',
         ]
-        
-=======
+
 
 class BorrowForm(forms.ModelForm):
     class Meta:
@@ -151,4 +149,3 @@ class BorrowdataForm(forms.ModelForm):
             'item',
             'userGroup',
         ]
->>>>>>> 89c8e23d022acc231ca4627b4cd03dd7e39a678e
