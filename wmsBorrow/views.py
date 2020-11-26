@@ -3,9 +3,12 @@ from django.core.exceptions import PermissionDenied
 import datetime
 from WMS.models import *
 from WMS.forms import *
+from module import item as i
 
 
 def borrowIndex(request):
+    item = i.avaibleItem(1,0,request.session['usergroup'])
+    print(item)
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
@@ -38,6 +41,7 @@ def borrow(request, id=0):
                     }
                     return render(request, 'inside/wmsBorrow/borrowCreate.html', context)
                 else:
+
                     borrow = Borrow.objects.get(pk=id)
                     context = {
                         'form': BorrowForm(instance=borrow),
