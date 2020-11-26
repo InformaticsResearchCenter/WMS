@@ -1,0 +1,49 @@
+{% extends 'base/master.html' %} {% load static %} {% block content %}
+<h2>Data Borrow</h2>
+<hr>
+<div class="card">
+    <div class="card-header">
+        {% if role != 'OPR' %} {% if borrowstats.status == '1' %}
+        <a href="{% url 'borrowdataCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+          Borrow Data</a>{% endif %} {% if borrowstatus.borrow.status == '1' %}
+        <a href="{% url 'borrowdataConfirm' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true" style="float: right;">Confirm</a> {% endif %}{% if borrowstatus.borrow.status == '3' %}
+        <a href="{% url 'borrowdataReturn' %}" class="btn btn-danger btn-sm" role="button" aria-pressed="true" style="float: right;">Returned</a> {% endif %} {% endif %}
+    </div>
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 100px;">No</th>
+                    <th scope="col">Borrowdata Id</th>
+                    <th scope="col">Capacity</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in borrowdata %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td><b>{{b.id}}</b></td>
+                    <td>{{b.quantity}}</td>
+                    <td>{{b.item.name}}</td>
+                    {% if role != 'OPR' %}
+                    <td>
+                        {% if b.borrow.status == '1' %}
+                        <a href="{% url 'borrowdataUpdate' b.id %}"><button class="btn btn-success btn-sm">Update</button></a>
+                        <form action="{% url 'borrowdataDelete' b.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                    <i class="text-white">Delete</i>
+                                </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

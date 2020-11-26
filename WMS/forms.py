@@ -63,6 +63,7 @@ class SupplierForm(forms.ModelForm):
             'userGroup',
         ]
 
+
 class InboundForm(forms.ModelForm):
     class Meta:
         model = Inbound
@@ -74,7 +75,8 @@ class InboundForm(forms.ModelForm):
             'create',
             'supplier',
             'userGroup',
-        ]                
+        ]
+
 
 class InboundDataForm(forms.ModelForm):
     class Meta:
@@ -89,6 +91,7 @@ class InboundDataForm(forms.ModelForm):
             'userGroup',
         ]
 
+
 class RackForm(forms.ModelForm):
     class Meta:
         model = Rack
@@ -97,6 +100,7 @@ class RackForm(forms.ModelForm):
             'userGroup',
         ]
 
+<<<<<<< HEAD
 class OutboundForm(forms.ModelForm):
     class Meta:
         model = Outbound
@@ -123,3 +127,28 @@ class OutboundDataForm(forms.ModelForm):
             'userGroup',
         ]
         
+=======
+
+class BorrowForm(forms.ModelForm):
+    class Meta:
+        model = Borrow
+        fields = [
+            'name',
+            'phoneNumber',
+            'confirm',
+            'create',
+            'date',
+            'userGroup',
+        ]
+
+
+class BorrowdataForm(forms.ModelForm):
+    class Meta:
+        model = BorrowData
+        fields = [
+            'quantity',
+            'borrow',
+            'item',
+            'userGroup',
+        ]
+>>>>>>> 89c8e23d022acc231ca4627b4cd03dd7e39a678e

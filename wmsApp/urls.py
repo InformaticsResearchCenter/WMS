@@ -15,6 +15,8 @@ urlpatterns = [
     path('inbound/', include('wmsInbound.urls')),
     path('outbound/', include('wmsOutbound.urls')),
     path('storage/', include('wmsStorage.urls')),
+    # path('    data/', include('wmsData.urls'))
+    path('borrow/', include('wmsBorrow.urls')),
     
 ]
 
