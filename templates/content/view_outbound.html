@@ -9,7 +9,7 @@
         {% if role != 'OPR' %}
         <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add Outbound Data</a>
             {% for otb in Outbound %}
-                {% if otb.status == "On - Progress" %}
+                {% if otb.status == "1" %}
                 <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
@@ -33,11 +33,18 @@
             {% for otb in Outbound %}
             <div class="col">
                 <h6><b>: {{otb.id}}</b></h6>
-                <h6><b>: {{otb.customername}}</b></h6>
+                <h6><b>: {{otb.name}}</b></h6>
                 <h6><b>: {{otb.address}}</b></h6>
-                <h6><b>: {{otb.phonenumber}}</b></h6>
+                <h6><b>: {{otb.phoneNumber}}</b></h6>
                 <h6><b>: {{otb.date}}</b></h6>
-                <h6><b>: {{otb.status}}</b></h6>
+                <h6><b>:{% if otb.status == "1" %}
+                        <td>Open Document</td>
+                        {% elif otb.status == "2" %}
+                        <td>Document ready</td>
+                        {% elif otb.status == "3" %}
+                        <td>Complete</td>
+                        {% endif %}
+                </b></h6>
             </div>
             {% endfor %}
         </div>
@@ -64,10 +71,10 @@
                 <tr>
                     <th scope="row">1</th>
                     <td>{{itdt.id}}</td>
-                    <td>{{itdt.itemid.name}}</td>
+                    <td>{{itdt.item.name}}</td>
                     <td>{{itdt.quantity}}</td>
                     {% if role != 'OPR' %}
-                        {% if itdt.outboundid.status == 'On - Progress' %}
+                        {% if itdt.outbound.status == '1' %}
                         <td>
                             <a href="{% url 'update_outbounddata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
                                 aria-pressed="true">Update</a>
