@@ -156,7 +156,7 @@
                         </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
                                     Outbound
@@ -165,7 +165,15 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{% url 'add_outbound' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Process Order</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'outbound' %}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Outbound Data</p>
                                     </a>

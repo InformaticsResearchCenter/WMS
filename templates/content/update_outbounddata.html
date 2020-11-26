@@ -13,7 +13,7 @@
     <h2 class="mb-4">Ini Role OPR</h2>
     {% endif %}
 
-    <h2>Input OutboundData</h2>
+    <h2>Update OutboundData</h2>
     <hr>
     <div class="card">
         <div class="card-header">
@@ -24,12 +24,12 @@
                 {% csrf_token %}
                 <div class="row justify-content-center">
                     <div class="col-8">
-                        <div class="form-group">
+                        <!-- div class="form-group">
                             <input type="hidden" class="form-control" name="id" id="id" value="{{outbounddata.id}}">
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label for="itemdata">Item</label>
-                            <select class="form-control" name="itemid">
+                            <select class="form-control" name="item" id="item">
                                 {% for itm in item %}
                                 <option value='{{itm.id}}'>{{itm.name}}</option>
                                 {% endfor %}
@@ -40,8 +40,11 @@
                             <input type="text" class="form-control" name="quantity" id="quantity"
                                 value="{{outbounddata.quantity}}">
                         </div>
+                         <div class="form-group">
+                            <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{outbounddata.userGroup_id}}">
+                        </div>
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name="outboundid" id="outboundid" value="{{outbounddata.outboundid.id}}">
+                            <input type="hidden" class="form-control" name="outbound" id="outbound" value="{{outboundid}}">
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
