@@ -3,12 +3,13 @@ from django.core.exceptions import PermissionDenied
 import datetime
 from WMS.models import *
 from WMS.forms import *
-from module import item as i
+from module import item as it
+from django.contrib import messages
 
 
 def borrowIndex(request):
-    item = i.avaibleItem(1,0,request.session['usergroup'])
-    print(item)
+    item = it.avaibleItem(1, 0, request.session['usergroup'])
+    print(item[0]['qty'])
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
@@ -41,7 +42,6 @@ def borrow(request, id=0):
                     }
                     return render(request, 'inside/wmsBorrow/borrowCreate.html', context)
                 else:
-
                     borrow = Borrow.objects.get(pk=id)
                     context = {
                         'form': BorrowForm(instance=borrow),
@@ -120,7 +120,7 @@ def borrowdata(request, id=0):
                     if id == 0:
                         context = {
                             'form': BorrowdataForm(),
-                            'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
+                            'item': it.avaibleItem(1, 0, request.session['usergroup']),
                             'borrow_id': request.session['borrow'],
                             'id': request.session['id'],
                             'role': request.session['role'],
@@ -133,7 +133,7 @@ def borrowdata(request, id=0):
                         borrowdata = BorrowData.objects.get(pk=id)
                         context = {
                             'form': BorrowdataForm(instance=borrowdata),
-                            'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
+                            'item': i.avaibleItem(1, 0, request.session['usergroup']),
                             'borrowdata': borrowdata,
                             'borrow_id': request.session['borrow'],
                             'id': request.session['id'],
@@ -151,8 +151,19 @@ def borrowdata(request, id=0):
                         form = BorrowdataForm(
                             request.POST, instance=borrowdata)
                     if form.is_valid():
-                        form.save()
-                        return redirect('borrowView', id=request.session['borrow'])
+                        formqty = request.POST['quantity']
+                        formitem = request.POST['item']
+                        item = it.avaibleItem(
+                            1, 0, request.session['usergroup'])
+                        for i in item:
+                            if i['item'] == int(formitem):
+                                if i['qty'] < int(formqty):
+                                    messages.error(
+                                        request, 'Item quantity exceeded the limit !')
+                                    return redirect('borrowdataCreate')
+                                else:
+                                    form.save()
+                                    return redirect('borrowView', id=request.session['borrow'])
 
 
 def borrowdataDelete(request, id):

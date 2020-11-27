@@ -3,9 +3,15 @@
 {% block content %}
 <!-- Page Content  -->
 <div id="content" width="80%">
-    <h2>Borrow - </h2>
+    <h2>Borrow</h2>
     <hr>
     <div class="card">
+        {% for message in messages %}
+        <div class="alert alert-danger">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
+        </div>
+        {% endfor %}
         <div class="card-header">
             Add List BorrowData
         </div>
@@ -23,7 +29,9 @@
                             <label for="item">Item</label>
                             <select class="form-control" name="item">
                                 {% for i in item %}
-                                <option value='{{i.id}}'>{{i.name}}</option>
+                                {% if i.qty != 0 %}
+                                <option value='{{i.item}}'>{{i.name}} || qty = {{i.qty}}</option>
+                                {% endif %}
                                 {% endfor %}
                             </select>
                         </div>

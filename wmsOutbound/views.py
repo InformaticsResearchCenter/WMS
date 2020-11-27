@@ -153,7 +153,8 @@ def outbounddata(request, id=0):
                     form = OutboundDataForm(request.POST)
                 else:
                     outbounddata = OutboundData.objects.get(pk=id)
-                    form = OutboundDataForm(request.POST, instance=outbounddata)
+                    form = OutboundDataForm(
+                        request.POST, instance=outbounddata)
                 if form.is_valid():
                     form.save()
                     return redirect('view_outbound', id=request.session['outbound_id'])
@@ -167,8 +168,8 @@ def delete_outbounddata(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            outbounddata = OutboundData.objects.get(pk=id)
-            outbounddata.delete()
+            OutboundData.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('view_outbound', id=request.session['outbound_id'])
 
 # =========================================== Konfirm =================
