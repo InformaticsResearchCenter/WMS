@@ -8,8 +8,6 @@ from django.contrib import messages
 
 
 def borrowIndex(request):
-    item = it.avaibleItem(1, 0, request.session['usergroup'])
-    print(item[0]['qty'])
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:

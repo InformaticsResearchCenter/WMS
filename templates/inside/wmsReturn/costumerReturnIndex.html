@@ -1,0 +1,48 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Data Return Costumer</h2>
+<hr>
+<div class="card">
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Costumer Return Id</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cr in costumerReturn %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{cr.id}}</td>
+                    <td>{{cr.outound.name}}</td>
+                    <td>{{cr.date}}</td>
+                    <td>{{cr.status}}</td>
+                    <td>{{cr.confirm}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                {% comment %}
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Inbound Id</th>
+                    <th scope="col">Supplier</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                </tr>
+                {% endcomment %}
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock content %}

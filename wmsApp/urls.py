@@ -7,7 +7,6 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-
     path('', views.index, name="home"),
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
@@ -16,7 +15,8 @@ urlpatterns = [
     path('outbound/', include('wmsOutbound.urls')),
     path('storage/', include('wmsStorage.urls')),
     path('borrow/', include('wmsBorrow.urls')),
-    
+    path('return/', include('wmsReturn.urls')),
+
 ]
 
 
