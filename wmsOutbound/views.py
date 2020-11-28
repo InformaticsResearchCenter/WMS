@@ -10,8 +10,6 @@ from pprint import pprint
 import datetime
 from WMS.forms import *
 
-from sequences import get_next_value
-
 from django.db import connection
 from django.db import models
 
@@ -33,6 +31,8 @@ def main_outbound(request):
     else:
         context = {
             'outbound': Outbound.objects.all(),
+            'role': request.session['role'],
+            'username': request.session['username'],
             'title': 'Outbound | WMS Poltekpos'
         }
         return render(request, "content/main_outbound.html", context)
@@ -172,7 +172,7 @@ def delete_outbounddata(request, id):
                 pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('view_outbound', id=request.session['outbound_id'])
 
-# =========================================== Konfirm =================
+# =========================================== Konfirm ======================================
 
 
 def confirm(request):
@@ -187,7 +187,7 @@ def confirm(request):
             Outbound.objects.filter(id=outbound_id).update(status="Ready")
             return redirect('outbound')
 
-# --------------------------- PDF OUTBOUND
+# --------------------------- PDF OUTBOUND ------------------------------
 
 
 class PdfOutbound(View):
@@ -198,10 +198,8 @@ class PdfOutbound(View):
         else:
             datas = list(OutboundData.objects.all().select_related(
                 'outbound').filter(outbound=obj).values_list('id', 'item__name', 'quantity', 'outbound'))
-
             pdf = render_to_pdf('content/pdf_outbound.html',
                                 {'datas': datas, 'obj': obj})
-
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)

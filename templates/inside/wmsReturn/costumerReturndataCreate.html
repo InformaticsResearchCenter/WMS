@@ -1,9 +1,10 @@
 {% extends 'base/master.html' %}
 {% load static %}
+
 {% block content %}
 <!-- Page Content  -->
 <div id="content" width="80%">
-    <h2>Borrow - </h2>
+    <h2>Input Costumer Return</h2>
     <hr>
     <div class="card">
         {% for message in messages %}
@@ -13,7 +14,7 @@
         </div>
         {% endfor %}
         <div class="card-header">
-            Update List BorrowData
+            Add Costumer Return
         </div>
         <div class="card-body">
             <form method="POST" action="">
@@ -21,34 +22,35 @@
                 <div class="row justify-content-center">
                     <div class="col-8">
                         <div class="form-group">
-                            <label for="name">Quantity</label>
+                            <label for="supplier">Quantity</label>
                             <input type="text" class="form-control" name="quantity" id="quantity"
-                                value="{{borrowdata.quantity}}">
+                                placeholder="Quantity">
                         </div>
                         <div class="form-group">
                             <label for="item">Item</label>
                             <select class="form-control" name="item">
                                 {% for i in item %}
-                                {% if i.qty != 0 %}
-                                <option value='{{i.item}}'>{{i.name}} || qty = {{i.qty}}</option>
-                                {% endif %}
+                                    {% if i.qty != 0 %}
+                                    <option value='{{i.item}}'>{{i.name}} || qty = {{i.qty}}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name="borrow" id="borrow"
-                                value="{{borrowdata.borrow.id}}">
+                            <input type="hidden" class="form-control" name="costumerReturn" id="costumerReturn"
+                                value="{{costumerReturnId}}">
                         </div>
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="userGroup" id="userGroup"
-                                value="{{borrowdata.userGroup.id}}">
+                                value="{{group_id}}">
                         </div>
-                        <button type="submit " class="btn btn-primary ">Update</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
             </form>
-            <a href="#"><button type="submit " class="btn btn-success ">Back</button></a>
+            <a href="{% url 'costumerReturnIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
         </div>
     </div>
+</div>
 </div>
 {% endblock content %}

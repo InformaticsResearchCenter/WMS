@@ -100,6 +100,7 @@ class RackForm(forms.ModelForm):
             'userGroup',
         ]
 
+
 class OutboundForm(forms.ModelForm):
     class Meta:
         model = Outbound
@@ -114,6 +115,7 @@ class OutboundForm(forms.ModelForm):
             'create',
             'userGroup',
         ]
+
 
 class OutboundDataForm(forms.ModelForm):
     class Meta:
@@ -146,6 +148,29 @@ class BorrowdataForm(forms.ModelForm):
         fields = [
             'quantity',
             'borrow',
+            'item',
+            'userGroup',
+        ]
+
+
+class CostumerReturnForm(forms.ModelForm):
+    class Meta:
+        model = CostumerReturn
+        fields = [
+            'outbound',
+            'date',
+            'confirm',
+            'create',
+            'userGroup',
+        ]
+
+
+class CostumerReturndataForm(forms.ModelForm):
+    class Meta:
+        model = CostumerReturnData
+        fields = [
+            'quantity',
+            'costumerReturn',
             'item',
             'userGroup',
         ]

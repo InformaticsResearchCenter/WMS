@@ -36,7 +36,6 @@ class UserGroup(External):
     password = models.CharField(max_length=100, null=True)
 
 
-
 class Category(models.Model):
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
@@ -231,7 +230,7 @@ class Rack(models.Model):
 
 
 class Binlocation(models.Model):
-    id=models.CharField(primary_key=True, max_length=5, default="NULL")
+    id = models.CharField(primary_key=True, max_length=5, default="NULL")
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -248,7 +247,8 @@ class ItemData(models.Model):
         ('4', 'broken'),
         ('5', 'lost'),
     ]
-    binlocation = models.ForeignKey(Binlocation,on_delete=models.CASCADE, null=True)
+    binlocation = models.ForeignKey(
+        Binlocation, on_delete=models.CASCADE, null=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -257,6 +257,7 @@ class ItemData(models.Model):
     outbound = models.ForeignKey(Outbound, on_delete=models.CASCADE, null=True)
     borrow = models.ForeignKey(Borrow, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=2, choices=status_list, default=0)
+
 
 class Admin(External):
     username = models.CharField(max_length=50, unique=True, null=True)

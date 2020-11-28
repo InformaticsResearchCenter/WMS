@@ -131,7 +131,7 @@ def borrowdata(request, id=0):
                         borrowdata = BorrowData.objects.get(pk=id)
                         context = {
                             'form': BorrowdataForm(instance=borrowdata),
-                            'item': i.avaibleItem(1, 0, request.session['usergroup']),
+                            'item': it.avaibleItem(1, 0, request.session['usergroup']),
                             'borrowdata': borrowdata,
                             'borrow_id': request.session['borrow'],
                             'id': request.session['id'],
