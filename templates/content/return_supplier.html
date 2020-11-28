@@ -1,0 +1,75 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<script src="{% static 'Admin/qrcode.min.js' %}"></script>
+<h2>Data Return Supplier</h2>
+<hr>
+<div class="card">
+
+    <div class="card-header">
+        {% if role != 'OPR' %}
+        <a href="{% url 'add_inbound' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Create Return</a>
+        {% endif %}
+    </div>
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Supplier Return Id</th>
+                    <th scope="col">Inbound</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inb in inbound %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td>{{inb.id}}</td>
+                    <td>{{inb.supplier.name}}</td>
+                    
+                    {% if inb.status == "1" %}
+                    <td>Open Document</td>
+                    {% elif inb.status == "2" %}
+                    <td>Complete with reject</td>
+                    {% elif inb.status == "3" %}
+                    <td>Complete</td>
+                    {% endif %}
+                    
+                    <td>{{inb.date}}</td>
+                    <td>
+                        <a href="{% url 'view_inbound' inb.id %}" class="btn btn-primary btn-sm" role="button"
+                            aria-pressed="true">View</a>
+                        {% if role != 'OPR' %}
+                        <form action="{% url 'delete_inbound' inb.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 50px;">
+                                <i class="text-white">Delete</i>
+                            </button>
+                        </form>
+                        {% endif %}
+                        {% if inb.status != "1" %}
+                        <a href="{{inb.id}}"><button class="btn btn-success btn-sm">PDF</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+</div>
+<script>
+    var qrdata = document.getElementById('qr-data');
+    var qrcode = new QRCode(document.getElementById('qrcode'));
+
+    function generateQR() {
+        var data = qrdata.value;
+
+        qrcode.makeCode(data);
+    }
+</script>
+{% endblock content %}

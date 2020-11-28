@@ -175,15 +175,14 @@ def delete_outbounddata(request, id):
 
 
 def confirm(request):
-    if '0' not in request.session and '1' not in request.session and '2' not in request.session:
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
-        role = request.session['2']
-        if role == 'OPR':
+        if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
             outbound_id = request.session['outbound_id']
-            Outbound.objects.filter(id=outbound_id).update(status="Ready")
+            Outbound.objects.filter(id=outbound_id).update(status="2")
             return redirect('outbound')
 
 # --------------------------- PDF OUTBOUND
@@ -211,3 +210,66 @@ class PdfOutbound(View):
                 response['Content-Disposition'] = content
                 return response
             return HttpResponse("Not Found")
+
+
+
+def outbounddata(request, id=0):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            if request.method == "GET":
+                if id == 0:
+                    form = OutboundDataForm()
+                    item = Item.objects.all()
+                    outboundid = request.session['outbound_id']
+                    context = {
+                        'form': form,
+                        'title': 'Add Outbounddata',
+                        'group_id': request.session['usergroup'],
+                        'item': item,
+                        'outboundid': outboundid,
+                    }
+                    return render(request, 'content/outbounddata.html', context)
+                else:
+                    outbounddata = OutboundData.objects.get(pk=id)
+                    item = Item.objects.all()
+                    form = OutboundDataForm(instance=outbounddata)
+                    outboundid = request.session['outbound_id']
+                    context = {
+                        'title': 'Update Outbounddata',
+                        'form': form,
+                        'item': item,
+                        'outbounddata': outbounddata,
+                        'outboundid': outboundid,
+                        'group_id': request.session['usergroup'],
+                    }
+                    return render(request, 'content/update_outbounddata.html', context)
+            else:
+                if id == 0:
+                    form = OutboundDataForm(request.POST)
+                else:
+                    outbounddata = OutboundData.objects.get(pk=id)
+                    form = OutboundDataForm(request.POST, instance=outbounddata)
+                if form.is_valid():
+                    form.save()
+                    return redirect('view_outbound', id=request.session['outbound_id'])
+            return render(request, 'content/outbounddata.html')
+
+
+
+# ========================================== Return Supplier ====================================
+
+def return_supplier(request):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        # context = {
+        #     'role': request.session['role'],
+        #     'username': request.session['username'],
+        #     'title': 'Category | Inbound',
+        #     'category': Category.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'category')
+        # }
+        return render(request, 'content/return_supplier.html')            

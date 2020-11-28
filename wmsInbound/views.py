@@ -468,20 +468,20 @@ def confirm(request):
             index = 0
             inbound_id = request.session['inbound_id']
             inbounddata = InboundData.objects.all().filter(
-                inboundid=inbound_id)
+                inbound=inbound_id)
             inbounddata_id_list = list(inbounddata.values_list('id', flat=True))
-            inbound_id_list = list(inbounddata.values_list('inboundid', flat=True))
+            inbound_id_list = list(inbounddata.values_list('inbound', flat=True))
             pass_field_list = list(
-                inbounddata.values_list('pass_field', flat=True))
+                inbounddata.values_list('rejectCounter', flat=True))
 
             # Memanggil Value Reject yang lebih dari 0
             inbounddata2 = InboundData.objects.all().filter(
-                inboundid=inbound_id).exclude(reject=0)
+                inbound=inbound_id).exclude(reject=0)
             rejectlist = list(inbounddata2.values_list('reject', flat=True))
             # -----------------------------------------
 
-            # Isi field Itembatch
-            date_time = datetime.now()
+            # Isi field Itemdata
+            date_time = datetime.datetime.now()
             date = date_time.strftime("%Y-%m-%d")
             data_fix = []
             rackid = None
@@ -489,18 +489,18 @@ def confirm(request):
             out = None
             # ----------------------------------------
 
-            # Looping insert data ke Itembatch
+            # Looping insert data ke Itemdata
             for i in pass_field_list:
                 inboundid = inbound_id_list[index]
                 inbounddataid = inbounddata_id_list[index]
                 for x in range(i):
-                    confirm_id = str(get_next_value('confirm_seq'))
+                    confirm_id = get_next_value('confirm_seq')
                     id_batch = inbound_id+confirm_id+inboundid
                     data = (id_batch, rackid, entry, out, inbounddataid)
                     data_fix.append(data)
                 index += 1
             cursor = connection.cursor()
-            query = """INSERT INTO ItemData(id, binid, entry, out, inbounddataid)
+            query = """INSERT INTO InboundData(id, binid, entry, out, inbounddataid)
                         VALUES
                         (%s, %s, %s, %s, %s) """
             cursor.executemany(query, data_fix)

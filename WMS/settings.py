@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'wmsInbound',
     'wmsOutbound',
     'wmsStorage',
+    'wmsReturn',
     'sequences.apps.SequencesConfig'
     # 'category',
     # 'storage',

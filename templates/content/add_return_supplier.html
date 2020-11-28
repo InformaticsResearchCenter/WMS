@@ -1,0 +1,63 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Page Content  -->
+    <div id="content" width="80%">
+        {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+
+        <h2>Return Supplier</h2>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                Return Supplier
+            </div>
+            <div class="card-body">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="id" id="id" value="{{id_inbound}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Supplier</label>
+                                <select class="form-control" name="supplier" id="supplier">
+                                    {% for sup in supplier %}
+                                    <option value='{{sup.id}}'>{{sup.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="status" id="status" value="1">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="date" id="date" value="{{date}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{group_id}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="confirm" id="confirm"
+                                    value="{{con_cre}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="create" id="create"
+                                    value="{{con_cre}}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+                <a href="{% url 'inboundIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
