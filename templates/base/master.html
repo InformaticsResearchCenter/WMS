@@ -8,11 +8,13 @@
     <title>{{title}}</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'Admin/plugins/fontawesome-free/css/all.min.css' %}">
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{% static 'Admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <link rel="stylesheet"
+        href="{% static 'Admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
     <!-- iCheck -->
     <link rel="stylesheet" href="{% static 'Admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
     <!-- JQVMap -->
@@ -52,8 +54,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="color: #ffc401;" href="{% url 'logout' %}">Logout <i class="fa fa-sign-out"
-              aria-hidden="true"></i></a>
+                    <a class="nav-link" style="color: #ffc401;" href="{% url 'logout' %}">Logout <i
+                            class="fa fa-sign-out" aria-hidden="true"></i></a>
                 </li>
             </ul>
         </nav>
@@ -63,7 +65,8 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="{% static 'Admin/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="{% static 'Admin/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">WMS POLTEKPOS</span>
             </a>
 
@@ -90,9 +93,8 @@
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
@@ -118,12 +120,6 @@
                                     <a href="{% url 'itemIndex' %}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Item</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Return</p>
                                     </a>
                                 </li>
                             </ul>
@@ -153,8 +149,25 @@
                                 </a>
                         </li>
                         {% endif %}
+                    </ul>
+                    </li>
+                   <!--  <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                Outbound
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'add_outbound' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Process Order</p>
+                                </a>
+                            </li>
                         </ul>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
@@ -180,7 +193,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
@@ -190,7 +203,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{% url 'supplierreturn' %}" class="nav-link">
+                                    <a href="{% url 'supplierReturnIndex' %}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Supplier Return</p>
                                     </a>
@@ -204,7 +217,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
@@ -230,32 +243,95 @@
                             </a>
                         </li>
                         {% endif %}
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-file"></i>
                                 <p>Report</p>
                             </a>
-                        </li>
+                        </li> -->
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'outbound' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Outbound Data</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                Borrow
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'borrowIndex' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Borrow Data</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li> -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-copy"></i>
+                            <p>
+                                Return
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'costumerReturnIndex' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Costumer Return</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'supplierReturnIndex' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Supplier Return</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% if role == 'MAN' %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-file"></i>
+                            <p>Management User</p>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-file"></i>
+                            <p>Report</p>
+                        </a>
+                    </li>
 
-                        <li class="nav-header">LABELS</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-circle text-danger"></i>
-                                <p class="text">Important</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-circle text-warning"></i>
-                                <p>Warning</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-circle text-info"></i>
-                                <p>Informational</p>
-                            </a>
-                        </li>
+                    <li class="nav-header">LABELS</li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon far fa-circle text-danger"></i>
+                            <p class="text">Important</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon far fa-circle text-warning"></i>
+                            <p>Warning</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon far fa-circle text-info"></i>
+                            <p>Informational</p>
+                        </a>
+                    </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -302,8 +378,8 @@
         <!-- /.content-wrapper -->
         <footer class="main-footer">
             <strong>Copyright &copy;<script>
-          document.write(new Date().getFullYear());
-        </script> All rights reserved | by WMS POLTEKPOS</strong>
+                    document.write(new Date().getFullYear());
+                </script> All rights reserved | by WMS POLTEKPOS</strong>
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 3.1.0-pre
             </div>

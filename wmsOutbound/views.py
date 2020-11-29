@@ -10,8 +10,6 @@ from pprint import pprint
 import datetime
 from WMS.forms import *
 
-from sequences import get_next_value
-
 from django.db import connection
 from django.db import models
 
@@ -33,6 +31,8 @@ def main_outbound(request):
     else:
         context = {
             'outbound': Outbound.objects.all(),
+            'role': request.session['role'],
+            'username': request.session['username'],
             'title': 'Outbound | WMS Poltekpos'
         }
         return render(request, "content/main_outbound.html", context)
@@ -153,7 +153,8 @@ def outbounddata(request, id=0):
                     form = OutboundDataForm(request.POST)
                 else:
                     outbounddata = OutboundData.objects.get(pk=id)
-                    form = OutboundDataForm(request.POST, instance=outbounddata)
+                    form = OutboundDataForm(
+                        request.POST, instance=outbounddata)
                 if form.is_valid():
                     form.save()
                     return redirect('view_outbound', id=request.session['outbound_id'])
@@ -167,11 +168,11 @@ def delete_outbounddata(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            outbounddata = OutboundData.objects.get(pk=id)
-            outbounddata.delete()
+            OutboundData.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('view_outbound', id=request.session['outbound_id'])
 
-# =========================================== Konfirm =================
+# =========================================== Konfirm ======================================
 
 
 def confirm(request):
@@ -185,7 +186,7 @@ def confirm(request):
             Outbound.objects.filter(id=outbound_id).update(status="2")
             return redirect('outbound')
 
-# --------------------------- PDF OUTBOUND
+# --------------------------- PDF OUTBOUND ------------------------------
 
 
 class PdfOutbound(View):
@@ -196,10 +197,8 @@ class PdfOutbound(View):
         else:
             datas = list(OutboundData.objects.all().select_related(
                 'outbound').filter(outbound=obj).values_list('id', 'item__name', 'quantity', 'outbound'))
-
             pdf = render_to_pdf('content/pdf_outbound.html',
                                 {'datas': datas, 'obj': obj})
-
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)
@@ -257,19 +256,3 @@ def outbounddata(request, id=0):
                     form.save()
                     return redirect('view_outbound', id=request.session['outbound_id'])
             return render(request, 'content/outbounddata.html')
-
-
-
-# ========================================== Return Supplier ====================================
-
-def return_supplier(request):
-    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
-        return redirect('login')
-    else:
-        # context = {
-        #     'role': request.session['role'],
-        #     'username': request.session['username'],
-        #     'title': 'Category | Inbound',
-        #     'category': Category.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'category')
-        # }
-        return render(request, 'content/return_supplier.html')            

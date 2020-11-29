@@ -12,7 +12,8 @@
                 <div class="row justify-content-center">
                     <div class="col-8">
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{group_id}}">
+                            <input type="hidden" class="form-control" name="userGroup" id="userGroup"
+                                value="{{group_id}}">
                         </div>
                         <div class="form-group">
                             <label for="category">Item</label>
@@ -21,10 +22,10 @@
                         <div class="form-group">
                             <label for="category">Subcategory</label>
                             <select class="form-control" name="subcategory">
-                                    {% for subcategory in subcategory %}
-                                    <option value='{{subcategory.id}}'>{{subcategory.subcategory}}</option>
-                                    {% endfor %}
-                                </select>
+                                {% for subcategory in subcategory %}
+                                <option value='{{subcategory.id}}'>{{subcategory.subcategory}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>

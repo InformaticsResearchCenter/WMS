@@ -2,16 +2,15 @@
 {% load static %}
 
 {% block content %}
-<h2>Data Costumer Return</h2>
+<h2>List Data Supplier Return</h2>
 <hr>
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-            Outbound Data</a>
-        {% for otb in Outbound %}
-        {% if otb.status == "1" %}
-        <form action="#" method="POST" class="d-inline">
+        <a href="{% url 'supplierReturndataCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            Supplier Return Data</a>
+        {% if supplierReturnDataStats.supplierReturn.status == '1' %}
+        <form action="{% url 'supplierReturnConfirm' %}" method="POST" class="d-inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-sm"
                 style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
@@ -19,34 +18,26 @@
             </button>
         </form>
         {% endif %}
-        {% endfor %}
         {% endif %}
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-2">
-                <h6>Outbound ID</h6>
-                <h6>Customer Name</h6>
-                <h6>Address</h6>
-                <h6>Phone Number</h6>
+                <h6>Supplier Return ID</h6>
+                <h6>Inbound id</h6>
+                <h6>Create</h6>
+                <h6>Confirm</h6>
                 <h6>Date</h6>
                 <h6>Status</h6>
             </div>
-            {% for otb in Outbound %}
+            {% for crd in supplierReturn %}
             <div class="col">
-                <h6><b>: {{otb.id}}</b></h6>
-                <h6><b>: {{otb.name}}</b></h6>
-                <h6><b>: {{otb.address}}</b></h6>
-                <h6><b>: {{otb.phoneNumber}}</b></h6>
-                <h6><b>: {{otb.date}}</b></h6>
-                <h6><b>:{% if otb.status == "1" %}
-                        <td>Open Document</td>
-                        {% elif otb.status == "2" %}
-                        <td>Document ready</td>
-                        {% elif otb.status == "3" %}
-                        <td>Complete</td>
-                        {% endif %}
-                    </b></h6>
+                <h6><b>: {{crd.id}}</b></h6>
+                <h6><b>: {{crd.inbound_id}}</b></h6>
+                <h6><b>: {{crd.create.name}}</b></h6>
+                <h6><b>: {{crd.confirm.name}}</b></h6>
+                <h6><b>: {{crd.date}}</b></h6>
+                <h6><b>: {{crd.get_status_display}}</b></h6>
             </div>
             {% endfor %}
         </div>
@@ -60,27 +51,29 @@
             <thead>
                 <tr>
                     <th scope="col">No</th>
-                    <th scope="col">Id Outbound Data</th>
+                    <th scope="col">Id Costumer Data</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
+                    {% if supplierReturnDataStats.supplierReturn.status == '1' %}
                     {% if role != 'OPR' %}
                     <th scope="col" style="width: 165px;">Action</th>
+                    {% endif %}
                     {% endif %}
                 </tr>
             </thead>
             <tbody>
-                {% for itdt in Outbounddata %}
+                {% for crd in supplierReturnData %}
                 <tr>
                     <th scope="row">1</th>
-                    <td>{{itdt.id}}</td>
-                    <td>{{itdt.item.name}}</td>
-                    <td>{{itdt.quantity}}</td>
+                    <td>{{crd.id}}</td>
+                    <td>{{crd.item.name}}</td>
+                    <td>{{crd.quantity}}</td>
                     {% if role != 'OPR' %}
-                    {% if itdt.outbound.status == '1' %}
+                    {% if crd.supplierReturn.status == '1' %}
                     <td>
                         <a href="#" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
-                        <form action="#" method="POST" class="d-inline">
+                        <form action="{% url 'supplierReturndataDelete' crd.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
                                 <i class="text-white">Delete</i>
@@ -93,7 +86,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="#"><button type="submit" class="btn btn-warning">Back</button></a>
+        <a href="{% url 'supplierReturnIndex' %}"><button type="submit" class="btn btn-warning">Back</button></a>
     </div>
 </div>
 

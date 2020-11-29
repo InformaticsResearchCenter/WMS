@@ -1,13 +1,14 @@
 {% extends 'base/master.html' %}
 {% load static %}
+
 {% block content %}
 <!-- Page Content  -->
 <div id="content" width="80%">
-    <h2>Borrow - </h2>
+    <h2>Input Costumer Return</h2>
     <hr>
     <div class="card">
         <div class="card-header">
-            Add BorrowData
+            Add Costumer Return
         </div>
         <div class="card-body">
             <form method="POST" action="">
@@ -15,13 +16,9 @@
                 <div class="row justify-content-center">
                     <div class="col-8">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="phoneNumber">Phone</label>
-                            <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
-                                placeholder="Phone Number">
+                            <label for="supplier">Outbound Id</label>
+                            <input type="text" class="form-control" name="outbound" id="outbound"
+                                placeholder="Outbound ID">
                         </div>
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="date" id="date" value="{{date}}">
@@ -36,12 +33,13 @@
                             <input type="hidden" class="form-control" name="userGroup" id="userGroup"
                                 value="{{group_id}}">
                         </div>
-                        <button type="submit " class="btn btn-primary ">Add</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
             </form>
-            <a href="#"><button type="submit " class="btn btn-success ">Back</button></a>
+            <a href="{% url 'costumerReturnIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
         </div>
     </div>
+</div>
 </div>
 {% endblock content %}
