@@ -40,4 +40,5 @@ urlpatterns = [
          views.supplierReturndataDelete, name="supplierReturndataDelete"),
     # -------------------- PDFInbound --------------------------
     path('supplier/<slug:pk>/', views.PdfSupplierReturn.as_view(),),
+    path('costumer/<slug:pk>/', views.PdfCostumerReturn.as_view(),),
 ]
