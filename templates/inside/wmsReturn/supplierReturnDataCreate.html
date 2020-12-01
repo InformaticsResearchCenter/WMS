@@ -31,7 +31,7 @@
                             <select class="form-control" name="item" id="item">
                                 {% for i in inbounddata %}
                                     {% if i.rejectCounter != 0 %}
-                                    <option value='{{i.item.id}}'>{{i.item.name}} || rejectCounter = {{i.rejectCounter}}</option>
+                                    <option value='{{i.item.id}}'>{{i.item.name}} || reject = {{i.rejectCounter}}</option>
                                     {% endif %}
                                 {% endfor %}    
                             </select>
@@ -41,8 +41,7 @@
                                 value="{{supplierReturnId}}">
                         </div>
                         <div class="form-group">
-                            <input type="hidden" class="form-control" name="reject" id="reject"
-                                value="1">
+                            <input type="hidden" class="form-control" name="reject" id="reject">
                         </div>
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="userGroup" id="userGroup"
@@ -51,6 +50,17 @@
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
+                 <script type="text/javascript">
+                    var qty = document.getElementById('quantity');
+                    var rjt = document.getElementById('item');
+                    var pass = document.getElementById('rejectCounter');
+                    qty.addEventListener("change", function () {
+                        pass.value = rjt.value;
+                    });
+                    rjt.addEventListener("change", function () {
+                        pass.value = rjt.value;
+                    });
+                </script>
             </form>
             <a href="{% url 'supplierReturnIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
         </div>

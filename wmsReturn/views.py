@@ -263,9 +263,12 @@ def supplierReturndata(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
+                    datas = list(InboundData.objects.all().select_related(
+                    'inbound_id').filter(inbound_id=id).values_list('id', 'item__id', 'item__name', 'quantity', 'rejectCounter'))
                     context = {
                         'form': SupplierReturndataForm(),
-                        'item': it.avaibleItem(1, 0, request.session['usergroup']),
+                        #'item': it.avaibleItem(1, 0, request.session['usergroup']),
+                        'datas': datas,
                         'inbounddata': InboundData.objects.all(),
                         'supplierReturnId': request.session['supplierReturn'],
                         'id': request.session['id'],
@@ -300,6 +303,7 @@ def supplierReturndata(request, id=0):
                 if form.is_valid():
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
+                    rejectCounter = InboundData.objects.get()
                     item = it.avaibleItem(
                         1, 0, request.session['usergroup'])
                     for i in item:
@@ -309,6 +313,7 @@ def supplierReturndata(request, id=0):
                                     request, 'Item quantity exceeded the limit !')
                                 return redirect('supplierReturndataCreate')
                             else:
+                                InboundData.update(rejectCounter - formqty)
                                 form.save()
                                 return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
 
