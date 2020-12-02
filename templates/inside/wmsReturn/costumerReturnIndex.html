@@ -46,17 +46,17 @@
                     <td>
                         <a href="{% url 'costumerReturndataIndex' cr.id %}"><button class="btn-primary btn-sm">View</button></a>
                         {% if role != 'OPR' %}
-                        {% if cr.status == '1' %}
-                        <form action="{% url 'costumerReturnDelete' cr.id %}" method="POST" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
-                                <i class="text-white">Delete</i>
-                            </button>
-                        </form>
-                        {% endif %}
-                        {% if cr.status != '1' %}
-                        <a href="{{cr.id}}"><button class="btn btn-warning btn-sm">PDF</button></a>
-                        {% endif %}
+                            {% if cr.status == '1' %}
+                            <form action="{% url 'costumerReturnDelete' cr.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
+                                    <i class="text-white">Delete</i>
+                                </button>
+                            </form>
+                            {% endif %}
+                            {% if cr.status != '1' %}
+                            <a href="{{cr.id}}"><button class="btn btn-warning btn-sm">PDF</button></a>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

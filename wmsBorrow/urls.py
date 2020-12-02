@@ -21,4 +21,6 @@ urlpatterns = [
          views.borrowdata, name="borrowdataUpdate"),
     path('borrowdata_delete/<slug:id>/',
          views.borrowdataDelete, name="borrowdataDelete"),
+
+    path('<slug:pk>/', views.PdfBorrow.as_view(),),
 ]

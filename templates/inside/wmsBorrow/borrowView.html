@@ -24,7 +24,7 @@
                 <tr>
                     <th scope="col" style="width: 100px;">No</th>
                     <th scope="col">Borrowdata Id</th>
-                    <th scope="col">Capacity</th>
+                    <th scope="col">Quantity</th>
                     <th scope="col">Item Name</th>
                     <th scope="col" style="width: 165px;">Action</th>
                 </tr>
@@ -54,6 +54,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        <a href="{% url 'borrowIndex' %}"><button type="submit " class="btn btn-success ">Back</button></a>
     </div>
 </div>
 {% endblock content %}

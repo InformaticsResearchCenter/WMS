@@ -113,6 +113,8 @@ def costumerReturndata(request, id=0):
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
                         }
+                        print(it.avaibleItem(
+                            1, 0, request.session['usergroup']))
                         return render(request, 'inside/wmsReturn/costumerReturndataCreate.html', context)
                     else:
                         costumerReturn = CostumerReturn.objects.get(pk=id)
@@ -127,7 +129,7 @@ def costumerReturndata(request, id=0):
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
                         }
-                        return render(request, 'inside/wmsBorrow/borrowUpdate.html', context)
+                        return render(request, 'inside/wmsReturn/costumerReturndataUpdate.html', context)
                 else:
                     if id == 0:
                         form = CostumerReturndataForm(request.POST)
