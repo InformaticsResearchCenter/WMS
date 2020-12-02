@@ -28,7 +28,7 @@
                     <td>
                         <a href="{% url 'rackView' r.id %}" class="btn btn-primary btn-sm" role="button"
                             aria-pressed="true">View</a>
-                        <a href="#"><button class="btn btn-success btn-sm">PDF</button></a> {% if role != 'OPR' %}
+                        <a href="{{r.id}}"><button class="btn btn-success btn-sm">PDF</button></a> {% if role != 'OPR' %}
                         <form action="{% url 'rackDelete' r.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;">
