@@ -54,6 +54,9 @@
                             </button>
                         </form>
                         {% endif %}
+                        {% if cr.status != '1' %}
+                        <a href="{{cr.id}}"><button class="btn btn-warning btn-sm">PDF</button></a>
+                        {% endif %}
                         {% endif %}
                     </td>
                 </tr>
