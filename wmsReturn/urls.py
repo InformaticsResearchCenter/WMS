@@ -21,6 +21,8 @@ urlpatterns = [
          views.costumerReturndata, name="costumerReturndataCreate"),
     path('costumer/costumerReturndata_delete/<slug:id>',
          views.costumerReturndataDelete, name="costumerReturndataDelete"),
+    path('costumer/costumerReturndata_update/<slug:id>',
+         views.costumerReturndata, name="costumerReturndataUpdate"),
 
     # -------------------------------- Supplier Return ---------------------------
     path('supplier/', views.supplierReturnIndex, name="supplierReturnIndex"),
@@ -32,8 +34,6 @@ urlpatterns = [
          views.supplierReturnDelete, name="supplierReturnDelete"),
     path('supplier/supplierReturn_confirm',
          views.supplierReturnConfirm, name="supplierReturnConfirm"),
-
-
     path('supplier/supplierReturndata_create',
          views.supplierReturndata, name="supplierReturndataCreate"),
     path('supplier/supplierReturndata_delete/<slug:id>',

@@ -25,6 +25,7 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = [
+            'id',
             'name',
             'subcategory',
             'userGroup',
@@ -35,6 +36,7 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = [
+            'id',
             'category',
             'userGroup',
         ]
@@ -44,6 +46,7 @@ class SubcategoryForm(forms.ModelForm):
     class Meta:
         model = Subcategory
         fields = [
+            'id',
             'subcategory',
             'category',
             'userGroup',
@@ -133,6 +136,7 @@ class BorrowForm(forms.ModelForm):
     class Meta:
         model = Borrow
         fields = [
+            'id',
             'name',
             'phoneNumber',
             'confirm',
@@ -146,6 +150,7 @@ class BorrowdataForm(forms.ModelForm):
     class Meta:
         model = BorrowData
         fields = [
+            'id',
             'quantity',
             'borrow',
             'item',
@@ -157,6 +162,7 @@ class CostumerReturnForm(forms.ModelForm):
     class Meta:
         model = CostumerReturn
         fields = [
+            'id',
             'outbound',
             'date',
             'confirm',
@@ -169,16 +175,19 @@ class CostumerReturndataForm(forms.ModelForm):
     class Meta:
         model = CostumerReturnData
         fields = [
+            'id',
             'quantity',
             'costumerReturn',
             'item',
             'userGroup',
         ]
 
+
 class SupplierReturnForm(forms.ModelForm):
     class Meta:
         model = SupplierReturn
         fields = [
+            'id',
             'inbound',
             'date',
             'confirm',
@@ -187,13 +196,15 @@ class SupplierReturnForm(forms.ModelForm):
             'userGroup',
         ]
 
+
 class SupplierReturndataForm(forms.ModelForm):
     class Meta:
         model = SupplierReturnData
         fields = [
+            'id',
             'quantity',
             'supplierReturn',
             'item',
             'userGroup',
             'reject',
-        ]        
+        ]

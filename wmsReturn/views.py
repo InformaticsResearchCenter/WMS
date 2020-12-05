@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from WMS.forms import *
 from module import item as it
 from django.contrib import messages
-
+from sequences import get_next_value, get_last_value
 
 # -------- PDF -----------
 from django.template.loader import get_template
@@ -44,6 +44,7 @@ def costumerReturn(request, id=0):
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
+                        'id_costumerreturn': get_last_value('costumerreturn_seq'),
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'title': 'Add Costumer Return',
                     }
@@ -53,6 +54,8 @@ def costumerReturn(request, id=0):
                     form = CostumerReturnForm(request.POST)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('costumerreturn_seq')
                     return redirect('costumerReturnIndex')
 
 
@@ -110,11 +113,10 @@ def costumerReturndata(request, id=0):
                             'role': request.session['role'],
                             'group_id': request.session['usergroup'],
                             'username': request.session['username'],
+                            'id_costumerreturndata': get_last_value('costumerreturndata_seq'),
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
                         }
-                        print(it.avaibleItem(
-                            1, 0, request.session['usergroup']))
                         return render(request, 'inside/wmsReturn/costumerReturndataCreate.html', context)
                     else:
                         costumerReturn = CostumerReturn.objects.get(pk=id)
@@ -128,6 +130,7 @@ def costumerReturndata(request, id=0):
                             'username': request.session['username'],
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
+                            'id_costumerreturndata': id
                         }
                         return render(request, 'inside/wmsReturn/costumerReturndataUpdate.html', context)
                 else:
@@ -162,6 +165,9 @@ def costumerReturndata(request, id=0):
                                             return redirect('costumerReturndataIndex', id=request.session['costumerReturn'])
                                         j += 1
                                     form.save()
+                                    if id == 0:
+                                        get_next_value(
+                                            'costumerreturndata_seq')
                                     return redirect('costumerReturndataIndex', id=request.session['costumerReturn'])
             else:
                 raise PermissionDenied
@@ -247,10 +253,13 @@ def supplierReturn(request, id=0):
             if request.method == "GET":
                 if id == 0:
                     context = {
-                        'inbound': Inbound.objects.filter(deleted=0, status=2),
+                        'inbound': Inbound.objects.filter(deleted=0, status=2, userGroup=request.session['usergroup']),
                         'form': SupplierReturnForm(),
                         'id': request.session['id'],
+                        'role': request.session['role'],
                         'group_id': request.session['usergroup'],
+                        'username': request.session['username'],
+                        'id_supplierreturn': get_last_value('supplierreturn_seq'),
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'title': 'Add Supplier Return',
                     }
@@ -260,6 +269,8 @@ def supplierReturn(request, id=0):
                     form = SupplierReturnForm(request.POST)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('supplierreturn_seq')
                     return redirect('supplierReturnIndex')
 
 
@@ -317,13 +328,14 @@ def supplierReturndata(request, id=0):
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
+                        'id_supplierreturndata': get_last_value('supplierreturndata_seq'),
                         'title': 'Add Supplier Return Data',
                     }
                     return render(request, 'inside/wmsReturn/supplierReturndataCreate.html', context)
                 else:
-                    costumerReturn = SupplierReturn.objects.get(pk=id)
+                    supplierReturn = SupplierReturn.objects.get(pk=id)
                     context = {
-                        'form': SupplierReturndataForm(),
+                        'form': SupplierReturndataForm(instance=supplierReturn),
                         'item': it.avaibleItem(1, 0, request.session['usergroup']),
                         'supplierReturnId': request.session['supplierReturn'],
                         'id': request.session['id'],
@@ -353,7 +365,21 @@ def supplierReturndata(request, id=0):
                                     request, 'Item quantity exceeded the limit !')
                                 return redirect('supplierReturndataCreate')
                             else:
+                                qtySupplier = list(SupplierReturnData.objects.filter(
+                                    supplierReturn=request.session['supplierReturn']).values_list('item__id'))
+                                j = 0
+                                while j < len(qtySupplier):
+                                    if qtySupplier[j][0] == int(formitem):
+                                        supRet = SupplierReturnData.objects.filter(
+                                            item=i['item'], supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup'])
+                                        supRetqty = supRet.first().quantity
+                                        supRet.update(
+                                            quantity=supRetqty + int(formqty))
+                                        return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
+                                    j += 1
                                 form.save()
+                                if id == 0:
+                                    get_next_value('supplierreturndata_seq')
                                 return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
 
 
