@@ -470,49 +470,53 @@ def confirm(request):
             inbounddata = InboundData.objects.all().filter(
                 inbound=inbound_id)
             inbounddata_id_list = list(inbounddata.values_list('id', flat=True))
-            inbound_id_list = list(inbounddata.values_list('inbound', flat=True))
-            pass_field_list = list(
+            item_id_list = list(inbounddata.values_list('item', flat=True))
+            rejectCounter_list = list(
                 inbounddata.values_list('rejectCounter', flat=True))
 
-            # Memanggil Value Reject yang lebih dari 0
+            # Memanggil Value RejectCounter yang lebih dari 0
             inbounddata2 = InboundData.objects.all().filter(
                 inbound=inbound_id).exclude(reject=0)
-            rejectlist = list(inbounddata2.values_list('reject', flat=True))
+            rejectlist = list(inbounddata2.values_list('rejectCounter', flat=True))
             # -----------------------------------------
 
             # Isi field Itemdata
-            date_time = datetime.datetime.now()
-            date = date_time.strftime("%Y-%m-%d")
             data_fix = []
-            rackid = None
-            entry = date
-            out = None
+            binlocation = 1
+            userGroup = request.session['usergroup']
+            inbound = request.session['inbound_id']
+            outbound = 1
+            borrow = 1
+            status = 1
             # ----------------------------------------
 
             # Looping insert data ke Itemdata
-            for i in pass_field_list:
-                inboundid = inbound_id_list[index]
-                inbounddataid = inbounddata_id_list[index]
+            for i in rejectCounter_list:
+                itemid = item_id_list[index]
+                inbound = inbounddata_id_list[index]
                 for x in range(i):
-                    confirm_id = get_next_value('confirm_seq')
-                    id_batch = inbound_id+confirm_id+inboundid
-                    data = (id_batch, rackid, entry, out, inbounddataid)
+                    #confirm_id = get_next_value('confirm_seq')
+                    id_itemdata = 1
+                    data = (id_itemdata, binlocation, userGroup, inbound, outbound, borrow, status)
                     data_fix.append(data)
+                    print(data_fix)
                 index += 1
             cursor = connection.cursor()
-            query = """INSERT INTO InboundData(id, binid, entry, out, inbounddataid)
+            query = """INSERT INTO WMS_itemdata(id, binlocation, userGroup, inbound, outbound, borrow, status)
                         VALUES
-                        (%s, %s, %s, %s, %s) """
-            cursor.executemany(query, data_fix)
+                        (%s, %s, %s, %s, %s, %s, %s) """
+            print(query)            
+            cursor.executemany(query,data_fix)
+
             # --------------------------------------------
 
             # Update status Inbound data
             if len(rejectlist) > 0:
                 Inbounddata.objects.filter(
-                    id=inbound_id).update(status="Rejected")
+                    id=inbound_id).update(status="2")
             else:
                 Inbounddata.objects.filter(
-                    id=inbound_id).update(status="Succes")
+                    id=inbound_id).update(status="3")
             # -------------------------------------------------
 
             return redirect('inbound')             

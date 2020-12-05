@@ -114,6 +114,8 @@ def costumerReturndata(request, id=0):
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
                         }
+                        print(it.avaibleItem(
+                            1, 0, request.session['usergroup']))
                         return render(request, 'inside/wmsReturn/costumerReturndataCreate.html', context)
                     else:
                         costumerReturn = CostumerReturn.objects.get(pk=id)
@@ -128,7 +130,7 @@ def costumerReturndata(request, id=0):
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
                         }
-                        return render(request, 'inside/wmsBorrow/borrowUpdate.html', context)
+                        return render(request, 'inside/wmsReturn/costumerReturndataUpdate.html', context)
                 else:
                     if id == 0:
                         form = CostumerReturndataForm(request.POST)
@@ -351,6 +353,18 @@ def supplierReturndata(request, id=0):
                             request, 'Item quantity exceeded the limit !')
                         return redirect('supplierReturndataCreate')
                     else:
+                        qtySupplier = list(SupplierReturnData.objects.filter(
+                            supplierReturn=request.session['supplierReturn']).values_list('item__id'))
+                        j = 0
+                        while j < len(qtySupplier):
+                            if qtySupplier[j][0] == int(formitem):
+                                supRet = SupplierReturnData.objects.filter(
+                                    item=i['item'], supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup'])
+                                supRetqty = supRet.first().quantity
+                                supRet.update(
+                                    quantity=supRetqty + int(formqty))
+                                return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
+                            j += 1    
                         form.save()
                         return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
                 

@@ -40,9 +40,12 @@
                             <input type="text" class="form-control" name="reject" id="reject"
                                 placeholder="Input Reject">
                         </div>
-                         <div class="form-group">
-                            <label for="itemdata">Reject Counter</label>
-                            <input type="text" readonly class="form-control" name="rejectCounter" id="rejectCounter">
+                        <div class="form-group">
+                            <label for="itemdata">Pass</label>
+                            <input type="text" readonly class="form-control" name="pass" id="pass">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" readonly class="form-control" name="rejectCounter" id="rejectCounter">
                         </div>
                          <div class="form-group">
                                 <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{group_id}}">
@@ -53,12 +56,27 @@
                 <script type="text/javascript">
                     var qty = document.getElementById('quantity');
                     var rjt = document.getElementById('reject');
-                    var pass = document.getElementById('rejectCounter');
+                    var rejectCounter = document.getElementById('rejectCounter');
+                    var pass = document.getElementById('pass');
+
                     qty.addEventListener("change", function () {
-                        pass.value = rjt.value;
+                        pass.value = qty.value - rjt.value;
                     });
                     rjt.addEventListener("change", function () {
-                        pass.value = rjt.value;
+                        pass.value = qty.value - rjt.value;
+                    });
+                </script>
+                 <script type="text/javascript">
+                    var qty = document.getElementById('quantity');
+                    var rjt = document.getElementById('reject');
+                    var rejectCounter = document.getElementById('rejectCounter');
+                    var pass = document.getElementById('pass');
+
+                    qty.addEventListener("change", function () {
+                        rejectCounter.value = rjt.value;
+                    });
+                    rjt.addEventListener("change", function () {
+                        rejectCounter.value = rjt.value;
                     });
                 </script>
             </form>
