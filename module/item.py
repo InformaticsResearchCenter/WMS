@@ -23,10 +23,15 @@ def avaibleItem(status, deleted, usergroup):
         deleted=deleted, borrow__status=2, userGroup=usergroup).values('item', 'quantity')
     outboundItem = OutboundData.objects.select_related('outbound').filter(
         deleted=deleted, outbound__status=2, userGroup=usergroup).values('item', 'quantity')
+    costumerReturItem = CostumerReturnData.objects.select_related('costumerReturn').filter(
+        deleted=deleted, costumerReturn__status=2, userGroup=usergroup).values('item',  'quantity')
     borrowItem1 = BorrowData.objects.select_related('borrow').filter(
         deleted=deleted, borrow__status=1, userGroup=usergroup).values('item', 'quantity')
     outboundItem1 = OutboundData.objects.select_related('outbound').filter(
         deleted=deleted, outbound__status=1, userGroup=usergroup).values('item', 'quantity')
+    costumerReturItem1 = CostumerReturnData.objects.select_related('costumerReturn').filter(
+        deleted=deleted, costumerReturn__status=1, userGroup=usergroup).values('item',  'quantity')
+    
 
     for i in outboundItem:
         for a in rawitem:
@@ -38,6 +43,15 @@ def avaibleItem(status, deleted, usergroup):
                     pass
 
     for i in borrowItem:
+        for a in rawitem:
+            if a['item'] == i['item']:
+                a['qty'] -= i['quantity']
+                if a['qty'] <= 0:
+                    a['qty'] = 0
+                else:
+                    pass
+
+    for i in costumerReturItem:
         for a in rawitem:
             if a['item'] == i['item']:
                 a['qty'] -= i['quantity']
@@ -64,4 +78,12 @@ def avaibleItem(status, deleted, usergroup):
                 else:
                     pass
 
+    for i in costumerReturItem1:
+        for a in rawitem:
+            if a['item'] == i['item']:
+                a['qty'] -= i['quantity']
+                if a['qty'] <= 0:
+                    a['qty'] = 0
+                else:
+                    pass
     return rawitem

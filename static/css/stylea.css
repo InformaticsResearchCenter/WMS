@@ -5,31 +5,25 @@
 	width: 200px;
 }
 
-form>input,
-form,
-form>button {
- }
+
 .flex-item{
 	display: flex;
 	margin:auto;
 	width: 70%;
-	padding-top: 100px;
-}
-/* form {
-	width: 400px;
-} */
-.gridcontainer{
-	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	height: 500px;
 }
 
-@media (max-width: 700px) {
+
+
+@media (max-width: 800px) {
 	#qr-reader,.card {
 		width: 300px;
 	}
 	.flex-item{
-		display: block;
+		flex-direction: column;
+		justify-content: center;
 		width: 95%;
 		margin: auto;
 	}

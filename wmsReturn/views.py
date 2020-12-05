@@ -300,6 +300,7 @@ def supplierReturndata(request, id=0):
                 if form.is_valid():
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
+                    
                     item = it.avaibleItem(
                         1, 0, request.session['usergroup'])
                     for i in item:
