@@ -7,17 +7,19 @@
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        <a href="{% url 'costumerReturndataCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-            Costumer Return Data</a>
-        {% if costumerReturnDataStats.costumerReturn.status == '1' %}
-        <form action="{% url 'costumerReturnConfirm' %}" method="POST" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success btn-sm"
-                style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
-                <i class="text-white">Confirm</i>
-            </button>
-        </form>
-        {% endif %}
+            {% if costumerReturnst == '1' %}
+            <a href="{% url 'costumerReturndataCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+                Costumer Return Data</a>
+            {% endif %}
+            {% if costumerReturnDataStats.costumerReturn.status == '1' %}
+            <form action="{% url 'costumerReturnConfirm' %}" method="POST" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm"
+                    style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
+                    <i class="text-white">Confirm</i>
+                </button>
+            </form>
+            {% endif %}
         {% endif %}
     </div>
     <div class="card-body">
@@ -71,7 +73,7 @@
                     {% if role != 'OPR' %}
                     {% if crd.costumerReturn.status == '1' %}
                     <td>
-                        <a href="#" class=" btn btn-success btn-sm" role="button"
+                        <a href="{% url 'costumerReturndataUpdate' crd.id %}" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
                         <form action="{% url 'costumerReturndataDelete' crd.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
@@ -86,7 +88,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="#"><button type="submit" class="btn btn-warning">Back</button></a>
+        <a href="{% url 'costumerReturnIndex' %}"><button type="submit" class="btn btn-warning">Back</button></a>
     </div>
 </div>
 

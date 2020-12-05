@@ -31,12 +31,14 @@ class Role(models.Model):
 
 
 class UserGroup(External):
+    id = models.TextField(primary_key=True)
     limit = models.DateField(default="1000-10-10")
     email = models.EmailField(max_length=254, unique=True, null=True)
     password = models.CharField(max_length=100, null=True)
 
 
 class Category(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -44,6 +46,7 @@ class Category(models.Model):
 
 
 class Subcategory(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -52,6 +55,7 @@ class Subcategory(models.Model):
 
 
 class Item(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -71,6 +75,7 @@ class User(External):
 
 
 class Supplier(External):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -83,6 +88,7 @@ class Inbound(models.Model):
         ('2', 'Complete with reject'),
         ('3', 'Complete'),
     ]
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -96,6 +102,7 @@ class Inbound(models.Model):
 
 
 class InboundData(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -118,6 +125,7 @@ class Outbound(External):
         ('2', 'Document ready'),
         ('3', 'Complete')
     ]
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -130,6 +138,7 @@ class Outbound(External):
 
 
 class OutboundData(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -145,6 +154,7 @@ class Borrow(Employee):
         ('3', 'Complete'),
         ('4', 'Returned')
     ]
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -157,6 +167,7 @@ class Borrow(Employee):
 
 
 class BorrowData(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -170,6 +181,7 @@ class SupplierReturn(models.Model):
         ('1', 'Open document'),
         ('2', 'Complete'),
     ]
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -183,6 +195,7 @@ class SupplierReturn(models.Model):
 
 
 class SupplierReturnData(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -199,6 +212,7 @@ class CostumerReturn(models.Model):
         ('2', 'Document ready'),
         ('3', 'Complete'),
     ]
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -212,6 +226,7 @@ class CostumerReturn(models.Model):
 
 
 class CostumerReturnData(models.Model):
+    id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
@@ -247,6 +262,7 @@ class ItemData(models.Model):
         ('4', 'broken'),
         ('5', 'lost'),
     ]
+    id = models.TextField(primary_key=True)
     binlocation = models.ForeignKey(
         Binlocation, on_delete=models.CASCADE, null=True)
     userGroup = models.ForeignKey(

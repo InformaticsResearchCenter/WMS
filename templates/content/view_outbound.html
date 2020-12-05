@@ -7,19 +7,17 @@
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        <a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+        <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Outbound Data</a>
-        {% for otb in Outbound %}
-        {% if otb.status == "1" %}
-        <form action="#" method="POST" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success btn-sm"
-                style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
-                <i class="text-white">Confirm</i>
-            </button>
-        </form>
-        {% endif %}
-        {% endfor %}
+            {% if Outbounddata.outbound.status == "1" %}
+            <form action="#" method="POST" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm"
+                    style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
+                    <i class="text-white">Confirm</i>
+                </button>
+            </form>
+            {% endif %}
         {% endif %}
     </div>
     <div class="card-body">
@@ -39,13 +37,7 @@
                 <h6><b>: {{otb.address}}</b></h6>
                 <h6><b>: {{otb.phoneNumber}}</b></h6>
                 <h6><b>: {{otb.date}}</b></h6>
-                <h6><b>:{% if otb.status == "1" %}
-                        <td>Open Document</td>
-                        {% elif otb.status == "2" %}
-                        <td>Document ready</td>
-                        {% elif otb.status == "3" %}
-                        <td>Complete</td>
-                        {% endif %}
+                <h6><b>: {{otb.get_status_display}}
                     </b></h6>
             </div>
             {% endfor %}
@@ -76,24 +68,24 @@
                     <td>{{itdt.item.name}}</td>
                     <td>{{itdt.quantity}}</td>
                     {% if role != 'OPR' %}
-                    {% if itdt.outbound.status == '1' %}
-                    <td>
-                        <a href="#" class=" btn btn-success btn-sm" role="button"
-                            aria-pressed="true">Update</a>
-                        <form action="#" method="POST" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
-                                <i class="text-white">Delete</i>
-                            </button>
-                        </form>
-                    </td>
-                    {% endif %}
+                        {% if itdt.outbound.status == '1' %}
+                        <td>
+                            <a href="#" class=" btn btn-success btn-sm" role="button"
+                                aria-pressed="true">Update</a>
+                            <form action="#" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
+                                    <i class="text-white">Delete</i>
+                                </button>
+                            </form>
+                        </td>
+                        {% endif %}
                     {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <a href="#"><button type="submit" class="btn btn-warning">Back</button></a>
+        <a href="{% url 'outbound' %}"><button type="submit" class="btn btn-warning">Back</button></a>
     </div>
 </div>
 

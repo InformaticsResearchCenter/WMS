@@ -37,14 +37,7 @@
                 <h6><b>: {{inb.supplier.id}}</b></h6>
                 <h6><b>: {{inb.supplier.name}}</b></h6>
                 <h6><b>: {{inb.date}}</b></h6>
-                <h6><b>:  {% if inb.status == "1" %}
-                    <td>Open Document</td>
-                    {% elif inb.status == "2" %}
-                    <td>Complete with reject</td>
-                    {% elif inb.status == "3" %}
-                    <td>Complete</td>
-                    {% endif %}
-                </b></h6>
+                <h6><b>: {{inb.get_status_display}}</b></h6>
                 <h6><b>: {{inb.create.name}}</b></h6>
             </div>
             {% endfor %}
@@ -59,6 +52,7 @@
             <thead>
                 <tr>
                     <th scope="col">No</th>
+                    <th scope="col">Inbound Data ID</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Reject Counter</th>
@@ -72,7 +66,8 @@
             <tbody>
                 {% for itdt in Itemdata %}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{itdt.id}}</td>
                     <td>{{itdt.item.name}}</td>
                     <td>{{itdt.quantity}}</td>
                     <td>{{itdt.rejectCounter}}</td>

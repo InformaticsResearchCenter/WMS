@@ -68,6 +68,14 @@ def borrow(request):
 
 def retur(request):
     return JsonResponse({"@@":"a"},status = 200)
+    
+# -------- PDF -----------
+from django.template.loader import get_template
+from category.utils import render_to_pdf
+from django.http import HttpResponse
+from django.views.generic import View
+from django.shortcuts import get_list_or_404, get_object_or_404
+
 
 # ===================================== RACK =========================================
 def rackIndex(request):
@@ -139,3 +147,22 @@ def rackView(request, id):
         'title': 'View Rack',
     }
     return render(request, 'inside/wmsStorage/rackView.html', context)
+
+
+class PdfRack(View):
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Rack, pk=kwargs['pk'])
+        datas = list(Binlocation.objects.all().select_related(
+            'Rack').filter(rack=obj).values_list('id', 'rack__id', 'capacity'))
+        pdf = render_to_pdf('inside/wmsStorage/pdf_rack.html', {
+                            'datas': datas, 'obj': obj})
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Invoice_%s.pdf" % (12341231)
+            content = "inline; filename=%s" % (filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename=%s" % (filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not Found")

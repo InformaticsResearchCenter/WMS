@@ -21,4 +21,6 @@ urlpatterns = [
     path('rack/rack_create', views.rack, name="rackCreate"),
     path('rack/rack_delete/<slug:id>/', views.rackDelete, name="rackDelete"),
     path('rack/rack_view/<slug:id>/', views.rackView, name="rackView"),
+
+    path('rack/<slug:pk>/', views.PdfRack.as_view(),),
 ]

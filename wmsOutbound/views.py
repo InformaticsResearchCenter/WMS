@@ -5,13 +5,15 @@ from WMS.models import *
 
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
-
+from django.contrib import messages
+from sequences import get_next_value, get_last_value
 from pprint import pprint
 import datetime
 from WMS.forms import *
 
 from django.db import connection
 from django.db import models
+from module import item as it
 
 # from datetime import datetime
 
@@ -47,32 +49,28 @@ def outbound(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
-                    form = OutboundForm()
-                    date_time = datetime.datetime.now()
-                    date_id = date_time.strftime("%d%m%Y%H%M%S")
-                    date = date_time.strftime("%Y-%m-%d")
-                    id_outbound = date_id
-                    con_cre = request.session['id']
                     context = {
-                        'form': form,
-                        'title': 'Add Outbound',
-                        'date': date,
+                        'form': OutboundForm(),
+                        'title': 'Add Outbound | Outbound',
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                        'id_outbound_date': datetime.datetime.now().strftime("%d%m%Y"),
+                        'id_outbound': get_last_value('outbound_seq'),
+                        'role': request.session['role'],
+                        'username': request.session['username'],
                         'group_id': request.session['usergroup'],
-                        'id_outbound': id_outbound,
-                        'con_cre': con_cre,
+                        'con_cre': request.session['id'],
                     }
                     return render(request, 'content/outbound.html', context)
                 else:
                     outbound = Outbound.objects.get(pk=id)
-                    form = OutboundForm(instance=outbound)
-                    date_time = datetime.datetime.now()
-                    date = date_time.strftime("%Y-%m-%d")
                     context = {
-                        'form': form,
+                        'form': OutboundForm(instance=outbound),
                         'outbound': outbound,
-                        'date': date,
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
                         'group_id': request.session['usergroup'],
-                        'title': 'Update Outbound'
+                        'role': request.session['role'],
+                        'username': request.session['username'],
+                        'title': 'Update Outbound | Outbound'
                     }
                 return render(request, 'content/update_outbound.html', context)
             else:
@@ -83,6 +81,8 @@ def outbound(request, id=0):
                     form = OutboundForm(request.POST, instance=outbound)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('outbound_seq')
                     return redirect('outbound')
             return render(request, 'content/outbound.html')
 
@@ -103,12 +103,10 @@ def view_outbound(request, id):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
-        outbound = Outbound.objects.filter(pk=id)
-        results2 = OutboundData.objects.all().filter(outbound=id)
         request.session['outbound_id'] = id
         context = {
-            'Outbound': outbound,
-            'Outbounddata': results2,
+            'Outbound': Outbound.objects.filter(pk=id),
+            'Outbounddata': OutboundData.objects.all().filter(outbound=id),
             'title': 'View outbound',
         }
         return render(request, 'content/view_outbound.html', context)
@@ -123,28 +121,25 @@ def outbounddata(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
-                    form = OutboundDataForm()
-                    item = Item.objects.all()
-                    outboundid = request.session['outbound_id']
                     context = {
-                        'form': form,
-                        'title': 'Add Outbounddata',
+                        'form': OutboundDataForm(),
+                        'title': 'Add Outbounddata | Outbound',
+                        'id_outbounddata': get_last_value('outbounddata_seq'),
+                        'role': request.session['role'],
                         'group_id': request.session['usergroup'],
-                        'item': item,
-                        'outboundid': outboundid,
+                        'username': request.session['username'],
+                        'item': it.avaibleItem(1, 0, request.session['usergroup']),
+                        'outboundid': request.session['outbound_id'],
                     }
                     return render(request, 'content/outbounddata.html', context)
                 else:
                     outbounddata = OutboundData.objects.get(pk=id)
-                    item = Item.objects.all()
-                    form = OutboundDataForm(instance=outbounddata)
-                    outboundid = request.session['outbound_id']
                     context = {
-                        'title': 'Update Outbounddata',
-                        'form': form,
-                        'item': item,
+                        'title': 'Update Outbounddata | Outbound',
+                        'form': OutboundDataForm(instance=outbounddata),
+                        'item': it.avaibleItem(1, 0, request.session['usergroup']),
                         'outbounddata': outbounddata,
-                        'outboundid': outboundid,
+                        'outboundid': request.session['outbound_id'],
                         'group_id': request.session['usergroup'],
                     }
                     return render(request, 'content/update_outbounddata.html', context)
@@ -156,9 +151,33 @@ def outbounddata(request, id=0):
                     form = OutboundDataForm(
                         request.POST, instance=outbounddata)
                 if form.is_valid():
-                    form.save()
-                    return redirect('view_outbound', id=request.session['outbound_id'])
-            return render(request, 'content/outbounddata.html')
+                    formqty = request.POST['quantity']
+                    formitem = request.POST['item']
+                    item = it.avaibleItem(
+                        1, 0, request.session['usergroup'])
+                    for i in item:
+                        if i['item'] == int(formitem):
+                            if i['qty'] < int(formqty):
+                                messages.error(
+                                    request, 'Item quantity exceeded the limit !')
+                                return redirect('add_outbounddata')
+                            else:
+                                qtyOut = list(OutboundData.objects.filter(
+                                    outbound=request.session['outbound_id']).values_list('item__id'))
+                                j = 0
+                                while j < len(qtyOut):
+                                    if qtyOut[j][0] == int(formitem):
+                                        out = OutboundData.objects.filter(
+                                            item=i['item'], outbound=request.session['outbound_id'], userGroup=request.session['usergroup'])
+                                        outqty = out.first().quantity
+                                        out.update(
+                                            quantity=outqty + int(formqty))
+                                        return redirect('view_outbound', id=request.session['outbound_id'])
+                                    j += 1
+                                form.save()
+                                if id == 0:
+                                    get_next_value('outbounddata_seq')
+                                return redirect('view_outbound', id=request.session['outbound_id'])
 
 
 def delete_outbounddata(request, id):
@@ -168,9 +187,14 @@ def delete_outbounddata(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            OutboundData.objects.filter(
-                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
-            return redirect('view_outbound', id=request.session['outbound_id'])
+            outstats = OutboundData.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).first()
+            if outstats.outbound.status == '1':
+                OutboundData.objects.filter(
+                    pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+                return redirect('view_outbound', id=request.session['outbound_id'])
+            else:
+                raise PermissionDenied
 
 # =========================================== Konfirm ======================================
 
@@ -182,9 +206,14 @@ def confirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            outbound_id = request.session['outbound_id']
-            Outbound.objects.filter(id=outbound_id).update(status="2")
-            return redirect('outbound')
+            outstats = OutboundData.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).first()
+            if outstats.outbound.status == '1':
+                Outbound.objects.filter(
+                    id=request.session['outbound_id']).update(status="2")
+                return redirect('outbound')
+            else:
+                raise PermissionDenied
 
 # --------------------------- PDF OUTBOUND ------------------------------
 
@@ -202,57 +231,10 @@ class PdfOutbound(View):
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)
-                content = "inline; filename='%s'" % (filename)
+                content = "inline; filename=%s" % (filename)
                 download = request.GET.get("download")
                 if download:
-                    content = "attachment; filename='%s'" % (filename)
+                    content = "attachment; filename=%s" % (filename)
                 response['Content-Disposition'] = content
                 return response
             return HttpResponse("Not Found")
-
-
-
-def outbounddata(request, id=0):
-    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
-        return redirect('login')
-    else:
-        if request.session['role'] == "OPR":
-            raise PermissionDenied
-        else:
-            if request.method == "GET":
-                if id == 0:
-                    form = OutboundDataForm()
-                    item = Item.objects.all()
-                    outboundid = request.session['outbound_id']
-                    context = {
-                        'form': form,
-                        'title': 'Add Outbounddata',
-                        'group_id': request.session['usergroup'],
-                        'item': item,
-                        'outboundid': outboundid,
-                    }
-                    return render(request, 'content/outbounddata.html', context)
-                else:
-                    outbounddata = OutboundData.objects.get(pk=id)
-                    item = Item.objects.all()
-                    form = OutboundDataForm(instance=outbounddata)
-                    outboundid = request.session['outbound_id']
-                    context = {
-                        'title': 'Update Outbounddata',
-                        'form': form,
-                        'item': item,
-                        'outbounddata': outbounddata,
-                        'outboundid': outboundid,
-                        'group_id': request.session['usergroup'],
-                    }
-                    return render(request, 'content/update_outbounddata.html', context)
-            else:
-                if id == 0:
-                    form = OutboundDataForm(request.POST)
-                else:
-                    outbounddata = OutboundData.objects.get(pk=id)
-                    form = OutboundDataForm(request.POST, instance=outbounddata)
-                if form.is_valid():
-                    form.save()
-                    return redirect('view_outbound', id=request.session['outbound_id'])
-            return render(request, 'content/outbounddata.html')

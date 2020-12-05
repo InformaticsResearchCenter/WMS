@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 import datetime
 from WMS.models import *
 from WMS.forms import *
-from sequences import get_next_value
+from sequences import get_next_value, get_last_value
 from WMS.forms import CategoryForm, SubcategoryForm
 from django.db import connection
 import datetime
@@ -45,6 +45,7 @@ def item(request, id=0):
                     context = {
                         'form': ItemForm(),
                         'subcategory': Subcategory.objects.filter(deleted=0, userGroup=request.session['usergroup']),
+                        'item_id': get_last_value('item_seq'),
                         'group_id': request.session['usergroup'],
                         'role': request.session['role'],
                         'username': request.session['username'],
@@ -71,6 +72,8 @@ def item(request, id=0):
                     form = ItemForm(request.POST, instance=item)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('item_seq')
                     return redirect('itemIndex')
 
 
@@ -81,7 +84,8 @@ def itemDelete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Item.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+            Item.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('itemIndex')
 
 # ==================== CATEGORY ======================
@@ -111,6 +115,7 @@ def category(request, id=0):
                 if id == 0:
                     context = {
                         'form': CategoryForm(),
+                        'category_id': get_last_value('category_seq'),
                         'group_id': request.session['usergroup'],
                         'role': request.session['role'],
                         'username': request.session['username'],
@@ -136,6 +141,8 @@ def category(request, id=0):
                     form = CategoryForm(request.POST, instance=category)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('category_seq')
                     return redirect('categoryIndex')
 
 
@@ -146,7 +153,8 @@ def categoryDelete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Category.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+            Category.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('categoryIndex')
 
 
@@ -179,6 +187,7 @@ def subcategory(request, id=0):
                     context = {
                         'form': SubcategoryForm(),
                         'category': Category.objects.get(pk=request.session['category']),
+                        'subcategory_id': get_last_value('subcategory_seq'),
                         'group_id': request.session['usergroup'],
                         'role': request.session['role'],
                         'username': request.session['username'],
@@ -204,6 +213,8 @@ def subcategory(request, id=0):
                     form = SubcategoryForm(request.POST, instance=subcategory)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('subcategory_seq')
                     return redirect('subcategoryIndex', id=request.session['category'])
 
 
@@ -214,7 +225,8 @@ def subcategoryDelete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Subcategory.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+            Subcategory.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('subcategoryIndex', id=request.session['category'])
 
 
@@ -242,22 +254,24 @@ def supplier(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
-                    form = SupplierForm()
-                    #username = request.session['1']
                     context = {
-                        'form': form,
+                        'form': SupplierForm(),
+                        'id_supplier': get_last_value('supplier_seq'),
                         'group_id': request.session['usergroup'],
-                        'title': 'Add Supplier'
+                        'username': request.session['username'],
+                        'role': request.session['role'],
+                        'title': 'Add Supplier | Inbound'
                     }
                     return render(request, 'content/supplier.html', context)
                 else:
                     supplier = Supplier.objects.get(pk=id)
-                    form = SupplierForm(instance=supplier)
                     context = {
-                        'form': form,
+                        'form': SupplierForm(instance=supplier),
                         'supplier': supplier,
                         'group_id': request.session['usergroup'],
-                        'title': 'Update Suppliers'
+                        'username': request.session['username'],
+                        'role': request.session['role'],
+                        'title': 'Update Supplier | Inbound'
                     }
                 return render(request, 'content/update_supplier.html', context)
             else:
@@ -268,6 +282,8 @@ def supplier(request, id=0):
                     form = SupplierForm(request.POST, instance=supplier)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('supplier_seq')
                     return redirect('list_supplier')
             return render(request, 'content/supplier.html')
 
@@ -279,7 +295,8 @@ def supplier_delete(request, id):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            Supplier.objects.filter(pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+            Supplier.objects.filter(
+                pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('list_supplier')
 
 
@@ -298,6 +315,7 @@ def supplier_detail(request, id):
 
 # ======================================= Inbound ============================================
 
+
 def inbound(request, id=0):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
@@ -307,21 +325,17 @@ def inbound(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
-                    form = InboundForm()
-                    date_time = datetime.datetime.now()
-                    date_id = date_time.strftime("%d%m%Y%H%M%S")
-                    date = date_time.strftime("%Y-%m-%d")
-                    id_inbound = date_id
-                    #username = request.session['1']
-                    con_cre = request.session['id']
                     context = {
-                        'form': form,
+                        'form': InboundForm(),
                         'supplier': Supplier.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name'),
-                        'title': 'Add Item',
+                        'title': 'Add Item | Inbound',
                         'group_id': request.session['usergroup'],
-                        'date': date,
-                        'id_inbound': id_inbound,
-                        'con_cre': con_cre
+                        'username': request.session['username'],
+                        'role': request.session['role'],
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                        'id_inbound_date': datetime.datetime.now().strftime("%d%m%Y"),
+                        'id_inbound': get_last_value('inbound_seq'),
+                        'con_cre': request.session['id'],
                     }
                     return render(request, 'content/inbound.html', context)
             else:
@@ -331,7 +345,7 @@ def inbound(request, id=0):
                     form.save()
                     if id == 0:
                         get_next_value('inbound_seq')
-                    return redirect('inboundIndex')    
+                    return redirect('inboundIndex')
             return render(request, 'content/inbound.html')
 
 
@@ -341,8 +355,8 @@ def main_inbound(request):
     else:
         context = {
             'inbound': Inbound.objects.filter(deleted=0),
-            # 'username': username,
-            # 'role': role,
+            'username': request.session['username'],
+            'role': request.session['role'],
             'title': 'Inbound | WMS Poltekpos'
         }
         return render(request, 'content/main_inbound.html', context)
@@ -352,12 +366,10 @@ def view_inbound(request, id):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
-        inbound = Inbound.objects.filter(pk=id)
-        results2 = InboundData.objects.filter(inbound=id, deleted=0)
         request.session['inbound_id'] = id
         context = {
-            'Inbound': inbound,
-            'Itemdata': results2,
+            'Inbound': Inbound.objects.filter(pk=id),
+            'Itemdata': InboundData.objects.filter(inbound=id, deleted=0),
             'title': 'View Inbound',
         }
         return render(request, 'content/view_inbound.html', context)
@@ -375,6 +387,7 @@ def delete_inbound(request, id):
 
 # ====================================== InboundData ====================================
 
+
 def inbound_data(request, id=0):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
@@ -385,24 +398,26 @@ def inbound_data(request, id=0):
             item = Item.objects.all()
             if request.method == "GET":
                 if id == 0:
-                    form = InboundDataForm()
                     context = {
-                        'form': form,
+                        'form': InboundDataForm(),
                         'item': item,
+                        'username': request.session['username'],
+                        'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'inbound_id': request.session['inbound_id'],
-                        'title': 'Add InboundData',
+                        'inbounddata_id': get_last_value('inbounddata_seq'),
+                        'title': 'Add InboundData | Inbound',
                     }
                     return render(request, 'content/inbounddata.html', context)
                 else:
                     inbounddata = InboundData.objects.get(pk=id)
-                    inboundid = request.session['inbound_id']
-                    form = InboundDataForm(instance=inbounddata)
                     context = {
-                        'form': form,
+                        'form': InboundDataForm(instance=inbounddata),
                         'item': item,
-                        'title': 'Update ItemData',
-                        'inboundid': inboundid,
+                        'title': 'Update ItemData | Inbound',
+                        'username': request.session['username'],
+                        'role': request.session['role'],
+                        'inboundid': request.session['inbound_id'],
                         'inbounddata': inbounddata,
                     }
                     return render(request, 'content/update_inbounddata.html', context)
@@ -414,8 +429,11 @@ def inbound_data(request, id=0):
                     form = InboundDataForm(request.POST, instance=inbounddata)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('inbounddata_seq')
                     return redirect('view_inbound', id=request.session['inbound_id'])
             return render(request, 'content/view_inbound.html')
+
 
 def delete_inbounddata(request, id):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
@@ -443,7 +461,7 @@ class PdfInbound(View):
                     'id').filter(id=e[0]).values_list('id', flat='true')))
             datacollect = zip(datas, itemdata)
             pdf = render_to_pdf('content/pdf_inbound.html', {
-                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect':datacollect})
+                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)
@@ -456,7 +474,7 @@ class PdfInbound(View):
             return HttpResponse("Not Found")
 
 
-#-------------------------- Confirm --------------------------------
+# -------------------------- Confirm --------------------------------
 
 def confirm(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
@@ -469,8 +487,10 @@ def confirm(request):
             inbound_id = request.session['inbound_id']
             inbounddata = InboundData.objects.all().filter(
                 inbound=inbound_id)
-            inbounddata_id_list = list(inbounddata.values_list('id', flat=True))
-            inbound_id_list = list(inbounddata.values_list('inbound', flat=True))
+            inbounddata_id_list = list(
+                inbounddata.values_list('id', flat=True))
+            inbound_id_list = list(
+                inbounddata.values_list('inbound', flat=True))
             pass_field_list = list(
                 inbounddata.values_list('rejectCounter', flat=True))
 
@@ -515,4 +535,4 @@ def confirm(request):
                     id=inbound_id).update(status="Succes")
             # -------------------------------------------------
 
-            return redirect('inbound')             
+            return redirect('inbound')

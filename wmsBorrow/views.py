@@ -5,6 +5,14 @@ from WMS.models import *
 from WMS.forms import *
 from module import item as it
 from django.contrib import messages
+from sequences import get_next_value, get_last_value
+
+# -------- PDF -----------
+from django.template.loader import get_template
+from category.utils import render_to_pdf
+from django.http import HttpResponse
+from django.views.generic import View
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 def borrowIndex(request):
@@ -35,16 +43,19 @@ def borrow(request, id=0):
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
+                        'id_borrow': get_last_value('borrow_seq'),
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'title': 'Add Borrow Data',
                     }
                     return render(request, 'inside/wmsBorrow/borrowCreate.html', context)
                 else:
                     borrow = Borrow.objects.get(pk=id)
+                    borow_date = borrow.date
                     context = {
                         'form': BorrowForm(instance=borrow),
                         'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
                         'borrow': borrow,
+                        'borrow_date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'borrow_id': request.session['borrow'],
                         'id': request.session['id'],
                         'role': request.session['role'],
@@ -62,6 +73,8 @@ def borrow(request, id=0):
                         request.POST, instance=borrow)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('borrow_seq')
                     return redirect('borrowIndex')
 
 
@@ -96,6 +109,9 @@ def borrowView(request, id):
                 'borrowdata': borrow,
                 'borrowstats': borrowstatus,
                 'borrowstatus': borrow.first(),
+                'role': request.session['role'],
+                'group_id': request.session['usergroup'],
+                'username': request.session['username'],
                 'title': 'View Borrow Data',
             }
             return render(request, 'inside/wmsBorrow/borrowView.html', context)
@@ -110,14 +126,14 @@ def borrowdata(request, id=0):
         if request.session['role'] == 'OPR':
             raise PermissionDenied
         else:
-            borrow = Borrow.objects.get(pk=request.session['borrow'])
-            if borrow.status != '1':
+            if Borrow.objects.get(pk=request.session['borrow']).status != '1':
                 raise PermissionDenied
             else:
                 if request.method == "GET":
                     if id == 0:
                         context = {
                             'form': BorrowdataForm(),
+                            'id_borrowdata': get_last_value('borrowdata_seq'),
                             'item': it.avaibleItem(1, 0, request.session['usergroup']),
                             'borrow_id': request.session['borrow'],
                             'id': request.session['id'],
@@ -160,7 +176,21 @@ def borrowdata(request, id=0):
                                         request, 'Item quantity exceeded the limit !')
                                     return redirect('borrowdataCreate')
                                 else:
+                                    qtyBorrow = list(BorrowData.objects.filter(
+                                        borrow=request.session['borrow']).values_list('item__id'))
+                                    j = 0
+                                    while j < len(qtyBorrow):
+                                        if qtyBorrow[j][0] == int(formitem):
+                                            bor = BorrowData.objects.filter(
+                                                item=i['item'], borrow=request.session['borrow'], userGroup=request.session['usergroup'])
+                                            borqty = bor.first().quantity
+                                            bor.update(
+                                                quantity=borqty + int(formqty))
+                                            return redirect('borrowView', id=request.session['borrow'])
+                                        j += 1
                                     form.save()
+                                    if id == 0:
+                                        get_next_value('borrowdata_seq')
                                     return redirect('borrowView', id=request.session['borrow'])
 
 
@@ -213,3 +243,25 @@ def borrowdataReturn(request):
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied
+
+
+class PdfBorrow(View):
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Borrow, pk=kwargs['pk'])
+        if obj.status == '1':
+            raise PermissionDenied
+        else:
+            datas = list(BorrowData.objects.all().select_related(
+                'borrow').filter(borrow=obj).values_list('id', 'item__name', 'quantity',))
+            pdf = render_to_pdf('inside/wmsBorrow/pdf_borrow.html',
+                                {'datas': datas, 'obj': obj})
+            if pdf:
+                response = HttpResponse(pdf, content_type='application/pdf')
+                filename = "BorrowData-%s.pdf" % (12341231)
+                content = "inline; filename=%s" % (filename)
+                download = request.GET.get("download")
+                if download:
+                    content = "attachment; filename=%s" % (filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not Found")
