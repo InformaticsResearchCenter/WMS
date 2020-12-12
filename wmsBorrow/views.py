@@ -240,6 +240,8 @@ def borrowdataReturn(request):
             if borrow.status == '3':
                 Borrow.objects.filter(
                     pk=request.session['borrow'], userGroup=request.session['usergroup']).update(status='4')
+                ItemData.objects.filter(
+                    borrow=request.session['borrow'], userGroup=request.session['usergroup']).update(borrow=None)
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied

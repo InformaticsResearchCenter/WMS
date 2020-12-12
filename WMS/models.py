@@ -269,7 +269,7 @@ class ItemData(models.Model):
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
     inbound = models.ForeignKey(
-        InboundData, on_delete=models.CASCADE, null=True)
+        Inbound, on_delete=models.CASCADE, null=True)
     outbound = models.ForeignKey(Outbound, on_delete=models.CASCADE, null=True)
     borrow = models.ForeignKey(Borrow, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=2, choices=status_list, default=0)
