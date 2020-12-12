@@ -6,7 +6,7 @@ from WMS.models import *
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
-
+from sequences import get_next_value, get_last_value
 from pprint import pprint
 import datetime
 from WMS.forms import *
@@ -49,32 +49,28 @@ def outbound(request, id=0):
         else:
             if request.method == "GET":
                 if id == 0:
-                    form = OutboundForm()
-                    date_time = datetime.datetime.now()
-                    date_id = date_time.strftime("%d%m%Y%H%M%S")
-                    date = date_time.strftime("%Y-%m-%d")
-                    id_outbound = date_id
-                    con_cre = request.session['id']
                     context = {
-                        'form': form,
-                        'title': 'Add Outbound',
-                        'date': date,
+                        'form': OutboundForm(),
+                        'title': 'Add Outbound | Outbound',
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                        'id_outbound_date': datetime.datetime.now().strftime("%d%m%Y"),
+                        'id_outbound': get_last_value('outbound_seq'),
+                        'role': request.session['role'],
+                        'username': request.session['username'],
                         'group_id': request.session['usergroup'],
-                        'id_outbound': id_outbound,
-                        'con_cre': con_cre,
+                        'con_cre': request.session['id'],
                     }
                     return render(request, 'content/outbound.html', context)
                 else:
                     outbound = Outbound.objects.get(pk=id)
-                    form = OutboundForm(instance=outbound)
-                    date_time = datetime.datetime.now()
-                    date = date_time.strftime("%Y-%m-%d")
                     context = {
-                        'form': form,
+                        'form': OutboundForm(instance=outbound),
                         'outbound': outbound,
-                        'date': date,
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
                         'group_id': request.session['usergroup'],
-                        'title': 'Update Outbound'
+                        'role': request.session['role'],
+                        'username': request.session['username'],
+                        'title': 'Update Outbound | Outbound'
                     }
                 return render(request, 'content/update_outbound.html', context)
             else:
@@ -85,6 +81,8 @@ def outbound(request, id=0):
                     form = OutboundForm(request.POST, instance=outbound)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('outbound_seq')
                     return redirect('outbound')
             return render(request, 'content/outbound.html')
 
@@ -105,12 +103,10 @@ def view_outbound(request, id):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
-        outbound = Outbound.objects.filter(pk=id)
-        results2 = OutboundData.objects.all().filter(outbound=id)
         request.session['outbound_id'] = id
         context = {
-            'Outbound': outbound,
-            'Outbounddata': results2,
+            'Outbound': Outbound.objects.filter(pk=id),
+            'Outbounddata': OutboundData.objects.all().filter(outbound=id),
             'title': 'View outbound',
         }
         return render(request, 'content/view_outbound.html', context)
@@ -127,7 +123,8 @@ def outbounddata(request, id=0):
                 if id == 0:
                     context = {
                         'form': OutboundDataForm(),
-                        'title': 'Add Outbounddata',
+                        'title': 'Add Outbounddata | Outbound',
+                        'id_outbounddata': get_last_value('outbounddata_seq'),
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
@@ -138,7 +135,7 @@ def outbounddata(request, id=0):
                 else:
                     outbounddata = OutboundData.objects.get(pk=id)
                     context = {
-                        'title': 'Update Outbounddata',
+                        'title': 'Update Outbounddata | Outbound',
                         'form': OutboundDataForm(instance=outbounddata),
                         'item': it.avaibleItem(1, 0, request.session['usergroup']),
                         'outbounddata': outbounddata,
@@ -178,6 +175,8 @@ def outbounddata(request, id=0):
                                         return redirect('view_outbound', id=request.session['outbound_id'])
                                     j += 1
                                 form.save()
+                                if id == 0:
+                                    get_next_value('outbounddata_seq')
                                 return redirect('view_outbound', id=request.session['outbound_id'])
 
 

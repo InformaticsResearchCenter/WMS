@@ -40,11 +40,8 @@
         .hrItem {
             border: none;
             height: 1px;
-            /* Set the hr color */
             color: #333;
-            /* old IE */
             background-color: #fff;
-            /* Modern Browsers */
         }
     </style>
     <script src="{% static 'Admin/qrcode.min.js' %}"></script>
@@ -100,9 +97,6 @@
                         <th scope="row">{{u.0}}</th>
                         <td>{{u.0}}<img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{u.0}}'>
                         </td>
-                        <!-- 
-                            <input type="text" id="qr-data" onchange="generateQR()">
-                            <td><div id="qrcode"></div></td> -->
                     </tr>
                     {% endfor %}
                 </tbody>

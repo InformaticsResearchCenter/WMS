@@ -5,6 +5,7 @@ from WMS.models import *
 from WMS.forms import *
 from module import item as it
 from django.contrib import messages
+from sequences import get_next_value, get_last_value
 
 # -------- PDF -----------
 from django.template.loader import get_template
@@ -42,16 +43,19 @@ def borrow(request, id=0):
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
+                        'id_borrow': get_last_value('borrow_seq'),
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'title': 'Add Borrow Data',
                     }
                     return render(request, 'inside/wmsBorrow/borrowCreate.html', context)
                 else:
                     borrow = Borrow.objects.get(pk=id)
+                    borow_date = borrow.date
                     context = {
                         'form': BorrowForm(instance=borrow),
                         'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
                         'borrow': borrow,
+                        'borrow_date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'borrow_id': request.session['borrow'],
                         'id': request.session['id'],
                         'role': request.session['role'],
@@ -69,6 +73,8 @@ def borrow(request, id=0):
                         request.POST, instance=borrow)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('borrow_seq')
                     return redirect('borrowIndex')
 
 
@@ -127,6 +133,7 @@ def borrowdata(request, id=0):
                     if id == 0:
                         context = {
                             'form': BorrowdataForm(),
+                            'id_borrowdata': get_last_value('borrowdata_seq'),
                             'item': it.avaibleItem(1, 0, request.session['usergroup']),
                             'borrow_id': request.session['borrow'],
                             'id': request.session['id'],
@@ -182,6 +189,8 @@ def borrowdata(request, id=0):
                                             return redirect('borrowView', id=request.session['borrow'])
                                         j += 1
                                     form.save()
+                                    if id == 0:
+                                        get_next_value('borrowdata_seq')
                                     return redirect('borrowView', id=request.session['borrow'])
 
 

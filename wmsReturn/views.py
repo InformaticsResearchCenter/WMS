@@ -5,15 +5,15 @@ from django.core.exceptions import PermissionDenied
 from WMS.forms import *
 from module import item as it
 from django.contrib import messages
-
 from django.db import connection
-
+from sequences import get_next_value, get_last_value
 # -------- PDF -----------
 from django.template.loader import get_template
 from category.utils import render_to_pdf
 from django.http import HttpResponse
 from django.views.generic import View
 from django.shortcuts import get_list_or_404, get_object_or_404
+from pprint import pprint
 # Create your views here.
 
 
@@ -45,6 +45,7 @@ def costumerReturn(request, id=0):
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
+                        'id_costumerreturn': get_last_value('costumerreturn_seq'),
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'title': 'Add Costumer Return',
                     }
@@ -54,6 +55,8 @@ def costumerReturn(request, id=0):
                     form = CostumerReturnForm(request.POST)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('costumerreturn_seq')
                     return redirect('costumerReturnIndex')
 
 
@@ -111,11 +114,10 @@ def costumerReturndata(request, id=0):
                             'role': request.session['role'],
                             'group_id': request.session['usergroup'],
                             'username': request.session['username'],
+                            'id_costumerreturndata': get_last_value('costumerreturndata_seq'),
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
                         }
-                        print(it.avaibleItem(
-                            1, 0, request.session['usergroup']))
                         return render(request, 'inside/wmsReturn/costumerReturndataCreate.html', context)
                     else:
                         costumerReturn = CostumerReturn.objects.get(pk=id)
@@ -129,6 +131,7 @@ def costumerReturndata(request, id=0):
                             'username': request.session['username'],
                             'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                             'title': 'Add Costumer Return Data',
+                            'id_costumerreturndata': id
                         }
                         return render(request, 'inside/wmsReturn/costumerReturndataUpdate.html', context)
                 else:
@@ -163,6 +166,9 @@ def costumerReturndata(request, id=0):
                                             return redirect('costumerReturndataIndex', id=request.session['costumerReturn'])
                                         j += 1
                                     form.save()
+                                    if id == 0:
+                                        get_next_value(
+                                            'costumerreturndata_seq')
                                     return redirect('costumerReturndataIndex', id=request.session['costumerReturn'])
             else:
                 raise PermissionDenied
@@ -248,10 +254,13 @@ def supplierReturn(request, id=0):
             if request.method == "GET":
                 if id == 0:
                     context = {
-                        'inbound': Inbound.objects.filter(deleted=0, status=2),
+                        'inbound': Inbound.objects.filter(deleted=0, status=2, userGroup=request.session['usergroup']),
                         'form': SupplierReturnForm(),
                         'id': request.session['id'],
+                        'role': request.session['role'],
                         'group_id': request.session['usergroup'],
+                        'username': request.session['username'],
+                        'id_supplierreturn': get_last_value('supplierreturn_seq'),
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
                         'title': 'Add Supplier Return',
                     }
@@ -261,6 +270,8 @@ def supplierReturn(request, id=0):
                     form = SupplierReturnForm(request.POST)
                 if form.is_valid():
                     form.save()
+                    if id == 0:
+                        get_next_value('supplierreturn_seq')
                     return redirect('supplierReturnIndex')
 
 
@@ -313,20 +324,21 @@ def supplierReturndata(request, id=0):
                 if id == 0:
                     context = {
                         'form': SupplierReturndataForm(),
-                        'inbounddata': InboundData.objects.filter(inbound=request.session['id_inbound'], deleted=0),
+                        'inbounddata': InboundData.objects.filter(inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup']),
                         'supplierReturnId': request.session['supplierReturn'],
                         'id': request.session['id'],
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'username': request.session['username'],
                         'date': datetime.datetime.today().strftime('%Y-%m-%d'),
+                        'id_supplierreturndata': get_last_value('supplierreturndata_seq'),
                         'title': 'Add Supplier Return Data',
                     }
                     return render(request, 'inside/wmsReturn/supplierReturndataCreate.html', context)
                 else:
                     supplierReturn = SupplierReturn.objects.get(pk=id)
                     context = {
-                        'form': SupplierReturndataForm(),
+                        'form': SupplierReturndataForm(instance=supplierReturn),
                         'item': it.avaibleItem(1, 0, request.session['usergroup']),
                         'supplierReturnId': request.session['supplierReturn'],
                         'id': request.session['id'],
@@ -347,27 +359,43 @@ def supplierReturndata(request, id=0):
                 if form.is_valid():
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
-                    rejectCounter = list(InboundData.objects.filter(id=request.session['id_inbound']).values('rejectCounter'))
-                    if(int(formqty) > rejectCounter[0]['rejectCounter']):
-                        messages.error(
-                            request, 'Item quantity exceeded the limit !')
-                        return redirect('supplierReturndataCreate')
-                    else:
-                        qtySupplier = list(SupplierReturnData.objects.filter(
-                            supplierReturn=request.session['supplierReturn']).values_list('item__id'))
-                        j = 0
-                        while j < len(qtySupplier):
-                            if qtySupplier[j][0] == int(formitem):
-                                supRet = SupplierReturnData.objects.filter(
-                                    item=i['item'], supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup'])
-                                supRetqty = supRet.first().quantity
-                                supRet.update(
-                                    quantity=supRetqty + int(formqty))
+                    rejectCounter = list(InboundData.objects.filter(inbound=request.session['id_inbound'], userGroup=request.session['usergroup']).values('rejectCounter', 'item'))
+                    pprint(rejectCounter[0]['rejectCounter'])
+                    pprint(rejectCounter)
+                    for s in rejectCounter:
+                        if (formitem) == (s['item']): 
+                            if int(formqty) > (s['rejectCounter']):
+                                messages.error(
+                                    request, 'Item quantity exceeded the limit !')
+                                return redirect('supplierReturndataCreate')
+                            else:
+                                qtySupplier = list(SupplierReturnData.objects.filter(
+                                    supplierReturn=request.session['supplierReturn']).values_list('item__id'))
+                                j = 0
+                                while j < len(qtySupplier):
+                                    if qtySupplier[j][0] == formitem:    
+                                        supRet = SupplierReturnData.objects.filter(
+                                            item=qtySupplier[j][0], supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup'])
+                                        pprint(supRet)
+                                        supRetqty = supRet.first().quantity
+                                        supRet.update(
+                                            quantity=supRetqty + int(formqty))
+                                        inbounddata2 = InboundData.objects.filter(item=qtySupplier[j][0], inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
+                                        inbounddata3 = inbounddata2.first()
+                                        inbounddata2.update(rejectCounter=inbounddata3.rejectCounter - int(formqty), quantity = inbounddata3.quantity + int(formqty))
+                                        return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
+                                    j += 1    
+                                form.save()
+                                inbounddata2 = InboundData.objects.filter(item=formitem, inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
+                                inbounddata3 = inbounddata2.first()
+                                # pp (inbounddata2)
+                                # pp (inbounddata3.rejectCounter)
+                                inbounddata2.update(rejectCounter=inbounddata3.rejectCounter - int(formqty), quantity = inbounddata3.quantity + int(formqty))
+                                if id == 0:
+                                    get_next_value(
+                                        'supplierreturndata_seq')
                                 return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
-                            j += 1    
-                        form.save()
-                        return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
-                
+
 
 def supplierReturndataDelete(request, id):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
@@ -390,56 +418,36 @@ def supplierReturnConfirm(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
-        if request.session['role'] == 'OPR':
+        if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
             index = 0
-            supplierReturn_id = request.session['supplierReturn']
-            inbounddata = InboundData.objects.all().filter(inbound=supplierReturn_id)
-            inbounddata_id_list = list(inbounddata.values_list('id', flat=True))
-            item_id_list = list(inbounddata.values_list('item', flat=True))
-            quantity_list = list(
-                inbounddata.values_list('quantity', flat=True))
-            print(quantity_list)   
+            inbounddata_id_list = list(InboundData.objects.filter(inbound= request.session['inbound_id'], userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter'))
+            rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
+            #Isi field Itemdata
+            data = []
+            # ----------------------------------------
 
-            # Memanggil value RejectCounter yang lebih dari 0
-            inbounddata2 = InboundData.objects.all().filter(
-                inbound=supplierReturn_id).exclude(rejectCounter=0)
-            rejectCounterlist = list(inbounddata2.values_list('rejectCounter', flat=True))
+            #Looping insert data ke Itemdata
+            for i in inbounddata_id_list:
+                for j in range(i[1] - i[2]):
+                    data.append(ItemData(id='ITD'+ str(get_next_value('itemdata_seq')), inbound=Inbound.objects.get(pk=request.session['inbound_id']), userGroup=UserGroup.objects.get(pk=request.session['usergroup'])))
+            
+            ItemData.objects.bulk_create(data)
 
-            # Isi field Itemdata
-            data_fix = []
-            binlocation = None
-            userGroup = request.session['usergroup']
-            inbound  = None
-            outbound = None
-            borrow = None
-            status = None
-
-            # Looping insert data ke ItemData
-            for i in quantity_list:
-                #itemid = item_id_list[index]
-                inbounddataid = inbounddata_id_list[index]
-                for x in range(i):
-                    data = (binlocation, userGroup, inbound, outbound, borrow, status)
-                    data_fix.append(data)
-                index += 1
-            cursor = connection.cursor()
-            query = """INSERT INTO ItemData(binlocation, userGroup, inbound, outbound, borrow, status)
-                        VALUES
-                        (%s, %s, %s, %s, %s, %s) """
-            cursor.executemany(query, data_fix)
-            #--------------------------------------------
+            # # # --------------------------------------------
 
             # Update status Inbound data
-            if len(rejectCounterlist) > 0:
-                Inbound.objects.filter(
-                    id=supplierReturn_id).update(status="2")
+            if len(rejectlist) > 0:
+                SupplierReturn.objects.filter(
+                    id=request.session['supplierReturn']).update(status="2")
             else:
-                Inbound.objects.filter(id=supplierReturn_id).update(status="3")
+                SupplierReturn.objects.filter(
+                    id=request.session['supplierReturn']).update(status="3")
+            # -------------------------------------------------
 
-            # -----------------------------------------------
-            return redirect('supplierReturnIndex')                                 
+            return redirect('supplierReturnIndex')
+                                 
 
 
 
@@ -450,7 +458,7 @@ class PdfSupplierReturn(View):
             raise PermissionDenied
         else:
             datas = list(SupplierReturnData.objects.all().select_related(
-                'supplierReturn').filter(supplierReturn=obj).values_list('id', 'item__name', 'quantity', 'reject'))
+                'supplierReturn').filter(supplierReturn=obj).values_list('id', 'item__name', 'quantity'))
             itemdata = []
             for e in datas:
                 itemdata.append(list(ItemData.objects.all().select_related(
