@@ -107,6 +107,10 @@ def view_outbound(request, id):
         context = {
             'Outbound': Outbound.objects.filter(pk=id),
             'Outbounddata': OutboundData.objects.all().filter(outbound=id),
+            'Outbounddatastats': OutboundData.objects.all().filter(outbound=id).first(),
+            'role': request.session['role'],
+            'group_id': request.session['usergroup'],
+            'username': request.session['username'],
             'title': 'View outbound',
         }
         return render(request, 'content/view_outbound.html', context)

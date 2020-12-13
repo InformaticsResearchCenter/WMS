@@ -9,7 +9,7 @@
         {% if role != 'OPR' %}
         <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Outbound Data</a>
-            {% if Outbounddata.outbound.status == "1" %}
+            {% if Outbounddatastats.outbound.status == "1" %}
             <form action="#" method="POST" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success btn-sm"

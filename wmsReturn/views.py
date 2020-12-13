@@ -53,6 +53,11 @@ def costumerReturn(request, id=0):
                 if id == 0:
                     form = CostumerReturnForm(request.POST)
                 if form.is_valid():
+                    outbound = Outbound.objects.get(
+                        pk=request.POST['outbound'])
+                    if request.POST['outbound'] != outbound.userGroup:
+                        messages.error(request, 'Outbound ID Not exist')
+                        return redirect('costumerReturnCreate')
                     form.save()
                     if id == 0:
                         get_next_value('costumerreturn_seq')
@@ -87,8 +92,8 @@ def costumerReturnDataIndex(request, id):
         costumerReturndataStats = CostumerReturnData.objects.filter(
             deleted=0, userGroup=request.session['usergroup'], costumerReturn=id)
         context = {
-            'costumerReturn': CostumerReturn.objects.filter(pk=id),
-            'costumerReturnst': CostumerReturn.objects.filter(pk=id).first().status,
+            'costumerReturn': CostumerReturn.objects.filter(pk=id, userGroup=request.session['usergroup']),
+            'costumerReturnst': CostumerReturn.objects.filter(pk=id, userGroup=request.session['usergroup']).first().status,
             'costumerReturnData': costumerReturndataStats,
             'costumerReturnDataStats': costumerReturndataStats.first(),
             'role': request.session['role'],
