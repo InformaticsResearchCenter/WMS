@@ -5,7 +5,7 @@ from django.http import HttpResponse
 import datetime
 from django.db import IntegrityError
 from django.contrib import messages
-from sequences import get_next_value
+from sequences import get_next_value, get_last_value
 # Create your views here.
 
 

@@ -488,17 +488,14 @@ def confirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            index = 0
             inbounddata_id_list = list(InboundData.objects.filter(inbound= request.session['inbound_id'], userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter'))
             rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
             # Isi field Itemdata
             data = []
-            # ----------------------------------------
-
             #Looping insert data ke Itemdata
             for i in inbounddata_id_list:
                 for j in range(i[1] - i[2]):
-                    data.append(ItemData(id='ITD'+ str(get_next_value('itemdata_seq')), inbound=Inbound.objects.get(pk=request.session['inbound_id']), userGroup=UserGroup.objects.get(pk=request.session['usergroup'])))
+                    data.append(ItemData(id='ITD'+ str(get_next_value('itemdata_seq')), inbound=InboundData.objects.get(pk=i[0]), userGroup=UserGroup.objects.get(pk=request.session['usergroup'])))
             
             ItemData.objects.bulk_create(data)
 
