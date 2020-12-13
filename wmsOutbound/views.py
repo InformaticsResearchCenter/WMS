@@ -156,7 +156,7 @@ def outbounddata(request, id=0):
                     item = it.avaibleItem(
                         1, 0, request.session['usergroup'])
                     for i in item:
-                        if i['item'] == int(formitem):
+                        if i['item'] == formitem:
                             if i['qty'] < int(formqty):
                                 messages.error(
                                     request, 'Item quantity exceeded the limit !')
@@ -166,7 +166,7 @@ def outbounddata(request, id=0):
                                     outbound=request.session['outbound_id']).values_list('item__id'))
                                 j = 0
                                 while j < len(qtyOut):
-                                    if qtyOut[j][0] == int(formitem):
+                                    if qtyOut[j][0] == formitem:
                                         out = OutboundData.objects.filter(
                                             item=i['item'], outbound=request.session['outbound_id'], userGroup=request.session['usergroup'])
                                         outqty = out.first().quantity

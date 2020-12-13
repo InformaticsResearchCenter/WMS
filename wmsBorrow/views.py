@@ -50,7 +50,6 @@ def borrow(request, id=0):
                     return render(request, 'inside/wmsBorrow/borrowCreate.html', context)
                 else:
                     borrow = Borrow.objects.get(pk=id)
-                    borow_date = borrow.date
                     context = {
                         'form': BorrowForm(instance=borrow),
                         'item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']),
@@ -170,7 +169,7 @@ def borrowdata(request, id=0):
                         item = it.avaibleItem(
                             1, 0, request.session['usergroup'])
                         for i in item:
-                            if i['item'] == int(formitem):
+                            if i['item'] == formitem:
                                 if i['qty'] < int(formqty):
                                     messages.error(
                                         request, 'Item quantity exceeded the limit !')
@@ -180,7 +179,7 @@ def borrowdata(request, id=0):
                                         borrow=request.session['borrow']).values_list('item__id'))
                                     j = 0
                                     while j < len(qtyBorrow):
-                                        if qtyBorrow[j][0] == int(formitem):
+                                        if qtyBorrow[j][0] == formitem:
                                             bor = BorrowData.objects.filter(
                                                 item=i['item'], borrow=request.session['borrow'], userGroup=request.session['usergroup'])
                                             borqty = bor.first().quantity
