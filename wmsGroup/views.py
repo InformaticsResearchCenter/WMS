@@ -54,6 +54,14 @@ def register(request):
                 password=request.POST['password'],
             )
             data.save()
+            man_user = User.objects.create(
+                name='MAN_'+request.POST['name'],
+                username=request.POST['email'],
+                password=request.POST['password'],
+                userGroup=UserGroup.objects.get(pk=request.POST['id']),
+                role=Role.objects.get(pk='MAN')
+            )
+            man_user.save()
             get_next_value('usergroup_seq')
             return redirect('groupLogin')
         except:
