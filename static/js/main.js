@@ -26,18 +26,6 @@
         });
     });
 
-    function validate(input) {
-        if ($(input).attr('type') == 'text' || $(input).attr('name') == 'username') {
-            if ($(input).val().trim().match(/^(?=[a-zA-Z0-9._]{5,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/) == null) {
-                return false;
-            }
-        } else {
-            if ($(input).val().trim() == '') {
-                return false;
-            }
-        }
-    }
-
     function showValidate(input) {
         var thisAlert = $(input).parent();
 
