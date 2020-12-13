@@ -106,6 +106,7 @@ def view_outbound(request, id):
         request.session['outbound_id'] = id
         context = {
             'Outbound': Outbound.objects.filter(pk=id),
+            'Outboundstats': Outbound.objects.filter(pk=id).first(),
             'Outbounddata': OutboundData.objects.all().filter(outbound=id),
             'Outbounddatastats': OutboundData.objects.all().filter(outbound=id).first(),
             'role': request.session['role'],
@@ -210,12 +211,12 @@ def confirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            outstats = OutboundData.objects.filter(
-                pk=id, userGroup=request.session['usergroup']).first()
-            if outstats.outbound.status == '1':
+            outstats = Outbound.objects.filter(
+                pk=request.session['outbound_id'], userGroup=request.session['usergroup']).first()
+            if outstats.status == '1':
                 Outbound.objects.filter(
                     id=request.session['outbound_id']).update(status="2")
-                return redirect('outbound')
+                return redirect('view_outbound', id=request.session['outbound_id'])
             else:
                 raise PermissionDenied
 
