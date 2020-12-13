@@ -255,12 +255,13 @@ $(document).ready(function () {
 		$(".overlay").show();
 		$.ajax({
 			type: 'post',
-			url: '/storage/checkOutbound/',
+			url: '/app/storage/scanner/checkOutbound',
 			data: {
 				outboundId: $("#outboundId").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
+				console.log(response)
 				customer = response['customer']
 				items = response['items']
 				if (response['customer'] == "" || response['items'] == "") {
@@ -292,51 +293,81 @@ $(document).ready(function () {
 		$(".overlay").show();
 		$.ajax({
 			type: 'post',
-			url: '/storage/checkBorrow/',
+			url: '/app/storage/scanner/checkBorrow',
 			data: {
-				borrowId: $("#borrowId").val(),
+				borrow: $("#borrowCode").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				customer = response['customer']
-				items = response['items']
-				if (response['customer'] == "" || response['items'] == "") {
-					$(".overlay").hide();
-				}
-				try {
-
-				} catch (err) {
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan")
 					$("#borrowData").empty();
-					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
+					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					employee = Object.values(response['employee'][0])
+					console.log(employee)
+					$("#borrowData").empty();
+					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
+					$("#borrowData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td>Alamat</td><td id="alamat">` + employee[1] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#borrowData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+
+
+					items = response['items']
+
+					$("#itemCodeContainer").show();
 				}
-				$("#itemCodeContainer").show();
 				$(".overlay").hide();
+			},
+			fail: function (xhr, textStatus, errorThrown) {
+				alert('request failed');
 			}
+
+
 		});
 	});
-	$("#outboundCheckButton").click(function (e) {
+	$("#returnCheckButton").click(function (e) {
 		e.preventDefault();
 		$(".overlay").show();
 		$.ajax({
 			type: 'post',
-			url: '/storage/checkOutbound/',
+			url: '/app/storage/scanner/checkReturn',
 			data: {
-				outboundId: $("#outboundId").val(),
+				return: $("#returnCode").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				customer = response['customer']
-				items = response['items']
-				if (response['customer'] == "" || response['items'] == "") {
-					$(".overlay").hide();
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan")
+					$("#returnData").empty();
+					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					employee = Object.values(response['employee'][0])
+					console.log(employee)
+					$("#returnData").empty();
+					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
+					$("#returnData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>Alamat</td><td id="alamat">` + employee[1] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
+					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#returnData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+
+
+					items = response['items']
+
+					$("#itemCodeContainer").show();
 				}
-				try {} catch (err) {
-					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
-				}
-				$("#itemCodeContainer").show();
 				$(".overlay").hide();
+			},
+			fail: function (xhr, textStatus, errorThrown) {
+				alert('request failed');
 			}
+
+
 		});
 	});
 

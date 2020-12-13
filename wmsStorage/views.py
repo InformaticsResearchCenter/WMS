@@ -42,12 +42,14 @@ def getReturnData(request):
 
 def getBorrowData(request):
     borrowId=request.POST.get('borrow',None)
-    employee = list(Borrow.objects.filter(id = 1,userGroup =1, deleted=0, status=2).values('id','name','phoneNumber','date'))
-    if employee != []:
-        item = list(BorrowData.objects.filter(borrow=employee[0]['id']).values('item','quantity'))
-        return JsonResponse({'employee' : employee, 'items' : item}, status = 200)
-    else:
-        return JsonResponse({'msg' : "data not found"}, status=404)
+    employee = []
+    if borrowId != "":
+        employee = list(Borrow.objects.filter(id = borrowId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber','date'))
+        if employee != []:
+            item = list(BorrowData.objects.filter(borrow=employee[0]['id']).values('item','quantity'))
+            return JsonResponse({'employee' : employee, 'items' : item}, status = 200)
+    return JsonResponse({'msg' : "data not found"}, status=200)
+    
 
 
 def put(request):
