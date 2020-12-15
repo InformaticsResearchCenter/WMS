@@ -32,7 +32,7 @@ $(document).ready(function () {
 	*/
 	$.ajax({
 		type: 'post',
-		url: '/storage/getScannerData',
+		url: '/app/storage/scanner/getScannerData',
 		data: {
 			csrfmiddlewaretoken: csrf
 		},
@@ -94,17 +94,46 @@ $(document).ready(function () {
 			$("#outboundIdContainer").hide();
 			$("#binLocationContainer").show();
 			$("#itemCodeContainer").show();
+			$("#borrowCodeContainer").hide();
+			$("#returnCodeContainer").hide();
 			$("#binLocation").val("");
 			$("#itemCode").val("");
 			$("#outboundId").val("");
-		} else {
+			$("#borrow").val("");
+			$("#return").val("");
+		} else if ($("#action").val() == "outbound") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").show();
 			$("#itemCodeContainer").hide();
+			$("#borrowCodeContainer").hide();
+			$("#returnCodeContainer").hide();
 			$("#binLocation").val("");
 			$("#itemCode").val("");
 			$("#outboundId").val("");
-
+			$("#borrow").val("");
+			$("#return").val("");
+		} else if ($("#action").val() == "borrow") {
+			$("#binLocationContainer").hide();
+			$("#outboundIdContainer").hide();
+			$("#itemCodeContainer").hide();
+			$("#borrowCodeContainer").show();
+			$("#returnCodeContainer").hide();
+			$("#binLocation").val("");
+			$("#itemCode").val("");
+			$("#outboundId").val("");
+			$("#borrow").val("");
+			$("#return").val("");
+		} else if ($("#action").val() == "return") {
+			$("#binLocationContainer").hide();
+			$("#outboundIdContainer").hide();
+			$("#itemCodeContainer").hide();
+			$("#borrowCodeContainer").hide();
+			$("#returnCodeContainer").show();
+			$("#binLocation").val("");
+			$("#itemCode").val("");
+			$("#outboundId").val("");
+			$("#borrow").val("");
+			$("#return").val("");
 		}
 	});
 
@@ -129,6 +158,14 @@ $(document).ready(function () {
 		e.preventDefault();
 		pointer = "outboundId"
 	});
+	$("#borrow").click(function (e) {
+		e.preventDefault();
+		pointer = "borrow"
+	});
+	$("#return").click(function (e) {
+		e.preventDefault();
+		pointer = "return"
+	});
 
 
 
@@ -140,9 +177,9 @@ $(document).ready(function () {
 	*/
 	$("#inputItem").click(function (e) {
 		e.preventDefault();
-
-		for (i = 0; i < itemData['itembatch'].length; i++) {
-			if (itemData['itembatch'][i][1] == $("#itemCode").val()) {
+		console.log(itemData['item'][0]['id'])
+		for (i = 0; i < itemData['item'].length; i++) {
+			if (itemData['item'][i]['id'] == $("#itemCode").val()) {
 				if (code.includes($("#itemCode").val())) {
 					alert("Item telah di scan")
 				} else {
@@ -173,8 +210,9 @@ $(document).ready(function () {
 	*/
 	$("#binlocationCheckButton").click(function (e) {
 		e.preventDefault();
+		console.log(itemData['binlocation'][1]['id'])
 		for (let i = 0; i < itemData['binlocation'].length; i++) {
-			if ($("#binLocation").val() == itemData['binlocation'][i][0]) {
+			if ($("#binLocation").val() == itemData['binlocation'][i]['id']) {
 				alert("found")
 				binlocationExist = 1
 				break;
@@ -249,6 +287,58 @@ $(document).ready(function () {
 			}
 		});
 	});
+	$("#borrowCheckButton").click(function (e) {
+		e.preventDefault();
+		$(".overlay").show();
+		$.ajax({
+			type: 'post',
+			url: '/storage/checkBorrow/',
+			data: {
+				borrowId: $("#borrowId").val(),
+				csrfmiddlewaretoken: csrf
+			},
+			success: function (response) {
+				customer = response['customer']
+				items = response['items']
+				if (response['customer'] == "" || response['items'] == "") {
+					$(".overlay").hide();
+				}
+				try {
+
+				} catch (err) {
+					$("#borrowData").empty();
+					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
+				}
+				$("#itemCodeContainer").show();
+				$(".overlay").hide();
+			}
+		});
+	});
+	$("#outboundCheckButton").click(function (e) {
+		e.preventDefault();
+		$(".overlay").show();
+		$.ajax({
+			type: 'post',
+			url: '/storage/checkOutbound/',
+			data: {
+				outboundId: $("#outboundId").val(),
+				csrfmiddlewaretoken: csrf
+			},
+			success: function (response) {
+				customer = response['customer']
+				items = response['items']
+				if (response['customer'] == "" || response['items'] == "") {
+					$(".overlay").hide();
+				}
+				try {} catch (err) {
+					$("#outboundData").empty();
+					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
+				}
+				$("#itemCodeContainer").show();
+				$(".overlay").hide();
+			}
+		});
+	});
 
 
 
@@ -263,7 +353,7 @@ $(document).ready(function () {
 		if ($("#action").val() == "inbound") {
 			$.ajax({
 				type: 'post',
-				url: '/storage/put/',
+				url: '/app/storage/scanner/put',
 				data: {
 					binlocation: $("#binLocation").val(),
 					itemCode: JSON.stringify(code),
@@ -289,7 +379,7 @@ $(document).ready(function () {
 		} else if ($("#action").val() == "move") {
 			$.ajax({
 				type: 'post',
-				url: '/storage/move/',
+				url: '/app/storage/scanner/move',
 				data: {
 					binlocation: $("#binLocation").val(),
 					itemCode: JSON.stringify(code),
@@ -315,7 +405,55 @@ $(document).ready(function () {
 		} else if ($("#action").val() == "outbound") {
 			$.ajax({
 				type: 'post',
-				url: '/storage/out/',
+				url: '/app/storage/scanner/out',
+				data: {
+					outboundId: $("#outboundId").val(),
+					itemCode: JSON.stringify(code),
+					csrfmiddlewaretoken: csrf
+				},
+				success: function (response) {
+					if (response['outboundId'] == "" || response['itemCode'] == "") {
+						$(".overlay").hide();
+						alert("error data kosong/tidak ditemukan")
+					} else {
+						$(".overlay").hide();
+						alert("Outbound berhasil")
+					}
+				},
+				fail: function (xhr, textStatus, errorThrown) {
+					alert('request failed');
+					$(".overlay").hide();
+				}
+			});
+			code = [];
+		} else if ($("#action").val() == "return") {
+			$.ajax({
+				type: 'post',
+				url: '/app/storage/scanner/return',
+				data: {
+					outboundId: $("#outboundId").val(),
+					itemCode: JSON.stringify(code),
+					csrfmiddlewaretoken: csrf
+				},
+				success: function (response) {
+					if (response['outboundId'] == "" || response['itemCode'] == "") {
+						$(".overlay").hide();
+						alert("error data kosong/tidak ditemukan")
+					} else {
+						$(".overlay").hide();
+						alert("Outbound berhasil")
+					}
+				},
+				fail: function (xhr, textStatus, errorThrown) {
+					alert('request failed');
+					$(".overlay").hide();
+				}
+			});
+			code = [];
+		} else if ($("#action").val() == "borrow") {
+			$.ajax({
+				type: 'post',
+				url: '/app/storage/scanner/borrow',
 				data: {
 					outboundId: $("#outboundId").val(),
 					itemCode: JSON.stringify(code),
@@ -343,7 +481,25 @@ $(document).ready(function () {
 	});
 	$("#clearButton").click(function (e) {
 		e.preventDefault();
-		alert("YO WASSSAP")
+		$(".overlay").show();
+
+		$.ajax({
+			type: 'post',
+			url: '/app/storage/scanner/put',
+			data: {
+				binlocation: $("#binLocation").val(),
+				itemCode: JSON.stringify(code),
+				csrfmiddlewaretoken: csrf
+			},
+			success: function (response) {
+				alert("Cooo")
+				$(".overlay").hide();
+			},
+			fail: function (xhr, textStatus, errorThrown) {
+				alert('request failed');
+				$(".overlay").hide();
+			}
+		});
 
 	});
 

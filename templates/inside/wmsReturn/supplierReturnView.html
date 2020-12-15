@@ -71,7 +71,7 @@
                     {% if role != 'OPR' %}
                     {% if crd.supplierReturn.status == '1' %}
                     <td>
-                        <a href="#" class=" btn btn-success btn-sm" role="button"
+                        <a href="{% url 'supplierReturndataUpdate' crd.id %}" class=" btn btn-success btn-sm" role="button"
                             aria-pressed="true">Update</a>
                         <form action="{% url 'supplierReturndataDelete' crd.id %}" method="POST" class="d-inline">
                             {% csrf_token %}

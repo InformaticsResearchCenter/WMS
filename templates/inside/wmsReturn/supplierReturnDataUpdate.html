@@ -1,0 +1,75 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Page Content  -->
+<div id="content" width="80%">
+    <h2>Update Supplier Return</h2>
+    <hr>
+    <div class="card">
+        {% for message in messages %}
+        <div class="alert alert-danger">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
+        </div>
+        {% endfor %}
+        <div class="card-header">
+            Update Supplier Return
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="id" id="id" value="SLD{{id_supplierreturndata}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier">Quantity</label>
+                            <input type="text" class="form-control" name="quantity" id="quantity"
+                                value="{{supplierreturn.quantity}}">
+                        </div>
+                        <div class="form-group">
+                           
+                                <input type="hidden" class="form-control" name="item" id="item"
+                                value="{{supplierreturn.item.id}}">
+                           {% comment %} <select class="form-control" name="item" id="item">
+                                {% for i in inbounddata %}
+                                    {% if i.rejectCounter != 0 %}
+                                    <option value='{{supplierteturn.item.id}}'>{{supplierreturn.item.name}} || reject = {{supplierreturn.rejectCounter}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>        {% endcomment %}
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="supplierReturn" id="supplierReturn"
+                                value="{{supplierReturnId}}">
+                        </div>
+                       <!--  <div class="form-group">
+                            <input type="hidden" class="form-control" name="reject" id="reject" value="1">
+                        </div> -->
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="userGroup" id="userGroup"
+                                value="{{group_id}}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+                 <script type="text/javascript">
+                    var qty = document.getElementById('quantity');
+                    var rjt = document.getElementById('item');
+                    var pass = document.getElementById('rejectCounter');
+                    qty.addEventListener("change", function () {
+                        pass.value = rjt.value;
+                    });
+                    rjt.addEventListener("change", function () {
+                        pass.value = rjt.value;
+                    });
+                </script>
+            </form>
+            <a href="{% url 'supplierReturnIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}

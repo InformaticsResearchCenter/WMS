@@ -20,7 +20,7 @@ def index(request):
             'username': request.session['username'],
             'userGroup' : request.session['usergroup']
         }
-        return render(request, "content/index.html", context)
+        return render(request, "inside/wmsApp/index.html", context)
 
 def login(request):
     context = {
