@@ -32,7 +32,7 @@ def main_outbound(request):
         return redirect('login')
     else:
         context = {
-            'outbound': Outbound.objects.filter(deleted=0,userGroup=request.session['usergroup']),
+            'outbound': Outbound.objects.filter(deleted=0, userGroup=request.session['usergroup']),
             'role': request.session['role'],
             'username': request.session['username'],
             'title': 'Outbound | WMS Poltekpos'
@@ -105,10 +105,10 @@ def view_outbound(request, id):
     else:
         request.session['outbound_id'] = id
         context = {
-            'Outbound': Outbound.objects.filter(pk=id,deleted=0,userGroup=request.session['usergroup']),
-            'Outboundstats': Outbound.objects.filter(pk=id).first(),
-            'Outbounddata': OutboundData.objects.all().filter(outbound=id),
-            'Outbounddatastats': OutboundData.objects.all().filter(outbound=id).first(),
+            'Outbound': Outbound.objects.filter(pk=id, deleted=0, userGroup=request.session['usergroup']),
+            'Outboundstats': Outbound.objects.filter(pk=id, deleted=0, userGroup=request.session['usergroup']).first(),
+            'Outbounddata': OutboundData.objects.all().filter(outbound=id, deleted=0, userGroup=request.session['usergroup']),
+            'Outbounddatastats': OutboundData.objects.all().filter(outbound=id, deleted=0, userGroup=request.session['usergroup']).first(),
             'role': request.session['role'],
             'group_id': request.session['usergroup'],
             'username': request.session['username'],
@@ -168,7 +168,7 @@ def outbounddata(request, id=0):
                                 return redirect('add_outbounddata')
                             else:
                                 qtyOut = list(OutboundData.objects.filter(
-                                    outbound=request.session['outbound_id'],deleted=0,userGroup=request.session['usergroup']).values_list('item__id'))
+                                    outbound=request.session['outbound_id'], deleted=0, userGroup=request.session['usergroup']).values_list('item__id'))
                                 j = 0
                                 while j < len(qtyOut):
                                     if qtyOut[j][0] == formitem:
@@ -230,7 +230,7 @@ class PdfOutbound(View):
             raise PermissionDenied
         else:
             datas = list(OutboundData.objects.all().select_related(
-                'outbound').filter(outbound=obj,deleted=0,userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'outbound'))
+                'outbound').filter(outbound=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'outbound'))
             pdf = render_to_pdf('inside/wmsOutbound/pdf_outbound.html',
                                 {'datas': datas, 'obj': obj})
             if pdf:
