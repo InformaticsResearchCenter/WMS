@@ -7,10 +7,11 @@
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        <a href="{% url 'add_inbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-            Inbound Data</a>
             {% for inb in Inbound %}
             {% if inb.status == "1" %}
+        <a href="{% url 'add_inbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            Inbound Data</a>
+            
             <form action="{% url 'confirm' %}" method="POST" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 70px;">
@@ -55,7 +56,6 @@
                     <th scope="col">Inbound Data ID</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
-                    <th scope="col">Reject Counter</th>
                     <th scope="col">Reject</th>
                     <th scope="col">QR Code</th>
                     {% if role != 'OPR' %}
@@ -70,7 +70,6 @@
                     <td>{{itdt.id}}</td>
                     <td>{{itdt.item.name}}</td>
                     <td>{{itdt.quantity}}</td>
-                    <td>{{itdt.rejectCounter}}</td>
                     <td>{{itdt.reject}}</td>
                     <td>-</td>
                     {% if role != 'OPR' %}

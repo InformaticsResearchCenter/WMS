@@ -206,5 +206,4 @@ class SupplierReturndataForm(forms.ModelForm):
             'supplierReturn',
             'item',
             'userGroup',
-            'reject',
         ]

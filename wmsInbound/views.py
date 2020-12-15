@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 import datetime
 from WMS.models import *
 from WMS.forms import *
+from module import item as it
 from sequences import get_next_value, get_last_value
 from WMS.forms import CategoryForm, SubcategoryForm
 from django.db import connection
@@ -242,7 +243,7 @@ def list_supplier(request):
             'role': request.session['role'],
             'title': 'Supplier | WMS Poltekpos'
         }
-        return render(request, 'content/list_supplier.html', context)
+        return render(request, 'inside/wmsInbound/list_supplier.html', context)
 
 
 def supplier(request, id=0):
@@ -262,7 +263,7 @@ def supplier(request, id=0):
                         'role': request.session['role'],
                         'title': 'Add Supplier | Inbound'
                     }
-                    return render(request, 'content/supplier.html', context)
+                    return render(request, 'inside/wmsInbound/supplier.html', context)
                 else:
                     supplier = Supplier.objects.get(pk=id)
                     context = {
@@ -273,7 +274,7 @@ def supplier(request, id=0):
                         'role': request.session['role'],
                         'title': 'Update Supplier | Inbound'
                     }
-                return render(request, 'content/update_supplier.html', context)
+                return render(request, 'inside/wmsInbound/update_supplier.html', context)
             else:
                 if id == 0:
                     form = SupplierForm(request.POST)
@@ -285,7 +286,7 @@ def supplier(request, id=0):
                     if id == 0:
                         get_next_value('supplier_seq')
                     return redirect('list_supplier')
-            return render(request, 'content/supplier.html')
+            return render(request, 'inside/wmsInbound/supplier.html')
 
 
 def supplier_delete(request, id):
@@ -311,7 +312,7 @@ def supplier_detail(request, id):
             'supplier': supplier,
             'title': 'Detail Supplier'
         }
-        return render(request, 'content/detail_supplier.html', context)
+        return render(request, 'inside/wmsInbound/detail_supplier.html', context)
 
 # ======================================= Inbound ============================================
 
@@ -337,7 +338,7 @@ def inbound(request, id=0):
                         'id_inbound': get_last_value('inbound_seq'),
                         'con_cre': request.session['id'],
                     }
-                    return render(request, 'content/inbound.html', context)
+                    return render(request, 'inside/wmsInbound/inbound.html', context)
             else:
                 if id == 0:
                     form = InboundForm(request.POST)
@@ -346,7 +347,7 @@ def inbound(request, id=0):
                     if id == 0:
                         get_next_value('inbound_seq')
                     return redirect('inboundIndex')
-            return render(request, 'content/inbound.html')
+            return render(request, 'inside/wmsInbound/inbound.html')
 
 
 def main_inbound(request):
@@ -354,12 +355,12 @@ def main_inbound(request):
         return redirect('login')
     else:
         context = {
-            'inbound': Inbound.objects.filter(deleted=0),
+            'inbound': Inbound.objects.filter(deleted=0, userGroup=request.session['usergroup']),
             'username': request.session['username'],
             'role': request.session['role'],
             'title': 'Inbound | WMS Poltekpos'
         }
-        return render(request, 'content/main_inbound.html', context)
+        return render(request, 'inside/wmsInbound/main_inbound.html', context)
 
 
 def view_inbound(request, id):
@@ -369,10 +370,10 @@ def view_inbound(request, id):
         request.session['inbound_id'] = id
         context = {
             'Inbound': Inbound.objects.filter(pk=id),
-            'Itemdata': InboundData.objects.filter(inbound=id, deleted=0),
+            'Itemdata': InboundData.objects.filter(inbound=id, deleted=0, userGroup=request.session['usergroup']),
             'title': 'View Inbound',
         }
-        return render(request, 'content/view_inbound.html', context)
+        return render(request, 'inside/wmsInbound/view_inbound.html', context)
 
 
 def delete_inbound(request, id):
@@ -405,10 +406,12 @@ def inbound_data(request, id=0):
                         'role': request.session['role'],
                         'group_id': request.session['usergroup'],
                         'inbound_id': request.session['inbound_id'],
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                        'id_inbounddata_date': datetime.datetime.now().strftime("%d%m%Y"),
                         'inbounddata_id': get_last_value('inbounddata_seq'),
                         'title': 'Add InboundData | Inbound',
                     }
-                    return render(request, 'content/inbounddata.html', context)
+                    return render(request, 'inside/wmsInbound/inbounddata.html', context)
                 else:
                     inbounddata = InboundData.objects.get(pk=id)
                     context = {
@@ -420,7 +423,7 @@ def inbound_data(request, id=0):
                         'inboundid': request.session['inbound_id'],
                         'inbounddata': inbounddata,
                     }
-                    return render(request, 'content/update_inbounddata.html', context)
+                    return render(request, 'inside/wmsInbound/update_inbounddata.html', context)
             else:
                 if id == 0:
                     form = InboundDataForm(request.POST)
@@ -428,11 +431,32 @@ def inbound_data(request, id=0):
                     inbounddata = InboundData.objects.get(pk=id)
                     form = InboundDataForm(request.POST, instance=inbounddata)
                 if form.is_valid():
+                    formqty = request.POST['quantity']
+                    formitem = request.POST['item']
+                    formreject = request.POST['reject']
+                    formrejectCounter = request.POST['rejectCounter']
+                    item = it.avaibleItem(1,0, request.session['usergroup'])
+                    for i in item:
+                        qtyInbounddata = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup']))
+                        j = 0
+                        while j < len(qtyInbounddata):
+                            if qtyInbounddata[j][0] == formitem:
+                                InData = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['inbound_id'],userGroup=request.session['usergroup'])
+                                InDataqty = InData.first().quantity
+                                InData.update(quantity=InDataqty + int(formqty))
+                                inbounddata2 = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
+                                inbounddata3 = inbounddata2.first()
+                                inbounddata2.update(quantity = inbounddata3.quantity + int(formqty), rejectCounter=inbounddata3.rejectCounter + int(formrejectCounter), reject=inbounddata3.reject + int(formreject))
+                                return redirect('view_inbound', id=request.session['inbound_id'])
+                            j += 1    
                     form.save()
+                    # inbounddata2 = InboundData.objects.filter(item=formitem, inbound=request.session['inbound_id'], deleted=0, userGroup=request.session['usergroup'])
+                    # inbounddata3 = inbounddata2.first()
+                    # inbounddata2.update(quantity = inbounddata3.quantity + int(formqty), rejectCounter=inbounddata3.rejectCounter + int(formrejectCounter), reject=inbounddata3.reject + int(formreject))
                     if id == 0:
                         get_next_value('inbounddata_seq')
                     return redirect('view_inbound', id=request.session['inbound_id'])
-            return render(request, 'content/view_inbound.html')
+            return render(request, 'inside/wmsInbound/view_inbound.html')
 
 
 def delete_inbounddata(request, id):
@@ -454,13 +478,17 @@ class PdfInbound(View):
             raise PermissionDenied
         else:
             datas = list(InboundData.objects.all().select_related(
-                'inbound').filter(inbound=obj).values_list('id', 'item__name', 'quantity', 'rejectCounter', 'reject'))
+                'inbound').filter(inbound=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'reject'))
             itemdata = []
             for e in datas:
+                print (e)
                 itemdata.append(list(ItemData.objects.all().select_related(
-                    'id').filter(id=e[0]).values_list('id', flat='true')))
+                    'inbound').select_related('inbound').filter(inbound=e[0]).values_list('id', flat='true')))
+                # itemdata.append(list(InboundData.objects.all().select_related(
+                #     'item').select_related('item__inbound').filter(inbound=obj).values_list('id', flat='true')))
+                print(itemdata)
             datacollect = zip(datas, itemdata)
-            pdf = render_to_pdf('content/pdf_inbound.html', {
+            pdf = render_to_pdf('inside/wmsInbound/pdf_inbound.html', {
                                 'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
@@ -483,56 +511,26 @@ def confirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            index = 0
-            inbound_id = request.session['inbound_id']
-            inbounddata = InboundData.objects.all().filter(
-                inbound=inbound_id)
-            inbounddata_id_list = list(
-                inbounddata.values_list('id', flat=True))
-            inbound_id_list = list(
-                inbounddata.values_list('inbound', flat=True))
-            pass_field_list = list(
-                inbounddata.values_list('rejectCounter', flat=True))
-
-            # Memanggil Value Reject yang lebih dari 0
-            inbounddata2 = InboundData.objects.all().filter(
-                inbound=inbound_id).exclude(reject=0)
-            rejectlist = list(inbounddata2.values_list('reject', flat=True))
-            # -----------------------------------------
-
+            inbounddata_id_list = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter'))
+            rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
             # Isi field Itemdata
-            date_time = datetime.datetime.now()
-            date = date_time.strftime("%Y-%m-%d")
-            data_fix = []
-            rackid = None
-            entry = date
-            out = None
-            # ----------------------------------------
+            data = []
+            #Looping insert data ke Itemdata
+            for i in inbounddata_id_list:
+                for j in range(i[1] - i[2]):
+                    data.append(ItemData(id='ITD'+ str(get_next_value('itemdata_seq')), inbound=InboundData.objects.get(pk=i[0]), userGroup=UserGroup.objects.get(pk=request.session['usergroup'])))
+            
+            ItemData.objects.bulk_create(data)
 
-            # Looping insert data ke Itemdata
-            for i in pass_field_list:
-                inboundid = inbound_id_list[index]
-                inbounddataid = inbounddata_id_list[index]
-                for x in range(i):
-                    confirm_id = get_next_value('confirm_seq')
-                    id_batch = inbound_id+confirm_id+inboundid
-                    data = (id_batch, rackid, entry, out, inbounddataid)
-                    data_fix.append(data)
-                index += 1
-            cursor = connection.cursor()
-            query = """INSERT INTO InboundData(id, binid, entry, out, inbounddataid)
-                        VALUES
-                        (%s, %s, %s, %s, %s) """
-            cursor.executemany(query, data_fix)
-            # --------------------------------------------
+            # # --------------------------------------------
 
             # Update status Inbound data
             if len(rejectlist) > 0:
-                Inbounddata.objects.filter(
-                    id=inbound_id).update(status="Rejected")
+                Inbound.objects.filter(
+                    id=request.session['inbound_id']).update(status="2")
             else:
-                Inbounddata.objects.filter(
-                    id=inbound_id).update(status="Succes")
-            # -------------------------------------------------
+                Inbound.objects.filter(
+                    id=request.session['inbound_id']).update(status="3")
+            # # -------------------------------------------------
 
-            return redirect('inbound')
+            return redirect('view_inbound', id=request.session['inbound_id'])
