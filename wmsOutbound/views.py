@@ -105,12 +105,8 @@ def view_outbound(request, id):
     else:
         request.session['outbound_id'] = id
         context = {
-<<<<<<< HEAD
             'Outbound': Outbound.objects.filter(pk=id,deleted=0,userGroup=request.session['usergroup']),
-=======
-            'Outbound': Outbound.objects.filter(pk=id),
             'Outboundstats': Outbound.objects.filter(pk=id).first(),
->>>>>>> d30ab99197b3345af5624ccc6cf468e026430679
             'Outbounddata': OutboundData.objects.all().filter(outbound=id),
             'Outbounddatastats': OutboundData.objects.all().filter(outbound=id).first(),
             'role': request.session['role'],
