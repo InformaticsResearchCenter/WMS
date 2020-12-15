@@ -87,5 +87,10 @@ def user_delete(request, id):
         if request.session['role'] != "MAN":
             raise PermissionDenied
         else:
-            User.objects.filter(pk=id).update(deleted=1)
-            return redirect('userIndex')
+            data = User.objects.filter(
+                pk=id, userGroup=request.session['usergroup'])
+            if data.first().role.role == 'MAN':
+                raise PermissionDenied
+            else:
+                data.update(deleted=1)
+                return redirect('userIndex')

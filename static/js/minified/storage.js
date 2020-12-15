@@ -1,9 +1,11 @@
 var code, customer, items, itemData = [];
 var code = []
 var itemLimit = []
+var items = []
 var validation = [0, 0, 0]; // [0] outboundid, [1] binlocation, [2] item
 // var scanPoint = null;
-var pointer, action, itemCode, itemExist, binlocationExist, itemLimitExist = null;
+var pointer, action, itemCode, itemExist, binlocationExist, itemLimitExist, checkLimit = null;
+
 
 
 function removeItem(a, id) {
@@ -24,6 +26,13 @@ function removeItem(a, id) {
 		$("#" + id).remove()
 		code.splice(code.indexOf(a), 1)
 		console.log(code)
+		$("#itemData").empty();
+		$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
+		for (let i = 0; i < itemLimit.length; i++) {
+			if (itemLimit[i]['qty'] > 0) {
+				$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
+			}
+		}
 
 	}
 }
@@ -192,47 +201,102 @@ $(document).ready(function () {
 		dan membuat element baru, juga mengecek eksistensi item
 	============================================================
 	*/
+
 	$("#inputItem").click(function (e) {
 		e.preventDefault();
-		console.log(itemData['item'])
-		console.log(code)
+
 		for (i = 0; i < itemData['item'].length; i++) {
 			if (itemData['item'][i]['id'] == $("#itemCode").val()) {
-				console.log(`DATA : ` + itemData['item'][i]['name'])
 				if (code.includes($("#itemCode").val())) {
 					alert("Item telah di scan")
 				} else {
-					$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
-					code.push($("#itemCode").val())
-					if (itemLimit.length == 0) {
-						itemLimit.push({
-							"name": itemData['item'][i]['name'],
-							"qty": 1
-						})
-					} else {
-						for (let a = 0; a < itemLimit.length; a++) {
-							itemLimitExist = null
-							console.log(`DATA LOOP : ` + itemLimit[a]['name'], itemLimit[a]['name'] == itemData['item'][i]['name'])
-							if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
-								itemLimit[a]['qty'] += 1
-								itemLimitExist = 1
+					console.log(items)
+					if (items != []) {
+						for (let a = 0; a < items.length; a++) {
+							checkLimit = null
+							console.log(itemData['item'][i]['itemId'], items[a]['item'])
+							if (itemData['item'][i]['itemId'] == items[a]['item']) {
+								for (let e = 0; e < itemLimit.length; e++) {
+									console.log(parseInt(itemLimit[e]['qty']), items[a]['quantity'])
+									if (parseInt(itemLimit[e]['qty'] + 1) > items[a]['quantity']) {
+										checkLimit = 1
+										break
+									}
+								}
 								break
 							}
+							checkLimit = 2
 						}
-						console.log(itemLimitExist)
-						if (itemLimitExist != 1) {
+						if (checkLimit == 1) {
+							alert("Melebihi kapasitas")
+						} else if (checkLimit == 2) {
+							alert("Item tidak ada dalam list")
+						} else {
+							$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
+							code.push($("#itemCode").val())
+
+							if (itemLimit.length == 0) {
+								itemLimit.push({
+									"name": itemData['item'][i]['name'],
+									"qty": 1
+								})
+							} else {
+								for (let a = 0; a < itemLimit.length; a++) {
+									itemLimitExist = null
+									if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
+										itemLimit[a]['qty'] += 1
+										itemLimitExist = 1
+										break
+									}
+								}
+								if (itemLimitExist != 1) {
+									itemLimit.push({
+										"name": itemData['item'][i]['name'],
+										"qty": 1
+									})
+								}
+								$("#itemData").empty();
+								$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
+								for (let i = 0; i < itemLimit.length; i++) {
+									$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
+								}
+
+							}
+						}
+					} else {
+						$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
+						code.push($("#itemCode").val())
+
+						if (itemLimit.length == 0) {
 							itemLimit.push({
 								"name": itemData['item'][i]['name'],
 								"qty": 1
 							})
-						}
-						$("#itemData").empty();
-						$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
-						for (let i = 0; i < itemLimit.length; i++) {
-							$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
-						}
+						} else {
+							for (let a = 0; a < itemLimit.length; a++) {
+								itemLimitExist = null
+								if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
+									itemLimit[a]['qty'] += 1
+									itemLimitExist = 1
+									break
+								}
+							}
+							if (itemLimitExist != 1) {
+								itemLimit.push({
+									"name": itemData['item'][i]['name'],
+									"qty": 1
+								})
+							}
+							$("#itemData").empty();
+							$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
+							for (let i = 0; i < itemLimit.length; i++) {
+								$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
+							}
 
+						}
 					}
+
+
 				}
 				itemExist = 1;
 				$("#itemCode").val("");

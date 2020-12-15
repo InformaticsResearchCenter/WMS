@@ -57,9 +57,9 @@
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
                     {% if costumerReturnDataStats.costumerReturn.status == '1' %}
-                    {% if role != 'OPR' %}
-                    <th scope="col" style="width: 165px;">Action</th>
-                    {% endif %}
+                        {% if role != 'OPR' %}
+                        <th scope="col" style="width: 165px;">Action</th>
+                        {% endif %}
                     {% endif %}
                 </tr>
             </thead>

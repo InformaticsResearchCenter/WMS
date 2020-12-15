@@ -32,12 +32,12 @@ def main_outbound(request):
         return redirect('login')
     else:
         context = {
-            'outbound': Outbound.objects.all(),
+            'outbound': Outbound.objects.filter(deleted=0, userGroup=request.session['usergroup']),
             'role': request.session['role'],
             'username': request.session['username'],
             'title': 'Outbound | WMS Poltekpos'
         }
-        return render(request, "content/main_outbound.html", context)
+        return render(request, "inside/wmsOutbound/main_outbound.html", context)
 
 
 def outbound(request, id=0):
@@ -60,7 +60,7 @@ def outbound(request, id=0):
                         'group_id': request.session['usergroup'],
                         'con_cre': request.session['id'],
                     }
-                    return render(request, 'content/outbound.html', context)
+                    return render(request, 'inside/wmsOutbound/outbound.html', context)
                 else:
                     outbound = Outbound.objects.get(pk=id)
                     context = {
@@ -72,7 +72,7 @@ def outbound(request, id=0):
                         'username': request.session['username'],
                         'title': 'Update Outbound | Outbound'
                     }
-                return render(request, 'content/update_outbound.html', context)
+                return render(request, 'inside/wmsOutbound/update_outbound.html', context)
             else:
                 if id == 0:
                     form = OutboundForm(request.POST)
@@ -84,7 +84,7 @@ def outbound(request, id=0):
                     if id == 0:
                         get_next_value('outbound_seq')
                     return redirect('outbound')
-            return render(request, 'content/outbound.html')
+            return render(request, 'inside/wmsOutbound/outbound.html')
 
 
 def delete_outbound(request, id):
@@ -105,11 +105,16 @@ def view_outbound(request, id):
     else:
         request.session['outbound_id'] = id
         context = {
-            'Outbound': Outbound.objects.filter(pk=id),
-            'Outbounddata': OutboundData.objects.all().filter(outbound=id),
+            'Outbound': Outbound.objects.filter(pk=id, deleted=0, userGroup=request.session['usergroup']),
+            'Outboundstats': Outbound.objects.filter(pk=id, deleted=0, userGroup=request.session['usergroup']).first(),
+            'Outbounddata': OutboundData.objects.all().filter(outbound=id, deleted=0, userGroup=request.session['usergroup']),
+            'Outbounddatastats': OutboundData.objects.all().filter(outbound=id, deleted=0, userGroup=request.session['usergroup']).first(),
+            'role': request.session['role'],
+            'group_id': request.session['usergroup'],
+            'username': request.session['username'],
             'title': 'View outbound',
         }
-        return render(request, 'content/view_outbound.html', context)
+        return render(request, 'inside/wmsOutbound/view_outbound.html', context)
 
 
 def outbounddata(request, id=0):
@@ -131,7 +136,7 @@ def outbounddata(request, id=0):
                         'item': it.avaibleItem(1, 0, request.session['usergroup']),
                         'outboundid': request.session['outbound_id'],
                     }
-                    return render(request, 'content/outbounddata.html', context)
+                    return render(request, 'inside/wmsOutbound/outbounddata.html', context)
                 else:
                     outbounddata = OutboundData.objects.get(pk=id)
                     context = {
@@ -142,7 +147,7 @@ def outbounddata(request, id=0):
                         'outboundid': request.session['outbound_id'],
                         'group_id': request.session['usergroup'],
                     }
-                    return render(request, 'content/update_outbounddata.html', context)
+                    return render(request, 'inside/wmsOutbound/update_outbounddata.html', context)
             else:
                 if id == 0:
                     form = OutboundDataForm(request.POST)
@@ -163,7 +168,7 @@ def outbounddata(request, id=0):
                                 return redirect('add_outbounddata')
                             else:
                                 qtyOut = list(OutboundData.objects.filter(
-                                    outbound=request.session['outbound_id']).values_list('item__id'))
+                                    outbound=request.session['outbound_id'], deleted=0, userGroup=request.session['usergroup']).values_list('item__id'))
                                 j = 0
                                 while j < len(qtyOut):
                                     if qtyOut[j][0] == formitem:
@@ -206,12 +211,12 @@ def confirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            outstats = OutboundData.objects.filter(
-                pk=id, userGroup=request.session['usergroup']).first()
-            if outstats.outbound.status == '1':
+            outstats = Outbound.objects.filter(
+                pk=request.session['outbound_id'], userGroup=request.session['usergroup']).first()
+            if outstats.status == '1':
                 Outbound.objects.filter(
                     id=request.session['outbound_id']).update(status="2")
-                return redirect('outbound')
+                return redirect('view_outbound', id=request.session['outbound_id'])
             else:
                 raise PermissionDenied
 
@@ -225,8 +230,8 @@ class PdfOutbound(View):
             raise PermissionDenied
         else:
             datas = list(OutboundData.objects.all().select_related(
-                'outbound').filter(outbound=obj).values_list('id', 'item__name', 'quantity', 'outbound'))
-            pdf = render_to_pdf('content/pdf_outbound.html',
+                'outbound').filter(outbound=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'outbound'))
+            pdf = render_to_pdf('inside/wmsOutbound/pdf_outbound.html',
                                 {'datas': datas, 'obj': obj})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')

@@ -19,7 +19,7 @@ def getScannerData(request):
     for i in itemdata:
         for a in items:
             if i['inbound__item'] == a['id']:
-                item.append({'id' : i['id'], 'name' : a['name']})
+                item.append({'id' : i['id'], 'name' : a['name'], 'itemId' : a['id']})
     return JsonResponse({'item': item, 'binlocation' : binlocation, 'itemlist' : items}, status=200)
 
 def getOutboundData(request):
