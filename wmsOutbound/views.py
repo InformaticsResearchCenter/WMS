@@ -105,8 +105,17 @@ def view_outbound(request, id):
     else:
         request.session['outbound_id'] = id
         context = {
+<<<<<<< HEAD
             'Outbound': Outbound.objects.filter(pk=id,deleted=0,userGroup=request.session['usergroup']),
+=======
+            'Outbound': Outbound.objects.filter(pk=id),
+            'Outboundstats': Outbound.objects.filter(pk=id).first(),
+>>>>>>> d30ab99197b3345af5624ccc6cf468e026430679
             'Outbounddata': OutboundData.objects.all().filter(outbound=id),
+            'Outbounddatastats': OutboundData.objects.all().filter(outbound=id).first(),
+            'role': request.session['role'],
+            'group_id': request.session['usergroup'],
+            'username': request.session['username'],
             'title': 'View outbound',
         }
         return render(request, 'inside/wmsOutbound/view_outbound.html', context)
@@ -156,7 +165,7 @@ def outbounddata(request, id=0):
                     item = it.avaibleItem(
                         1, 0, request.session['usergroup'])
                     for i in item:
-                        if i['item'] == int(formitem):
+                        if i['item'] == formitem:
                             if i['qty'] < int(formqty):
                                 messages.error(
                                     request, 'Item quantity exceeded the limit !')
@@ -166,7 +175,7 @@ def outbounddata(request, id=0):
                                     outbound=request.session['outbound_id'],deleted=0,userGroup=request.session['usergroup']).values_list('item__id'))
                                 j = 0
                                 while j < len(qtyOut):
-                                    if qtyOut[j][0] == int(formitem):
+                                    if qtyOut[j][0] == formitem:
                                         out = OutboundData.objects.filter(
                                             item=i['item'], outbound=request.session['outbound_id'], userGroup=request.session['usergroup'])
                                         outqty = out.first().quantity
@@ -206,12 +215,12 @@ def confirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            outstats = OutboundData.objects.filter(
-                pk=id, userGroup=request.session['usergroup']).first()
-            if outstats.outbound.status == '1':
+            outstats = Outbound.objects.filter(
+                pk=request.session['outbound_id'], userGroup=request.session['usergroup']).first()
+            if outstats.status == '1':
                 Outbound.objects.filter(
                     id=request.session['outbound_id']).update(status="2")
-                return redirect('outbound')
+                return redirect('view_outbound', id=request.session['outbound_id'])
             else:
                 raise PermissionDenied
 

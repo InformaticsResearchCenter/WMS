@@ -2,21 +2,23 @@
 {% load static %}
 
 {% block content %}
-<h2>Data Costumer Return</h2>
+<h2>Data Outbound</h2>
 <hr>
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
-            Outbound Data</a>
-            {% if Outbounddata.outbound.status == "1" %}
-            <form action="#" method="POST" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success btn-sm"
-                    style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
-                    <i class="text-white">Confirm</i>
-                </button>
-            </form>
+            {% if Outboundstats.status == "1" %}
+                <a href="{% url 'add_outbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+                    Outbound Data</a>
+            {% endif %}
+            {% if Outbounddatastats.outbound.status == "1" %}
+                <form action="{% url 'confirm_outbound' %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm"
+                        style="margin-top: 10px; padding: 6px; float: right;width: 100px;">
+                        <i class="text-white">Confirm</i>
+                    </button>
+                </form>
             {% endif %}
         {% endif %}
     </div>
@@ -56,7 +58,9 @@
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
                     {% if role != 'OPR' %}
+                    {% if Outbounddatastats.outbound.status == '1' %}
                     <th scope="col" style="width: 165px;">Action</th>
+                    {% endif %}
                     {% endif %}
                 </tr>
             </thead>
@@ -68,18 +72,18 @@
                     <td>{{itdt.item.name}}</td>
                     <td>{{itdt.quantity}}</td>
                     {% if role != 'OPR' %}
-                        {% if itdt.outbound.status == '1' %}
-                        <td>
-                            <a href="#" class=" btn btn-success btn-sm" role="button"
-                                aria-pressed="true">Update</a>
-                            <form action="#" method="POST" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
-                                    <i class="text-white">Delete</i>
-                                </button>
-                            </form>
-                        </td>
-                        {% endif %}
+                    {% if itdt.outbound.status == '1' %}
+                    <td>
+                        <a href="{% url 'update_outbounddata' itdt.id %}" class=" btn btn-success btn-sm" role="button"
+                            aria-pressed="true">Update</a>
+                        <form action="{% url 'delete_outbounddata' itdt.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
+                                <i class="text-white">Delete</i>
+                            </button>
+                        </form>
+                    </td>
+                    {% endif %}
                     {% endif %}
                 </tr>
                 {% endfor %}

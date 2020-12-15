@@ -26,22 +26,26 @@
                 </tr>
             </thead>
             <tbody>
-                {% for list in user %} {% if list.deleted != '1' %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ list.name }}</td>
-                    <td>{{ list.address }}</td>
-                    <td>{{ list.phoneNumber }}</td>
-                    <td>{{ list.postalCode }}</td>
-                    <td>{{ list.username }}</td>
-                    <td>{{ list.role_id }}</td>
-                    <td><a href="#">View</a></td>
-                    <td>
-                        <a href="{% url 'userUpdate' list.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
-                        <a href="{% url 'userDelete' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
-                    </td>
-                </tr>
-                {% endif %} {% endfor %}
+                {% for list in user %} 
+                    {% if list.deleted != '1' %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ list.name }}</td>
+                        <td>{{ list.address }}</td>
+                        <td>{{ list.phoneNumber }}</td>
+                        <td>{{ list.postalCode }}</td>
+                        <td>{{ list.username }}</td>
+                        <td>{{ list.role_id }}</td>
+                        <td><a href="#">View</a></td>
+                        <td>
+                            <a href="{% url 'userUpdate' list.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
+                            {% if list.role_id != 'MAN' %}
+                                <a href="{% url 'userDelete' list.id %}"><button class="btn btn-danger btn-sm">Delete</button></a>
+                            {% endif %} 
+                        </td>
+                    </tr>
+                    {% endif %} 
+                {% endfor %}
             </tbody>
         </table>
     </div>

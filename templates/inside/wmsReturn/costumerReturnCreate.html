@@ -7,6 +7,12 @@
     <h2>Input Costumer Return</h2>
     <hr>
     <div class="card">
+        {% for message in messages %}
+        <div class="alert alert-danger">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
+        </div>
+        {% endfor %}
         <div class="card-header">
             Add Costumer Return
         </div>

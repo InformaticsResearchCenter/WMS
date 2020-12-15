@@ -54,10 +54,18 @@ def costumerReturn(request, id=0):
                 if id == 0:
                     form = CostumerReturnForm(request.POST)
                 if form.is_valid():
+                    outbound = Outbound.objects.get(
+                        pk=request.POST['outbound'])
+                    if request.POST['outbound'] != outbound.userGroup:
+                        messages.error(request, 'Outbound ID Not exist')
+                        return redirect('costumerReturnCreate')
                     form.save()
                     if id == 0:
                         get_next_value('costumerreturn_seq')
                     return redirect('costumerReturnIndex')
+                else:
+                    messages.error(request, 'Outbound ID Not exist')
+                    return redirect('costumerReturnCreate')
 
 
 def costumerReturnDelete(request, id):
@@ -85,8 +93,8 @@ def costumerReturnDataIndex(request, id):
         costumerReturndataStats = CostumerReturnData.objects.filter(
             deleted=0, userGroup=request.session['usergroup'], costumerReturn=id)
         context = {
-            'costumerReturn': CostumerReturn.objects.filter(pk=id),
-            'costumerReturnst': CostumerReturn.objects.filter(pk=id).first().status,
+            'costumerReturn': CostumerReturn.objects.filter(pk=id, userGroup=request.session['usergroup']),
+            'costumerReturnst': CostumerReturn.objects.filter(pk=id, userGroup=request.session['usergroup']).first().status,
             'costumerReturnData': costumerReturndataStats,
             'costumerReturnDataStats': costumerReturndataStats.first(),
             'role': request.session['role'],
@@ -147,7 +155,7 @@ def costumerReturndata(request, id=0):
                         item = it.avaibleItem(
                             1, 0, request.session['usergroup'])
                         for i in item:
-                            if i['item'] == int(formitem):
+                            if i['item'] == formitem:
                                 if i['qty'] < int(formqty):
                                     messages.error(
                                         request, 'Item quantity exceeded the limit !')
@@ -157,7 +165,7 @@ def costumerReturndata(request, id=0):
                                         costumerReturn=request.session['costumerReturn']).values_list('item__id'))
                                     j = 0
                                     while j < len(qtyCostumer):
-                                        if qtyCostumer[j][0] == int(formitem):
+                                        if qtyCostumer[j][0] == formitem:
                                             cosRet = CostumerReturnData.objects.filter(
                                                 item=i['item'], costumerReturn=request.session['costumerReturn'], userGroup=request.session['usergroup'])
                                             cosRetqty = cosRet.first().quantity
