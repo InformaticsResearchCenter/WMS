@@ -14,31 +14,40 @@ def scanner(request):
 def getScannerData(request):
     items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name'))
     itemdata = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0).select_related('inbound').values('id','inbound__item'))
-    binlocation = list(Binlocation.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','capacity'))
+    binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','capacity'))
     item = []
     for i in itemdata:
         for a in items:
             if i['inbound__item'] == a['id']:
                 item.append({'id' : i['id'], 'name' : a['name']})
-    return JsonResponse({'item': item, 'binlocation' : binlocation}, status=200)
+    return JsonResponse({'item': item, 'binlocation' : binlocation, 'itemlist' : items}, status=200)
 
 def getOutboundData(request):
-    outboundId=request.POST.get('outboundId',None)
-    customer = list(Outbound.objects.filter(id = outboundId,userGroup = request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber', 'address','postalCode', 'date'))
-    if customer != []:
-        item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
-        return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
-    else:
-        return JsonResponse({'msg' : "data not found"},status=404)
+    outbound=request.POST.get('outbound',None)
+    print(outbound)
+    customer = []
+    if outbound != "":
+        customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber','date'))
+        if customer != []:
+            item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
+            print(item)
+            print(customer)
+            return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
+    return JsonResponse({'msg' : "data not found"}, status=200)
+    
 
 def getReturnData(request):
     returnId=request.POST.get('return',None)
-    customer = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId,userGroup = request.session['usergroup'], deleted=0, status=2).values('id','outbound__name','outbound__phoneNumber', 'outbound__address','outbound__postalCode', 'outbound__date'))
-    if customer != []:
-        item = list(CostumerReturnData.objects.filter(costumerReturn=customer[0]['id']).values('item','quantity'))
-        return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
-    else:
-        return JsonResponse({'msg' : "data not found"}, status=404)
+    print(returnId)
+    customer = []
+    if returnId != "":
+        customer = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id', 'outbound__name', 'outbound__phoneNumber', 'outbound__date'))
+        if customer != []:
+            item = list(CostumerReturnData.objects.filter(costumerReturn=customer[0]['id']).values('item','quantity'))
+            print(item)
+            print(customer)
+            return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
+    return JsonResponse({'msg' : "data not found"}, status=200)
 
 def getBorrowData(request):
     borrowId=request.POST.get('borrow',None)
@@ -47,6 +56,8 @@ def getBorrowData(request):
         employee = list(Borrow.objects.filter(id = borrowId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber','date'))
         if employee != []:
             item = list(BorrowData.objects.filter(borrow=employee[0]['id']).values('item','quantity'))
+            print(item)
+            print(employee)
             return JsonResponse({'employee' : employee, 'items' : item}, status = 200)
     return JsonResponse({'msg' : "data not found"}, status=200)
     

@@ -57,6 +57,9 @@ def costumerReturn(request, id=0):
                     if id == 0:
                         get_next_value('costumerreturn_seq')
                     return redirect('costumerReturnIndex')
+                else:
+                    messages.error(request, 'Outbound ID Not exist')
+                    return redirect('costumerReturnCreate')
 
 
 def costumerReturnDelete(request, id):
@@ -146,7 +149,7 @@ def costumerReturndata(request, id=0):
                         item = it.avaibleItem(
                             1, 0, request.session['usergroup'])
                         for i in item:
-                            if i['item'] == int(formitem):
+                            if i['item'] == formitem:
                                 if i['qty'] < int(formqty):
                                     messages.error(
                                         request, 'Item quantity exceeded the limit !')
@@ -156,7 +159,7 @@ def costumerReturndata(request, id=0):
                                         costumerReturn=request.session['costumerReturn']).values_list('item__id'))
                                     j = 0
                                     while j < len(qtyCostumer):
-                                        if qtyCostumer[j][0] == int(formitem):
+                                        if qtyCostumer[j][0] == formitem:
                                             cosRet = CostumerReturnData.objects.filter(
                                                 item=i['item'], costumerReturn=request.session['costumerReturn'], userGroup=request.session['usergroup'])
                                             cosRetqty = cosRet.first().quantity
@@ -356,11 +359,11 @@ def supplierReturndata(request, id=0):
                 if form.is_valid():
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
-                    
+
                     item = it.avaibleItem(
                         1, 0, request.session['usergroup'])
                     for i in item:
-                        if i['item'] == int(formitem):
+                        if i['item'] == formitem:
                             if i['qty'] < int(formqty):
                                 messages.error(
                                     request, 'Item quantity exceeded the limit !')
@@ -370,7 +373,7 @@ def supplierReturndata(request, id=0):
                                     supplierReturn=request.session['supplierReturn']).values_list('item__id'))
                                 j = 0
                                 while j < len(qtySupplier):
-                                    if qtySupplier[j][0] == int(formitem):
+                                    if qtySupplier[j][0] == formitem:
                                         supRet = SupplierReturnData.objects.filter(
                                             item=i['item'], supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup'])
                                         supRetqty = supRet.first().quantity

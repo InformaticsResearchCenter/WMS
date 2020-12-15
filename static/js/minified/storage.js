@@ -1,15 +1,30 @@
 var code, customer, items, itemData = [];
 var code = []
+var itemLimit = []
 var validation = [0, 0, 0]; // [0] outboundid, [1] binlocation, [2] item
 // var scanPoint = null;
-var pointer, action, itemCode, itemExistm, binlocationExist = null;
+var pointer, action, itemCode, itemExist, binlocationExist, itemLimitExist = null;
 
 
 function removeItem(a, id) {
-	if (confirm('hapus ga ni ?')) {
+	if (confirm('remove item ?')) {
+		for (let i = 0; i < itemData["item"].length; i++) {
+			if (itemData["item"][i]["id"] == a) {
+				for (let a = 0; a < itemLimit.length; a++) {
+					console.log(itemLimit[a]["name"])
+					console.log(itemData["item"][i]["name"])
+					if (itemLimit[a]["name"] == itemData["item"][i]["name"]) {
+						itemLimit[a]["qty"] -= 1
+						break
+					}
+				}
+				break
+			}
+		}
 		$("#" + id).remove()
 		code.splice(code.indexOf(a), 1)
 		console.log(code)
+
 	}
 }
 
@@ -38,7 +53,9 @@ $(document).ready(function () {
 		},
 		success: function (response) {
 			itemData = response
-			console.log(itemData)
+			console.log(itemData['itemlist'])
+			console.log(itemData['item'])
+			console.log(itemData['binlocation'])
 			$(".overlay").hide();
 		},
 		fail: function (xhr, textStatus, errorThrown) {
@@ -158,11 +175,11 @@ $(document).ready(function () {
 		e.preventDefault();
 		pointer = "outboundId"
 	});
-	$("#borrow").click(function (e) {
+	$("#borrowCode").click(function (e) {
 		e.preventDefault();
 		pointer = "borrow"
 	});
-	$("#return").click(function (e) {
+	$("#returnCode").click(function (e) {
 		e.preventDefault();
 		pointer = "return"
 	});
@@ -177,15 +194,45 @@ $(document).ready(function () {
 	*/
 	$("#inputItem").click(function (e) {
 		e.preventDefault();
-		console.log(itemData['item'][0]['id'])
+		console.log(itemData['item'])
+		console.log(code)
 		for (i = 0; i < itemData['item'].length; i++) {
 			if (itemData['item'][i]['id'] == $("#itemCode").val()) {
+				console.log(`DATA : ` + itemData['item'][i]['name'])
 				if (code.includes($("#itemCode").val())) {
 					alert("Item telah di scan")
 				} else {
-					$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()}</li>`);
+					$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
 					code.push($("#itemCode").val())
-					console.log(code)
+					if (itemLimit.length == 0) {
+						itemLimit.push({
+							"name": itemData['item'][i]['name'],
+							"qty": 1
+						})
+					} else {
+						for (let a = 0; a < itemLimit.length; a++) {
+							itemLimitExist = null
+							console.log(`DATA LOOP : ` + itemLimit[a]['name'], itemLimit[a]['name'] == itemData['item'][i]['name'])
+							if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
+								itemLimit[a]['qty'] += 1
+								itemLimitExist = 1
+								break
+							}
+						}
+						console.log(itemLimitExist)
+						if (itemLimitExist != 1) {
+							itemLimit.push({
+								"name": itemData['item'][i]['name'],
+								"qty": 1
+							})
+						}
+						$("#itemData").empty();
+						$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
+						for (let i = 0; i < itemLimit.length; i++) {
+							$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
+						}
+
+					}
 				}
 				itemExist = 1;
 				$("#itemCode").val("");
@@ -194,6 +241,7 @@ $(document).ready(function () {
 				itemExist = null
 			}
 		}
+
 		if (!itemExist) {
 			alert("Item tidak tersedia")
 			$("#itemCode").val("");
@@ -212,6 +260,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		console.log(itemData['binlocation'][1]['id'])
 		for (let i = 0; i < itemData['binlocation'].length; i++) {
+			console.log(itemData['binlocation'][i]['id'])
 			if ($("#binLocation").val() == itemData['binlocation'][i]['id']) {
 				alert("found")
 				binlocationExist = 1
@@ -257,35 +306,50 @@ $(document).ready(function () {
 			type: 'post',
 			url: '/app/storage/scanner/checkOutbound',
 			data: {
-				outboundId: $("#outboundId").val(),
+				outbound: $("#outboundId").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				console.log(response)
-				customer = response['customer']
-				items = response['items']
-				if (response['customer'] == "" || response['items'] == "") {
-					$(".overlay").hide();
-				}
-				try {
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan")
 					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">customer</td></tr>`);
-					$("#outboundData").append(`<tr><td>Nama</td><td id="nama">` + customer[0][0] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[0][1] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[0][2] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[0][3] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					console.log(response)
+					customer = Object.values(response['customer'][0])
+					console.log(customer)
+					$("#outboundData").empty();
+					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#outboundData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
 					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#outboundData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-					for (let i = 0; i < items.length; i++) {
-						$("#outboundData").append(`<tr><td>` + items[i][2] + `</td><td>` + items[i][1] + `</td></tr>`);
+					items = response['items']
+					for (let index = 0; index < items.length; index++) {
+						var itemName
+						for (let i = 0; i < itemData['itemlist'].length; i++) {
+							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
+								itemName = itemData['itemlist'][i]['name']
+								break
+							} else {
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
+							}
+						}
+						$("#outboundData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
-				} catch (err) {
-					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
+
+					$("#itemCodeContainer").show();
 				}
-				$("#itemCodeContainer").show();
 				$(".overlay").hide();
+			},
+			fail: function (xhr, textStatus, errorThrown) {
+				alert('request failed');
 			}
+
+
 		});
 	});
 	$("#borrowCheckButton").click(function (e) {
@@ -314,10 +378,20 @@ $(document).ready(function () {
 					$("#borrowData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
 					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#borrowData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-
-
 					items = response['items']
-
+					for (let index = 0; index < items.length; index++) {
+						var itemName
+						for (let i = 0; i < itemData['itemlist'].length; i++) {
+							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
+								itemName = itemData['itemlist'][i]['name']
+								break
+							} else {
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
+							}
+						}
+						$("#borrowData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+					}
 					$("#itemCodeContainer").show();
 				}
 				$(".overlay").hide();
@@ -345,19 +419,31 @@ $(document).ready(function () {
 					$("#returnData").empty();
 					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
-					employee = Object.values(response['employee'][0])
-					console.log(employee)
+					console.log(response)
+					customer = Object.values(response['customer'][0])
+					console.log(customer)
 					$("#returnData").empty();
-					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
-					$("#returnData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
-					$("#returnData").append(`<tr><td>Alamat</td><td id="alamat">` + employee[1] + `</td></tr>`);
-					$("#returnData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
-					$("#returnData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
+					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#returnData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
 					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#returnData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-
-
 					items = response['items']
+					for (let index = 0; index < items.length; index++) {
+						var itemName
+						for (let i = 0; i < itemData['itemlist'].length; i++) {
+							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
+								itemName = itemData['itemlist'][i]['name']
+								break
+							} else {
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
+							}
+						}
+						$("#returnData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+					}
 
 					$("#itemCodeContainer").show();
 				}

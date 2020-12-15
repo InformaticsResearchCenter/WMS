@@ -151,23 +151,6 @@
                         {% endif %}
                     </ul>
                     </li>
-                   <!--  <li class="nav-item">
-                        <a href="" class="nav-link">
-                            <i class="nav-icon fas fa-table"></i>
-                            <p>
-                                Outbound
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'add_outbound' %}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Process Order</p>
-                                </a>
-                            </li>
-                        </ul>
-                        </li> -->
                         <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
@@ -193,31 +176,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
-                                <p>
-                                    Return
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'supplierReturnIndex' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Supplier Return</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'outbound' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Customer Return</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li> -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
@@ -235,20 +193,6 @@
                                 </li>
                             </ul>
                         </li>
-                        {% if role == 'MAN' %}
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-file"></i>
-                                <p>Management User</p>
-                            </a>
-                        </li>
-                        {% endif %}
-                        <!-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-file"></i>
-                                <p>Report</p>
-                            </a>
-                        </li> -->
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'outbound' %}" class="nav-link">
@@ -258,23 +202,6 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-table"></i>
-                            <p>
-                                Borrow
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'borrowIndex' %}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Borrow Data</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> -->
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-copy"></i>
@@ -312,7 +239,6 @@
                             <p>Report</p>
                         </a>
                     </li>
-
                     <li class="nav-header">LABELS</li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">

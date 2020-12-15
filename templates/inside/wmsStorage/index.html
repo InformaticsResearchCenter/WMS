@@ -47,7 +47,7 @@
                         <input type="button" name="" value="check" id="binlocationCheckButton">
                     </div>
                     <div id="itemCodeContainer">
-                        <input type="text" name="" id="itemCode" placeholder="Click to Scan - Item code" readonly>
+                        <input type="text" name="" id="itemCode" placeholder="Click to Scan - Item code">
                         <input type="button" name="" value="Input" id="inputItem">
                         <input type="button" name="" value="View" id="itemViewButton" data-toggle="modal"
                             data-target="#itemModal">
@@ -157,14 +157,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="itemModalTitle">Scanned item</h5>
+                <table id="itemData">
+                    <tr>
+                        <td>None</td>
+                    </tr>
+                </table>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <ul id="data">
-
-                </ul>
+            <div class="modal-body mx-auto">
+                <ul id="data"></ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

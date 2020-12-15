@@ -9,6 +9,7 @@ from django.contrib import messages
 from sequences import get_next_value
 from WMS.forms import UserForm
 
+
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
@@ -36,14 +37,6 @@ def user(request, id=0):
             raise PermissionDenied
         else:
             try:
-                data = User(
-                    name="Administrator",address='jl. kemana',phoneNumber='08679584738', postalCode='712739', username="administrator1", password="administrator1", role=Role.objects.get(pk="ADM"), userGroup=UserGroup.objects.get(pk=request.session['usergroup'])
-                    )
-                data.save()
-                last = get_next_value('user_seq')
-                print(last)
-                next('user_seq')
-                print(last)
                 if request.method == "GET":
                     if id == 0:
                         context = {
