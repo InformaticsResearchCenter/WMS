@@ -436,12 +436,14 @@ def inbound_data(request, id=0):
                     formreject = request.POST['reject']
                     formrejectCounter = request.POST['rejectCounter']
                     item = it.avaibleItem(1,0, request.session['usergroup'])
+                    qtyInbounddata = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup'], deleted=0))
                     for i in item:
-                        qtyInbounddata = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup']))
                         j = 0
                         while j < len(qtyInbounddata):
+                            print(qtyInbounddata[j][0])
+                            print(formitem)
                             if qtyInbounddata[j][0] == formitem:
-                                InData = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['inbound_id'],userGroup=request.session['usergroup'])
+                                InData = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['inbound_id'],userGroup=request.session['usergroup'], deleted=0)
                                 InDataqty = InData.first().quantity
                                 InData.update(quantity=InDataqty + int(formqty))
                                 inbounddata2 = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
@@ -483,7 +485,7 @@ class PdfInbound(View):
             for e in datas:
                 print (e)
                 itemdata.append(list(ItemData.objects.all().select_related(
-                    'inbound').select_related('inbound').filter(inbound=e[0]).values_list('id', flat='true')))
+                    'inbound').select_related('inbound').filter(inbound=e[0], deleted=0, userGroup=request.session['usergroup']).values_list('id', flat='true')))
                 # itemdata.append(list(InboundData.objects.all().select_related(
                 #     'item').select_related('item__inbound').filter(inbound=obj).values_list('id', flat='true')))
                 print(itemdata)
@@ -511,8 +513,8 @@ def confirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            inbounddata_id_list = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter'))
-            rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
+            inbounddata_id_list = list(InboundData.objects.filter(inbound=request.session['inbound_id'], deleted=0,userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter'))
+            rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id'], deleted=0, userGroup=request.session['usergroup']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
             # Isi field Itemdata
             data = []
             #Looping insert data ke Itemdata

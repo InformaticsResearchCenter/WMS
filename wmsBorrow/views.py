@@ -85,7 +85,7 @@ def borrowDelete(request, id):
             raise PermissionDenied
         else:
             borrow = Borrow.objects.filter(
-                pk=id, userGroup=request.session['usergroup'])
+                pk=id, userGroup=request.session['usergroup'], deleted=0)
             borrowstatus = borrow.first()
             if borrowstatus.status != '1':
                 raise PermissionDenied
@@ -176,12 +176,12 @@ def borrowdata(request, id=0):
                                     return redirect('borrowdataCreate')
                                 else:
                                     qtyBorrow = list(BorrowData.objects.filter(
-                                        borrow=request.session['borrow']).values_list('item__id'))
+                                        borrow=request.session['borrow'], deleted=0, userGroup=request.session['usergroup']).values_list('item__id'))
                                     j = 0
                                     while j < len(qtyBorrow):
                                         if qtyBorrow[j][0] == formitem:
                                             bor = BorrowData.objects.filter(
-                                                item=i['item'], borrow=request.session['borrow'], userGroup=request.session['usergroup'])
+                                                item=i['item'], borrow=request.session['borrow'], userGroup=request.session['usergroup'], deleted=0)
                                             borqty = bor.first().quantity
                                             bor.update(
                                                 quantity=borqty + int(formqty))
@@ -201,7 +201,7 @@ def borrowdataDelete(request, id):
             raise PermissionDenied
         else:
             borrowdata = BorrowData.objects.filter(
-                pk=id, userGroup=request.session['usergroup'])
+                pk=id, userGroup=request.session['usergroup'], deleted=0)
             borrowstatus = borrowdata.first()
             if borrowstatus.borrow.status != '1':
                 raise PermissionDenied
@@ -218,10 +218,10 @@ def borrowdataConfirm(request):
             raise PermissionDenied
         else:
             borrow = Borrow.objects.filter(
-                pk=request.session['borrow']).first()
+                pk=request.session['borrow'], deleted=0, userGroup=request.session['usergroup']).first()
             if borrow.status == '1':
                 Borrow.objects.filter(
-                    pk=request.session['borrow'], userGroup=request.session['usergroup']).update(status='2')
+                    pk=request.session['borrow'], deleted=0,userGroup=request.session['usergroup']).update(status='2')
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied
@@ -238,9 +238,9 @@ def borrowdataReturn(request):
                 pk=request.session['borrow']).first()
             if borrow.status == '3':
                 Borrow.objects.filter(
-                    pk=request.session['borrow'], userGroup=request.session['usergroup']).update(status='4')
+                    pk=request.session['borrow'], deleted=0,userGroup=request.session['usergroup']).update(status='4')
                 ItemData.objects.filter(
-                    borrow=request.session['borrow'], userGroup=request.session['usergroup']).update(borrow=None)
+                    borrow=request.session['borrow'], deleted=0,userGroup=request.session['usergroup']).update(borrow=None)
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied
@@ -253,7 +253,7 @@ class PdfBorrow(View):
             raise PermissionDenied
         else:
             datas = list(BorrowData.objects.all().select_related(
-                'borrow').filter(borrow=obj).values_list('id', 'item__name', 'quantity',))
+                'borrow').filter(borrow=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity',))
             pdf = render_to_pdf('inside/wmsBorrow/pdf_borrow.html',
                                 {'datas': datas, 'obj': obj})
             if pdf:
