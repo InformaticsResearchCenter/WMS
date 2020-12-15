@@ -312,7 +312,7 @@ def supplierReturnDelete(request, id):
             raise PermissionDenied
         else:
             supplierReturn = SupplierReturn.objects.filter(
-                pk=id, userGroup=request.session['usergroup'])
+                pk=id, userGroup=request.session['usergroup'], deleted=0)
             supplierReturnstatus = supplierReturn.first()
             if supplierReturnstatus.status != '1':
                 raise PermissionDenied
@@ -369,7 +369,7 @@ def supplierReturndata(request, id=0):
                 if form.is_valid():
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
-                    rejectCounter = list(InboundData.objects.filter(inbound=request.session['id_inbound'], userGroup=request.session['usergroup']).values('rejectCounter', 'item'))
+                    rejectCounter = list(InboundData.objects.filter(inbound=request.session['id_inbound'], deleted=0,userGroup=request.session['usergroup']).values('rejectCounter', 'item'))
                     pprint(rejectCounter[0]['rejectCounter'])
                     pprint(rejectCounter)
                     for s in rejectCounter:
@@ -391,13 +391,13 @@ def supplierReturndata(request, id=0):
                             else:
                                 print('hello else')
                                 qtySupplier = list(SupplierReturnData.objects.filter(
-                                    supplierReturn=request.session['supplierReturn']).values_list('item__id'))
+                                    supplierReturn=request.session['supplierReturn'],deleted=0, userGroup=request.session['usergroup']).values_list('item__id'))
                                 j = 0
                                 print ('hello')
                                 while j < len(qtySupplier):
                                     if qtySupplier[j][0] == formitem:    
                                         supRet = SupplierReturnData.objects.filter(
-                                            item=qtySupplier[j][0], supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup'])
+                                            item=qtySupplier[j][0], supplierReturn=request.session['supplierReturn'],delete=0, userGroup=request.session['usergroup'])
                                         pprint(supRet)
                                         supRetqty = supRet.first().quantity
                                         supRet.update(
@@ -444,10 +444,10 @@ def supplierReturnConfirm(request):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            supplier_returndata = list(SupplierReturnData.objects.filter(supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup']).values_list('id','item'))
+            supplier_returndata = list(SupplierReturnData.objects.filter(supplierReturn=request.session['supplierReturn'],delete=0, userGroup=request.session['usergroup']).values_list('id','item'))
             #supplier_return = list(SupplierReturn.objects.filter(inbound=request.session['inbound_id'], usergroup=request.session['usergroup']).values_list('id'))
-            inbounddata_id_list = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter','item'))
-            rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
+            inbounddata_id_list = list(InboundData.objects.filter(inbound=request.session['inbound_id'],delete=0, userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter','item'))
+            rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id'], delete=0,userGroup=request.session['usergroup']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
             # Isi field Itemdata
             data = []
             #Looping insert data ke Itemdata
