@@ -115,9 +115,9 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'wmspoltekpos',
+#         'NAME': 'DBWMSLoc',
 #         'USER': 'postgres',
-#         'PASSWORD': 'root',
+#         'PASSWORD': 'admin',
 #         'HOST': '127.0.0.1'
 #     }
 # }
