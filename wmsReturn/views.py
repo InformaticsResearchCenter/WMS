@@ -56,7 +56,7 @@ def costumerReturn(request, id=0):
                 if form.is_valid():
                     outbound = Outbound.objects.get(
                         pk=request.POST['outbound'])
-                    if request.POST['outbound'] != outbound.userGroup:
+                    if request.POST['userGroup'] != outbound.userGroup.id:
                         messages.error(request, 'Outbound ID Not exist')
                         return redirect('costumerReturnCreate')
                     form.save()

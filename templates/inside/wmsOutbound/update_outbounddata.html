@@ -19,16 +19,13 @@
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="id" id="id" value="{{outbounddata.id}}">
                         </div>
-                        <div class="form-group">
-                            <label for="item">Item</label>
-                            <select class="form-control" name="item">
-                                {% for i in item %}
-                                    {% if i.qty != 0 %}
-                                    <option value='{{i.item}}'>{{i.name}} || qty = {{i.qty}}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
+                        {% for i in item %}
+                            {% if i.item == outbounddata.item.id %}
+                            <label for="item">{{i.name}} || Qty = {{i.qty}}</label>
+                            <input type="text" class="form-control" name="item" id="item"
+                                value="{{i.item}}" readonly>
+                            {% endif %}
+                        {% endfor %}
                         <div class="form-group">
                             <label for="itemdata">Quantity</label>
                             <input type="text" class="form-control" name="quantity" id="quantity"

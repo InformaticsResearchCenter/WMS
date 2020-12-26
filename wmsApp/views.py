@@ -4,6 +4,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.contrib import messages
 from sequences import get_next_value
 from django.http import HttpResponseNotFound,HttpResponse
+from WMS.models import *
 from django.core.exceptions import PermissionDenied
 from pprint import pprint
 import datetime
@@ -13,12 +14,35 @@ import datetime
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
+
     else:
+        avaibleItem = ItemData.objects.select_related('inbound').filter(
+            status='1', deleted=0, userGroup=request.session['usergroup']).values('inbound__item')
+        rawitem = []
+        for i in avaibleItem:
+            found = False
+            for a in rawitem:
+                if i['inbound__item'] == a['item']:
+                    a['qty'] += 1
+                    found = True
+                    break
+            if found == False:
+                try:
+                    rawitem.append({'item': i['inbound__item'], 'name': Item.objects.filter(
+                        id=i['inbound__item']).values('name')[0]['name'], 'qty': 1})
+                except:
+                    pass
+        print(rawitem)
         context = {
             'title': 'Home | WMS Poltekpos',
             'role': request.session['role'],
             'username': request.session['username'],
-            'userGroup' : request.session['usergroup']
+            'userGroup' : request.session['usergroup'],
+            'avaibleItem' : ItemData.objects.filter(status="1", userGroup=request.session['usergroup'], deleted = 0).count(),
+            'itemSold' : ItemData.objects.filter(status="2", userGroup=request.session['usergroup'], deleted = 0).count(),
+            'borrowedItem' : ItemData.objects.filter(status="3", userGroup=request.session['usergroup'], deleted = 0).count(),
+            "detailAvaibleItem" : rawitem
+
         }
         return render(request, "inside/wmsApp/index.html", context)
 

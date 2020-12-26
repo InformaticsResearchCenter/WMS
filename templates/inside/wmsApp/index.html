@@ -2,15 +2,49 @@
 {% load static %}
 
 {% block content %}
-{% if role == 'ADM' %}
-<h2 class="mb-4">Ini Role ADM</h2>
-{% elif role == 'MAN' %}
-<h2 class="mb-4">Ini Role MAN</h2>
-{% elif role == 'OPR' %}
-<h2 class="mb-4">Ini Role OPR</h2>
-{% endif %}
+<style>
+    .card {
+        padding: 2%;
+    }
 
+    .card-header {
+        width: 100 %;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 <div class="card">
     <div class="card-header">
-</div></div>
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="fa fa-window-maximize"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Avaible item total</span>
+                <span class="info-box-number">{{avaibleItem}}</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="fa fa-window-maximize"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Item sold total</span>
+                <span class="info-box-number">{{itemSold}}</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="fa fa-window-maximize"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Avaible item total</span>
+                <span class="info-box-number">{{borrowedItem}}</span>
+            </div>
+        </div>
+    </div>
+    <h1>Item :</h1>
+    <ul>
+
+        {% for i in detailAvaibleItem %}
+        <li>item name : {{i.name}}, Qty : {{i.qty}}</li>
+        {% endfor %}
+    </ul>
+
+</div>
 {% endblock content %}

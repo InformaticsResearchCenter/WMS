@@ -1,15 +1,44 @@
 var code, customer, items, itemData = [];
 var code = []
-var validation = [0, 0, 0]; // [0] outboundid, [1] binlocation, [2] item
+var itemLimit = []
+var items = []
+var validation = {
+	"outbound": false,
+	"binlocation": false,
+	"borrow": false,
+	"return": false
+}; // [0] outboundid, [1] binlocation, [2] item
 // var scanPoint = null;
-var pointer, action, itemCode, itemExistm, binlocationExist = null;
+var pointer, action, itemCode, itemExist, binlocationExist, itemLimitExist, checkLimit, qtyLimit = null;
+
 
 
 function removeItem(a, id) {
-	if (confirm('hapus ga ni ?')) {
+	if (confirm('remove item ?')) {
+		for (let i = 0; i < itemData["item"].length; i++) {
+			if (itemData["item"][i]["id"] == a) {
+				for (let a = 0; a < itemLimit.length; a++) {
+					console.log(itemLimit[a]["name"])
+					console.log(itemData["item"][i]["name"])
+					if (itemLimit[a]["name"] == itemData["item"][i]["name"]) {
+						itemLimit[a]["qty"] -= 1
+						break
+					}
+				}
+				break
+			}
+		}
 		$("#" + id).remove()
 		code.splice(code.indexOf(a), 1)
 		console.log(code)
+		$("#itemData").empty();
+		$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
+		for (let i = 0; i < itemLimit.length; i++) {
+			if (itemLimit[i]['qty'] > 0) {
+				$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
+			}
+		}
+
 	}
 }
 
@@ -38,7 +67,9 @@ $(document).ready(function () {
 		},
 		success: function (response) {
 			itemData = response
-			console.log(itemData)
+			console.log(itemData['itemlist'])
+			console.log(itemData['item'])
+			console.log(itemData['binlocation'])
 			$(".overlay").hide();
 		},
 		fail: function (xhr, textStatus, errorThrown) {
@@ -50,10 +81,31 @@ $(document).ready(function () {
 	function onScanSuccess(qrCodeMessage) {
 		if (pointer == "binLocation") {
 			$("#binLocation").val(qrCodeMessage);
+			validation["binlocation"] = false
+
 		} else if (pointer == "itemCode") {
 			$("#itemCode").val(qrCodeMessage);
 		} else if (pointer == "outboundId") {
 			$("#outboundId").val(qrCodeMessage);
+			validation["outbound"] = false
+			$("#itemCodeContainer").hide();
+			itemLimit = []
+			items = []
+			code = []
+		} else if (pointer == "borrow") {
+			$("#borrowCode").val(qrCodeMessage);
+			validation["borrow"] = false
+			itemLimit = []
+			items = []
+			code = []
+			$("#itemCodeContainer").hide();
+		} else if (pointer == "return") {
+			$("#returnCode").val(qrCodeMessage);
+			validation["return"] = false
+			itemLimit = []
+			items = []
+			code = []
+			$("#itemCodeContainer").hide();
 		}
 	}
 
@@ -80,6 +132,35 @@ $(document).ready(function () {
 
 	});
 
+	$("#binLocation").change(function (e) {
+		validation["binlocation"] = false
+		items = []
+		code = []
+		itemLimit = []
+	});
+	$("#borrowCode").change(function (e) {
+		validation["borrow"] = false
+		$("#itemCodeContainer").hide();
+		items = []
+		code = []
+		itemLimit = []
+
+	});
+	$("#outboundId").change(function (e) {
+		validation["outbound"] = false
+		$("#itemCodeContainer").hide();
+		items = []
+		code = []
+		itemLimit = []
+	});
+	$("#returnCode").change(function (e) {
+		validation["return"] = false
+		$("#itemCodeContainer").hide();
+		items = []
+		code = []
+		itemLimit = []
+
+	});
 
 
 	/*
@@ -89,6 +170,12 @@ $(document).ready(function () {
 	*/
 	$("#action").change(function (e) {
 		e.preventDefault();
+		items = []
+		code = []
+		itemLimit = []
+		$("#data").empty();
+		$("#itemData").empty();
+		$("#itemData").append(`<tr><td>none</td></tr>`);
 		$(".card-body").show();
 		if ($("#action").val() == "move" || $("#action").val() == "inbound") {
 			$("#outboundIdContainer").hide();
@@ -99,8 +186,8 @@ $(document).ready(function () {
 			$("#binLocation").val("");
 			$("#itemCode").val("");
 			$("#outboundId").val("");
-			$("#borrow").val("");
-			$("#return").val("");
+			$("#borrowCode").val("");
+			$("#returnCode").val("");
 		} else if ($("#action").val() == "outbound") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").show();
@@ -110,8 +197,8 @@ $(document).ready(function () {
 			$("#binLocation").val("");
 			$("#itemCode").val("");
 			$("#outboundId").val("");
-			$("#borrow").val("");
-			$("#return").val("");
+			$("#borrowCode").val("");
+			$("#returnCode").val("");
 		} else if ($("#action").val() == "borrow") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").hide();
@@ -121,8 +208,8 @@ $(document).ready(function () {
 			$("#binLocation").val("");
 			$("#itemCode").val("");
 			$("#outboundId").val("");
-			$("#borrow").val("");
-			$("#return").val("");
+			$("#borrowCode").val("");
+			$("#returnCode").val("");
 		} else if ($("#action").val() == "return") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").hide();
@@ -132,8 +219,8 @@ $(document).ready(function () {
 			$("#binLocation").val("");
 			$("#itemCode").val("");
 			$("#outboundId").val("");
-			$("#borrow").val("");
-			$("#return").val("");
+			$("#borrowCode").val("");
+			$("#returnCode").val("");
 		}
 	});
 
@@ -158,11 +245,11 @@ $(document).ready(function () {
 		e.preventDefault();
 		pointer = "outboundId"
 	});
-	$("#borrow").click(function (e) {
+	$("#borrowCode").click(function (e) {
 		e.preventDefault();
 		pointer = "borrow"
 	});
-	$("#return").click(function (e) {
+	$("#returnCode").click(function (e) {
 		e.preventDefault();
 		pointer = "return"
 	});
@@ -175,17 +262,109 @@ $(document).ready(function () {
 		dan membuat element baru, juga mengecek eksistensi item
 	============================================================
 	*/
+
 	$("#inputItem").click(function (e) {
 		e.preventDefault();
-		console.log(itemData['item'][0]['id'])
+
 		for (i = 0; i < itemData['item'].length; i++) {
 			if (itemData['item'][i]['id'] == $("#itemCode").val()) {
 				if (code.includes($("#itemCode").val())) {
 					alert("Item telah di scan")
 				} else {
-					$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()}</li>`);
-					code.push($("#itemCode").val())
-					console.log(code)
+					console.log(items)
+					if (items != []) {
+						for (let a = 0; a < items.length; a++) {
+							checkLimit = null
+							console.log(itemData['item'][i]['itemId'], items[a]['item'])
+							if (itemData['item'][i]['itemId'] == items[a]['item']) {
+								for (let e = 0; e < itemLimit.length; e++) {
+									console.log(parseInt(itemLimit[e]['qty']), items[a]['quantity'])
+									if (itemLimit[e]['name'] == itemData['item'][i]['name']) {
+										if (parseInt(itemLimit[e]['qty']) >= items[a]['quantity']) {
+											checkLimit = 1
+											break
+										}
+									}
+
+								}
+								break
+							}
+							checkLimit = 2
+						}
+						if (checkLimit == 1) {
+							alert("Melebihi kapasitas")
+						} else if (checkLimit == 2) {
+							alert("Item tidak ada dalam list")
+						} else {
+							$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
+							code.push($("#itemCode").val())
+
+							if (itemLimit.length == 0) {
+								itemLimit.push({
+									"name": itemData['item'][i]['name'],
+									"id": itemData['item'][i]['itemId'],
+									"qty": 1
+								})
+							} else {
+								for (let a = 0; a < itemLimit.length; a++) {
+									itemLimitExist = null
+									if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
+										itemLimit[a]['qty'] += 1
+										itemLimitExist = 1
+										break
+									}
+								}
+								if (itemLimitExist != 1) {
+									itemLimit.push({
+										"name": itemData['item'][i]['name'],
+										"id": itemData['item'][i]['itemId'],
+										"qty": 1
+									})
+								}
+								$("#itemData").empty();
+								$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
+								for (let i = 0; i < itemLimit.length; i++) {
+									$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
+								}
+
+							}
+						}
+					} else {
+						$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
+						code.push($("#itemCode").val())
+
+						if (itemLimit.length == 0) {
+							itemLimit.push({
+								"name": itemData['item'][i]['name'],
+								"id": itemData['item'][i]['itemId'],
+								"qty": 1
+							})
+						} else {
+							for (let a = 0; a < itemLimit.length; a++) {
+								itemLimitExist = null
+								if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
+									itemLimit[a]['qty'] += 1
+									itemLimitExist = 1
+									break
+								}
+							}
+							if (itemLimitExist != 1) {
+								itemLimit.push({
+									"name": itemData['item'][i]['name'],
+									"id": itemData['item'][i]['itemId'],
+									"qty": 1
+								})
+							}
+							$("#itemData").empty();
+							$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
+							for (let i = 0; i < itemLimit.length; i++) {
+								$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
+							}
+
+						}
+					}
+
+
 				}
 				itemExist = 1;
 				$("#itemCode").val("");
@@ -194,6 +373,7 @@ $(document).ready(function () {
 				itemExist = null
 			}
 		}
+
 		if (!itemExist) {
 			alert("Item tidak tersedia")
 			$("#itemCode").val("");
@@ -210,11 +390,14 @@ $(document).ready(function () {
 	*/
 	$("#binlocationCheckButton").click(function (e) {
 		e.preventDefault();
+		validation["binlocation"] = false
 		console.log(itemData['binlocation'][1]['id'])
 		for (let i = 0; i < itemData['binlocation'].length; i++) {
+			console.log(itemData['binlocation'][i]['id'])
 			if ($("#binLocation").val() == itemData['binlocation'][i]['id']) {
 				alert("found")
 				binlocationExist = 1
+				validation["binlocation"] = true
 				break;
 			} else {
 				binlocationExist = null
@@ -229,19 +412,6 @@ $(document).ready(function () {
 
 
 
-	/*
-	============================================================
-		fungsi untuk menginput data ke server
-	============================================================
-	*/
-	$("#binLocation").change(function (e) {
-		e.preventDefault();
-		validation[1] = 0
-	});
-	$("#outboundId").change(function (e) {
-		e.preventDefault();
-		validation[0] = 0
-	});
 
 
 
@@ -253,90 +423,165 @@ $(document).ready(function () {
 	$("#outboundCheckButton").click(function (e) {
 		e.preventDefault();
 		$(".overlay").show();
+		validation["outbound"] = false
 		$.ajax({
 			type: 'post',
-			url: '/storage/checkOutbound/',
+			url: '/app/storage/scanner/checkOutbound',
 			data: {
-				outboundId: $("#outboundId").val(),
+				outbound: $("#outboundId").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				customer = response['customer']
-				items = response['items']
-				if (response['customer'] == "" || response['items'] == "") {
-					$(".overlay").hide();
-				}
-				try {
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan")
 					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">customer</td></tr>`);
-					$("#outboundData").append(`<tr><td>Nama</td><td id="nama">` + customer[0][0] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[0][1] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[0][2] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[0][3] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					console.log(response)
+					customer = Object.values(response['customer'][0])
+					console.log(customer)
+					$("#outboundData").empty();
+					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#outboundData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
+					$("#outboundData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
 					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#outboundData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-					for (let i = 0; i < items.length; i++) {
-						$("#outboundData").append(`<tr><td>` + items[i][2] + `</td><td>` + items[i][1] + `</td></tr>`);
+					items = response['items']
+					for (let index = 0; index < items.length; index++) {
+						var itemName
+						for (let i = 0; i < itemData['itemlist'].length; i++) {
+							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
+								itemName = itemData['itemlist'][i]['name']
+								break
+							} else {
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
+							}
+						}
+						$("#outboundData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
-				} catch (err) {
-					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
+					validation["outbound"] = true
+					$("#itemCodeContainer").show();
 				}
-				$("#itemCodeContainer").show();
 				$(".overlay").hide();
+			},
+			fail: function (xhr, textStatus, errorThrown) {
+				alert('request failed');
 			}
+
+
 		});
 	});
 	$("#borrowCheckButton").click(function (e) {
 		e.preventDefault();
 		$(".overlay").show();
+		validation["borrow"] = false
+
 		$.ajax({
 			type: 'post',
-			url: '/storage/checkBorrow/',
+			url: '/app/storage/scanner/checkBorrow',
 			data: {
-				borrowId: $("#borrowId").val(),
+				borrow: $("#borrowCode").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				customer = response['customer']
-				items = response['items']
-				if (response['customer'] == "" || response['items'] == "") {
-					$(".overlay").hide();
-				}
-				try {
-
-				} catch (err) {
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan")
 					$("#borrowData").empty();
-					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
+					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					employee = Object.values(response['employee'][0])
+					console.log(employee)
+					$("#borrowData").empty();
+					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
+					$("#borrowData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td>Alamat</td><td id="alamat">` + employee[1] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
+					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#borrowData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					items = response['items']
+					for (let index = 0; index < items.length; index++) {
+						var itemName
+						for (let i = 0; i < itemData['itemlist'].length; i++) {
+							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
+								itemName = itemData['itemlist'][i]['name']
+								break
+							} else {
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
+							}
+						}
+						$("#borrowData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+					}
+					$("#itemCodeContainer").show();
+					validation["borrow"] = true
+
 				}
-				$("#itemCodeContainer").show();
 				$(".overlay").hide();
+			},
+			fail: function (xhr, textStatus, errorThrown) {
+				alert('request failed');
 			}
+
+
 		});
 	});
-	$("#outboundCheckButton").click(function (e) {
+	$("#returnCheckButton").click(function (e) {
 		e.preventDefault();
 		$(".overlay").show();
+		validation["return"] = false
 		$.ajax({
 			type: 'post',
-			url: '/storage/checkOutbound/',
+			url: '/app/storage/scanner/checkReturn',
 			data: {
-				outboundId: $("#outboundId").val(),
+				return: $("#returnCode").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				customer = response['customer']
-				items = response['items']
-				if (response['customer'] == "" || response['items'] == "") {
-					$(".overlay").hide();
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan")
+					$("#returnData").empty();
+					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					console.log(response)
+					customer = Object.values(response['customer'][0])
+					console.log(customer)
+					$("#returnData").empty();
+					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#returnData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
+					$("#returnData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
+					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#returnData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					items = response['items']
+					for (let index = 0; index < items.length; index++) {
+						var itemName
+						for (let i = 0; i < itemData['itemlist'].length; i++) {
+							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
+								itemName = itemData['itemlist'][i]['name']
+								break
+							} else {
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
+							}
+						}
+						$("#returnData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+					}
+
+					$("#itemCodeContainer").show();
+					validation["return"] = true
 				}
-				try {} catch (err) {
-					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">Data tidak ditemukan</td></tr>`);
-				}
-				$("#itemCodeContainer").show();
 				$(".overlay").hide();
+			},
+			fail: function (xhr, textStatus, errorThrown) {
+				alert('request failed');
 			}
+
+
 		});
 	});
 
@@ -349,131 +594,237 @@ $(document).ready(function () {
 	*/
 	$("#confirmButton").click(function (e) {
 		e.preventDefault();
-		$(".overlay").show();
 		if ($("#action").val() == "inbound") {
-			$.ajax({
-				type: 'post',
-				url: '/app/storage/scanner/put',
-				data: {
-					binlocation: $("#binLocation").val(),
-					itemCode: JSON.stringify(code),
-					csrfmiddlewaretoken: csrf
-				},
-				success: function (response) {
-					if (response['binlocation'] == "" || response['itemCode'] == "") {
+			if (!validation["binlocation"]) {
+				alert("Data Invalid, Binlocation belum di check")
+			} else if (code == "") {
+				alert("Data Invalid, belum ada item yang di scan")
+			} else {
+				$(".overlay").show();
+				$.ajax({
+					type: 'post',
+					url: '/app/storage/scanner/put',
+					data: {
+						binlocation: $("#binLocation").val(),
+						itemCode: JSON.stringify(code),
+						csrfmiddlewaretoken: csrf
+					},
+					success: function (response) {
+						if (response['binlocation'] == "" || response['itemCode'] == "") {
+							$(".overlay").hide();
+							alert("error data kosong/tidak ditemukan")
+						} else {
+							$(".overlay").hide();
+							alert("inbound berhasil")
+						}
+					},
+					fail: function (xhr, textStatus, errorThrown) {
+						alert('request failed');
 						$(".overlay").hide();
-						alert("error data kosong/tidak ditemukan")
-					} else {
-						$(".overlay").hide();
-						alert("inbound berhasil")
 					}
-				},
-				fail: function (xhr, textStatus, errorThrown) {
-					alert('request failed');
-					$(".overlay").hide();
-				}
-			});
-			code = [];
-			$("#binLocation").val("");
+				});
+				code = [];
+				$("#binLocation").val("");
+			}
+
 
 		} else if ($("#action").val() == "move") {
-			$.ajax({
-				type: 'post',
-				url: '/app/storage/scanner/move',
-				data: {
-					binlocation: $("#binLocation").val(),
-					itemCode: JSON.stringify(code),
-					csrfmiddlewaretoken: csrf
-				},
-				success: function (response) {
-					if (response['binlocation'] == "" || response['itemCode'] == "") {
+			if (!validation["binlocation"]) {
+				alert("Data Invalid, Binlocation belum di check")
+			} else if (code == "") {
+				alert("Data Invalid, belum ada item yang di scan")
+			} else {
+				$(".overlay").show();
+				$.ajax({
+					type: 'post',
+					url: '/app/storage/scanner/move',
+					data: {
+						binlocation: $("#binLocation").val(),
+						itemCode: JSON.stringify(code),
+						csrfmiddlewaretoken: csrf
+					},
+					success: function (response) {
+						if (response['binlocation'] == "" || response['itemCode'] == "") {
+							$(".overlay").hide();
+							alert("error data kosong/tidak ditemukan")
+						} else {
+							$(".overlay").hide();
+							alert("move barang berhasil")
+						}
+					},
+					fail: function (xhr, textStatus, errorThrown) {
+						alert('request failed');
 						$(".overlay").hide();
-						alert("error data kosong/tidak ditemukan")
-					} else {
-						$(".overlay").hide();
-						alert("move barang berhasil")
 					}
-				},
-				fail: function (xhr, textStatus, errorThrown) {
-					alert('request failed');
-					$(".overlay").hide();
-				}
-			});
-			code = [];
-			$("#binLocation").val("");
+
+				});
+				code = [];
+				$("#binLocation").val("");
+			}
 
 		} else if ($("#action").val() == "outbound") {
-			$.ajax({
-				type: 'post',
-				url: '/app/storage/scanner/out',
-				data: {
-					outboundId: $("#outboundId").val(),
-					itemCode: JSON.stringify(code),
-					csrfmiddlewaretoken: csrf
-				},
-				success: function (response) {
-					if (response['outboundId'] == "" || response['itemCode'] == "") {
-						$(".overlay").hide();
-						alert("error data kosong/tidak ditemukan")
-					} else {
-						$(".overlay").hide();
-						alert("Outbound berhasil")
+			qtyLimit = null
+			if (!validation["outbound"]) {
+				alert("Data Invalid, Outbound id belum di check")
+			} else if (code == "") {
+				alert("Data Invalid, belum ada item yang di scan")
+			} else {
+				if (itemLimit.length == items.length) {
+					for (let a = 0; a < items.length; a++) {
+						for (let i = 0; i < itemLimit.length; i++) {
+							if (itemLimit[i]['id'] == items[a]['item']) {
+								if (itemLimit[i]['qty'] != items[a]['quantity']) {
+									qtyLimit = 1
+								}
+							}
+						}
 					}
-				},
-				fail: function (xhr, textStatus, errorThrown) {
-					alert('request failed');
-					$(".overlay").hide();
+					if (!qtyLimit) {
+						$(".overlay").show();
+						$.ajax({
+							type: 'post',
+							url: '/app/storage/scanner/out',
+							data: {
+								outboundId: $("#outboundId").val(),
+								itemCode: JSON.stringify(code),
+								csrfmiddlewaretoken: csrf
+							},
+							success: function (response) {
+								if (response['outboundId'] == "" || response['itemCode'] == "") {
+									$(".overlay").hide();
+									alert("error data kosong/tidak ditemukan")
+								} else {
+									$(".overlay").hide();
+									alert("Outbound berhasil")
+								}
+							},
+							fail: function (xhr, textStatus, errorThrown) {
+								alert('request failed');
+								$(".overlay").hide();
+							}
+						});
+						code = [];
+						itemLimit = [];
+						items = [];
+					} else {
+						alert("jumlah item tidak sesuai")
+					}
+
+				} else {
+					alert("jumlah item tidak sesuai")
 				}
-			});
-			code = [];
+
+
+			}
+
 		} else if ($("#action").val() == "return") {
-			$.ajax({
-				type: 'post',
-				url: '/app/storage/scanner/return',
-				data: {
-					outboundId: $("#outboundId").val(),
-					itemCode: JSON.stringify(code),
-					csrfmiddlewaretoken: csrf
-				},
-				success: function (response) {
-					if (response['outboundId'] == "" || response['itemCode'] == "") {
-						$(".overlay").hide();
-						alert("error data kosong/tidak ditemukan")
-					} else {
-						$(".overlay").hide();
-						alert("Outbound berhasil")
+			qtyLimit = null
+			if (!validation["return"]) {
+				alert("Data Invalid, return id belum di check")
+			} else if (code == "") {
+				alert("Data Invalid, belum ada item yang di scan")
+			} else {
+				if (itemLimit.length == items.length) {
+					for (let a = 0; a < items.length; a++) {
+						for (let i = 0; i < itemLimit.length; i++) {
+							if (itemLimit[i]['id'] == items[a]['item']) {
+								if (itemLimit[i]['qty'] != items[a]['quantity']) {
+									qtyLimit = 1
+								}
+							}
+						}
 					}
-				},
-				fail: function (xhr, textStatus, errorThrown) {
-					alert('request failed');
-					$(".overlay").hide();
+					if (!qtyLimit) {
+						$(".overlay").show();
+						$.ajax({
+							type: 'post',
+							url: '/app/storage/scanner/return',
+							data: {
+								returnId: $("#returnCode").val(),
+								itemCode: JSON.stringify(code),
+								csrfmiddlewaretoken: csrf
+							},
+							success: function (response) {
+								if (response['returnId'] == "" || response['itemCode'] == "") {
+									$(".overlay").hide();
+									alert("error data kosong/tidak ditemukan")
+								} else {
+									$(".overlay").hide();
+									alert("return berhasil")
+								}
+							},
+							fail: function (xhr, textStatus, errorThrown) {
+								alert('request failed');
+								$(".overlay").hide();
+							}
+						});
+						code = [];
+						itemLimit = [];
+						items = [];
+					} else {
+						alert("jumlah item tidak sesuai")
+					}
+
+				} else {
+					alert("jumlah item tidak sesuai")
 				}
-			});
-			code = [];
+
+
+			}
 		} else if ($("#action").val() == "borrow") {
-			$.ajax({
-				type: 'post',
-				url: '/app/storage/scanner/borrow',
-				data: {
-					outboundId: $("#outboundId").val(),
-					itemCode: JSON.stringify(code),
-					csrfmiddlewaretoken: csrf
-				},
-				success: function (response) {
-					if (response['outboundId'] == "" || response['itemCode'] == "") {
-						$(".overlay").hide();
-						alert("error data kosong/tidak ditemukan")
-					} else {
-						$(".overlay").hide();
-						alert("Outbound berhasil")
+			qtyLimit = null
+			if (!validation["borrow"]) {
+				alert("Data Invalid, borrow id belum di check")
+			} else if (code == "") {
+				alert("Data Invalid, belum ada item yang di scan")
+			} else {
+				if (itemLimit.length == items.length) {
+					for (let a = 0; a < items.length; a++) {
+						for (let i = 0; i < itemLimit.length; i++) {
+							if (itemLimit[i]['id'] == items[a]['item']) {
+								if (itemLimit[i]['qty'] != items[a]['quantity']) {
+									qtyLimit = 1
+								}
+							}
+						}
 					}
-				},
-				fail: function (xhr, textStatus, errorThrown) {
-					alert('request failed');
-					$(".overlay").hide();
+					if (!qtyLimit) {
+						$(".overlay").show();
+						$.ajax({
+							type: 'post',
+							url: '/app/storage/scanner/borrow',
+							data: {
+								borrowId: $("#borrowCode").val(),
+								itemCode: JSON.stringify(code),
+								csrfmiddlewaretoken: csrf
+							},
+							success: function (response) {
+								if (response['borrowCode'] == "" || response['itemCode'] == "") {
+									$(".overlay").hide();
+									alert("error data kosong/tidak ditemukan")
+								} else {
+									$(".overlay").hide();
+									alert("borrow berhasil")
+								}
+							},
+							fail: function (xhr, textStatus, errorThrown) {
+								alert('request failed');
+								$(".overlay").hide();
+							}
+						});
+						code = [];
+						itemLimit = [];
+						items = [];
+					} else {
+						alert("jumlah item tidak sesuai")
+					}
+
+				} else {
+					alert("jumlah item tidak sesuai")
 				}
-			});
-			code = [];
+
+
+			}
 		} else {
 			alert("Select option")
 		}
@@ -481,25 +832,17 @@ $(document).ready(function () {
 	});
 	$("#clearButton").click(function (e) {
 		e.preventDefault();
-		$(".overlay").show();
-
-		$.ajax({
-			type: 'post',
-			url: '/app/storage/scanner/put',
-			data: {
-				binlocation: $("#binLocation").val(),
-				itemCode: JSON.stringify(code),
-				csrfmiddlewaretoken: csrf
-			},
-			success: function (response) {
-				alert("Cooo")
-				$(".overlay").hide();
-			},
-			fail: function (xhr, textStatus, errorThrown) {
-				alert('request failed');
-				$(".overlay").hide();
-			}
-		});
+		if (confirm("Clear data ?")) {
+			$("#binLocation").val("");
+			$("#itemCode").val("");
+			$("#outboundId").val("");
+			$("#borrowCode").val("");
+			$("#returnCode").val("");
+			items = []
+			code = []
+			itemLimit = []
+			$("#itemData").append(`<tr><td>none</td></tr>`);
+		}
 
 	});
 
