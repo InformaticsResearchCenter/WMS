@@ -270,8 +270,12 @@ class ItemData(models.Model):
     deleted = models.CharField(max_length=1, default=0)
     inbound = models.ForeignKey(
         InboundData, on_delete=models.CASCADE, null=True)
-    outbound = models.ForeignKey(Outbound, on_delete=models.CASCADE, null=True)
-    borrow = models.ForeignKey(Borrow, on_delete=models.CASCADE, null=True)
+    returnData = models.ForeignKey(
+        SupplierReturnData, on_delete=models.CASCADE, null = True)
+    outbound = models.ForeignKey(
+        Outbound, on_delete=models.CASCADE, null=True)
+    borrow = models.ForeignKey(
+        Borrow, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=2, choices=status_list, default=0)
 
 
