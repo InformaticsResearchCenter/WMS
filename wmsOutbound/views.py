@@ -146,6 +146,8 @@ def outbounddata(request, id=0):
                         'outbounddata': outbounddata,
                         'outboundid': request.session['outbound_id'],
                         'group_id': request.session['usergroup'],
+                        'role': request.session['role'],
+                        'username': request.session['username'],
                     }
                     return render(request, 'inside/wmsOutbound/update_outbounddata.html', context)
             else:
