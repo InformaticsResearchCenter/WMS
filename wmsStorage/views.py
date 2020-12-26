@@ -13,8 +13,10 @@ def scanner(request):
 
 def getScannerData(request):
     items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name'))
-    itemdata = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0).select_related('inbound').values('id','inbound__item'))
+    itemraw1 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="1").select_related('inbound').values('id','inbound__item'))
+    itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
     binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','capacity'))
+    itemdata = itemraw1+itemraw2
     item = []
     for i in itemdata:
         for a in items:
@@ -64,22 +66,42 @@ def getBorrowData(request):
 
 
 def put(request):
-    binlocation = request.POST.get('binlocation', None)
+    binLocation = request.POST.get('binlocation', None)
     itemCode = loads(request.POST.get('itemCode', None))
-    print(binlocation)
-    print(itemCode)
+    for i in itemCode:
+        ItemData.objects.filter(id=i).update(status = "1", binlocation=Binlocation.objects.get(pk=binLocation))
     return JsonResponse({"@@":"a"},status = 200)
 
 def out(request):
+    outbound = request.POST.get('outboundId', None)
+    itemCode = loads(request.POST.get('itemCode', None))
+    for i in itemCode:
+        ItemData.objects.filter(id=i).update(status = "2", outbound=Outbound.objects.get(pk=outbound))
+    Outbound.objects.filter(id=outbound).update(status = "3")
     return JsonResponse({"@@":"a"},status = 200)
 
 def move(request):
+    binLocation = request.POST.get('binlocation', None)
+    itemCode = loads(request.POST.get('itemCode', None))
+    for i in itemCode:
+        ItemData.objects.filter(id=i).update(binlocation=Binlocation.objects.get(pk=binLocation))
     return JsonResponse({"@@":"a"},status = 200)
-
+    
 def borrow(request):
+    itemCode = loads(request.POST.get('itemCode', None))
+    borrowId = request.POST.get('borrowId', None)
+    for i in itemCode:
+        ItemData.objects.filter(id=i).update(status = "3", borrow=Borrow.objects.get(pk=borrowId))
+    Borrow.objects.filter(id=borrowId).update(status = "3")
     return JsonResponse({"@@":"a"},status = 200)
 
 def retur(request):
+    itemCode = loads(request.POST.get('itemCode', None))
+    returnId = request.POST.get('returnId', None)
+    outbound = CostumerReturn.objects.filter(id=returnId).values("outbound__id")
+    for i in itemCode:
+        ItemData.objects.filter(id=i).update(status = "2", outbound = Outbound.objects.get(pk=outbound[0]["outbound__id"]))
+    CostumerReturn.objects.filter(id=returnId).update(status = "3")
     return JsonResponse({"@@":"a"},status = 200)
     
 # -------- PDF -----------
