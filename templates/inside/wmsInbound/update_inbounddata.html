@@ -24,6 +24,7 @@
                 <div class="row justify-content-center">
                     <div class="col-8">
                         <div class="form-group">
+                             <label for="itemdata">{{inbounddata.item.name}}</label>
                             <input type="text" readonly="true" class="form-control" name="id" id="id"
                                 value="{{inbounddata.id}}">
                         </div>
@@ -33,22 +34,26 @@
                                 value="{{inboundid}}">
                         </div>
                         <div class="form-group">
-                            <label for="itemdata">Item</label>
-                            <select class="form-control" name="item" id="item">
+                            {% comment %} <label for="itemdata">Item</label> {% endcomment %}
+                            <input type="hidden" readonly="true" class="form-control" name="item" id="item"
+                                value="{{inbounddata.item.id}}">
+                            {% comment %} <select class="form-control" name="item" id="item">
                                 {% for itm in item %}
                                 <option value='{{itm.id}}'>{{itm.name}}</option>
                                 {% endfor %}
-                            </select>
+                            </select> {% endcomment %}
                         </div>
                         <div class="form-group">
                             <label for="itemdata">Quantity</label>
                             <input type="text" class="form-control" name="quantity" id="quantity" value="{{inbounddata.quantity}}">
                         </div>
-                        <div class="form-group">
+                        {% comment %} <div class="form-group">
                             <label for="itemdata">Pass</label>
-                            <input type="text" class="form-control" name="rejectCounter" id="rejectCounter" readonly
+                            <input type="text" class="form-control" name="pass" id="pass" readonly
                                 value="{{inbounddata.rejectCounter}}">
-                        </div>
+                        </div> {% endcomment %}
+                        <input type="hidden" class="form-control" name="rejectCounter" id="rejectCounter" readonly
+                                value="{{inbounddata.rejectCounter}}">
                         <div class="form-group">
                             <label for="itemdata">Reject</label>
                             <input type="text" class="form-control" name="reject" id="reject" placeholder="Input Reject"
@@ -64,13 +69,16 @@
                     var qty = document.getElementById('quantity');
                     var rjt = document.getElementById('reject');
                     var pass = document.getElementById('rejectCounter');
+                    var rejectCounter = document.getElementById('rejectCounter');
                     qty.addEventListener("change", function () {
                         pass.value = qty.value - rjt.value;
                     });
                     rjt.addEventListener("change", function () {
-                        pass.value = qty.value - rjt.value;
+                        pass.value = rjt.value;
                     });
-                    // document.getElementById('pass_field').value = qty - rjt;
+                    rejectCounter.addEventListener("change", function () {
+                        pass.value = qty.value;
+                    });
                 </script>
             </form>
             <a href="{% url 'inboundIndex' %}"><button type="submit" class="btn btn-success">Back</button></a>

@@ -369,7 +369,8 @@ def view_inbound(request, id):
     else:
         request.session['inbound_id'] = id
         context = {
-            'Inbound': Inbound.objects.filter(pk=id),
+            'Inbound': Inbound.objects.filter(pk=id, deleted=0, userGroup=request.session['usergroup']),
+            'inboundReturnDataStars': InboundData.objects.filter(deleted=0, userGroup=request.session['usergroup'], inbound=id),
             'Itemdata': InboundData.objects.filter(inbound=id, deleted=0, userGroup=request.session['usergroup']),
             'title': 'View Inbound',
         }
@@ -434,27 +435,31 @@ def inbound_data(request, id=0):
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
                     formreject = request.POST['reject']
-                    formrejectCounter = request.POST['rejectCounter']
                     item = it.avaibleItem(1,0, request.session['usergroup'])
-                    qtyInbounddata = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup'], deleted=0))
-                    for i in item:
-                        j = 0
-                        while j < len(qtyInbounddata):
-                            print(qtyInbounddata[j][0])
-                            print(formitem)
-                            if qtyInbounddata[j][0] == formitem:
-                                InData = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['inbound_id'],userGroup=request.session['usergroup'], deleted=0)
-                                InDataqty = InData.first().quantity
-                                InData.update(quantity=InDataqty + int(formqty))
-                                inbounddata2 = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
-                                inbounddata3 = inbounddata2.first()
-                                inbounddata2.update(quantity = inbounddata3.quantity + int(formqty), rejectCounter=inbounddata3.rejectCounter + int(formrejectCounter), reject=inbounddata3.reject + int(formreject))
-                                return redirect('view_inbound', id=request.session['inbound_id'])
-                            j += 1    
+                    # print(qtyInbounddata[0].item.id)
+                    # print(formitem)
+                    if id == 0:
+                        for i in item:
+                            if i['item'] == formitem:
+                                # print(i['item'])
+                                # print(formitem)
+                                qtyInbounddata = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values_list('item__id'))
+                                j = 0
+                                print('HELLO')
+                                while j < len(qtyInbounddata):
+                                    print(qtyInbounddata[j][0])
+                                    print(formitem)
+                                    if qtyInbounddata[j][0] == formitem:
+                                        InData = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['inbound_id'],userGroup=request.session['usergroup'], deleted=0)
+                                        print(InData)
+                                        print(request.session['inbound_id'])
+                                        InDataqty = InData.first().quantity
+                                        print(InDataqty)
+                                        InData.update(quantity=InDataqty + int(formqty), rejectCounter=InData.first().rejectCounter + int(formreject), reject=InData.first().reject + int(formreject) )
+                                        print('berhasil di update')
+                                        return redirect('view_inbound', id=request.session['inbound_id'])
+                                    j += 1    
                     form.save()
-                    # inbounddata2 = InboundData.objects.filter(item=formitem, inbound=request.session['inbound_id'], deleted=0, userGroup=request.session['usergroup'])
-                    # inbounddata3 = inbounddata2.first()
-                    # inbounddata2.update(quantity = inbounddata3.quantity + int(formqty), rejectCounter=inbounddata3.rejectCounter + int(formrejectCounter), reject=inbounddata3.reject + int(formreject))
                     if id == 0:
                         get_next_value('inbounddata_seq')
                     return redirect('view_inbound', id=request.session['inbound_id'])
