@@ -831,7 +831,6 @@ a.navbar-brand {
 	left: -100%;
 	width: 200%;
 	height: 100%;
-	background: url(../images/wave.svg) repeat-x center center;
 	background-size: 50% auto;
 }
 
@@ -881,7 +880,6 @@ a.navbar-brand {
 }
 
 .about_bg {
-    background-image: url('../images/about_bg.png');
     background-repeat: no-repeat;
     background-position: left center;
 }
@@ -2281,7 +2279,6 @@ ul.bottom_menu li {
 	background-color: #f9f9f9;
 	min-height: 150px;
 	text-align: center;
-	background-image: url("../images/slider-01.jpg");
 	background-size: cover;
 	background-position: center center;
 }
@@ -2315,7 +2312,6 @@ ul.bottom_menu li {
 }
 
 /*.contact_form {
-    background: url('../images');
     background-size: cover;
     background-position: center center;
     min-height: 650px;
