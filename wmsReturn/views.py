@@ -289,15 +289,10 @@ def supplierReturnDataIndex(request, id):
     else:
         id_inbound = SupplierReturn.objects.filter(
             pk=id, deleted=0, userGroup=request.session['usergroup']).first().inbound.id,
-        print(id_inbound[0])
         request.session['id_inbound'] = (id_inbound[0])
-        print(id_inbound)
-        print(request.session['id_inbound'])
         request.session['supplierReturn'] = id  
         supplierReturndataStats = SupplierReturnData.objects.filter(
             deleted=0, supplierReturn=id, userGroup=request.session['usergroup'])
-        # print(supplierReturndataStats)
-        # request.session['supplierReturnData'] = (supplierReturndataStats)    
         context = {
             'supplierReturn': SupplierReturn.objects.filter(pk=id, deleted=0, userGroup=request.session['usergroup']),
             'supplierReturnst': SupplierReturn.objects.filter(pk=id, deleted=0, userGroup=request.session['usergroup']).first().status,
@@ -339,8 +334,6 @@ def supplierReturndata(request, id=0):
                     data = []
                     inbound = list(InboundData.objects.filter(deleted=0, userGroup=request.session['usergroup'],inbound=request.session['id_inbound']).values('id','item','rejectCounter','item__name'))
                     supplierReturnData = list(SupplierReturnData.objects.filter(deleted=0, userGroup=request.session['usergroup'], supplierReturn=request.session['supplierReturn']).values('id','item','quantity'))
-                    print(inbound)
-                    print(supplierReturnData)
                     for i in inbound:
                         a = 0
                         for s in supplierReturnData:
@@ -350,7 +343,6 @@ def supplierReturndata(request, id=0):
                                 break
                         if a == 0:
                             data.append({'id':i['id'], 'rejectCounter':i['rejectCounter'], 'item':i['item__name'], 'item_id':i['item']})       
-                    print(data)                 
                     context = {
                         'form': SupplierReturndataForm(),
                         'inbounddata': InboundData.objects.filter(inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup']),
@@ -388,8 +380,6 @@ def supplierReturndata(request, id=0):
                     supplierReturn = SupplierReturnData.objects.get(pk=id)
                     form = SupplierReturndataForm(
                         request.POST, instance=supplierReturn)
-                    print(supplierReturn)        
-                print(form.is_valid())        
                 if form.is_valid():
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
@@ -410,14 +400,11 @@ def supplierReturndata(request, id=0):
                                         request, 'Item quantity exceeded the limit !')
                                     return redirect('supplierReturndataCreate')
                                 else:
-                                    print('hello')
                                     qtySupplier = list(SupplierReturnData.objects.filter(
                                         supplierReturn=request.session['supplierReturn'], deleted=0, userGroup=request.session['usergroup']).values_list('item__id'))
                                     j = 0
                                     while j < len(qtySupplier):
-                                        print(qtySupplier[j][0])
                                         if qtySupplier[j][0] == formitem:
-                                            print(qtySupplier[j][0])
                                             supRet = SupplierReturnData.objects.filter(
                                                 item=qtySupplier[j][0], supplierReturn=request.session['supplierReturn'],deleted=0, userGroup=request.session['usergroup'])
                                             pprint(supRet)
@@ -458,7 +445,6 @@ def supplierReturndataDelete(request, id):
                 pk=id, deleted=0, userGroup=request.session['usergroup']).first()
             # request.session['supplierReturnData'] = (supplierReturndata[0])    
             # supplierReturndatastatus = supplierReturndata
-            print(supplierReturndata)
             supplierReturndata.delete()
             return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
 
@@ -476,9 +462,6 @@ def supplierReturnConfirm(request):
             rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
             # Isi field Itemdata
             data = []
-            print(supplierReturnData)
-            print(inboundId)
-            print(inboundData)
             #Looping insert data ke Itemdata
             i = 0
 
@@ -487,7 +470,6 @@ def supplierReturnConfirm(request):
                     for m in range(supplierReturnData.len()):
                         if supplierReturnData[m][1] == j[1]:
                             for k in range(supplierReturnData[m][2]):
-                                print(supplierReturnData[m][2])
                                 data.append(ItemData(id='ITD'+ str(get_next_value('itemdata_seq')), inbound=InboundData.objects.get(pk=j[0]), userGroup=UserGroup.objects.get(pk=request.session['usergroup']), returnData=SupplierReturnData.objects.get(pk=supplierReturnData[m][0]))),
                 except:
                     break
