@@ -219,7 +219,7 @@ button:focus {
 	animation-delay: 0s;
 	animation-delay: 0s;
 	animation-delay: 0s;
-	background-image: url('../images/gb.png');
+	/* background-image: url('../images/gb.png'); */
 	background-size: 100% 100%;
 }
 
