@@ -7,7 +7,7 @@
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
-        {% if supplierReturnDataStats.supplierReturn.status == '1' %}
+        {% if supplierReturnst == '1' %}
         <a href="{% url 'supplierReturndataCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Supplier Return Data</a>
         {% endif %}
