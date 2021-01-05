@@ -183,9 +183,14 @@ def borrowdata(request, id=0):
                                             bor = BorrowData.objects.filter(
                                                 item=i['item'], borrow=request.session['borrow'], userGroup=request.session['usergroup'], deleted=0)
                                             borqty = bor.first().quantity
-                                            bor.update(
-                                                quantity=borqty + int(formqty))
-                                            return redirect('borrowView', id=request.session['borrow'])
+                                            if id == 0:
+                                                bor.update(
+                                                    quantity=borqty + int(formqty))
+                                                return redirect('borrowView', id=request.session['borrow'])
+                                            else:
+                                                bor.update(
+                                                    quantity=int(formqty))
+                                                return redirect('borrowView', id=request.session['borrow'])
                                         j += 1
                                     form.save()
                                     if id == 0:
