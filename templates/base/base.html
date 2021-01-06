@@ -32,20 +32,17 @@
     <!-- END LOADER -->
     
     <!-- Start header -->
-
-
-
     <header class="top-header">
         <div class="header_top">
             
             <div class="container">
                 <div class="row">
-                    <div class="logo_section">
+                    <div class="logo_section" style="width:100%;">
                         {% comment %} <a class="navbar-brand" href="index.html"><img src="{% static '/base/images/logo.png' %}" alt="image"></a> {% endcomment %}
                         <h1 style="font-size:45px;margin-top:20px;font-style:bold;"><span class="theme_color">WMS </span>POLTEKPOS</h1>
                     </div>
-                    <div class="site_information">
-                        <ul>
+                    <div class="site_information" style="width:100%;">
+                        <ul style="width:100%;">
                             <li style="margin-top:20px;"><a href="mailto:exchang@gmail.com"><img src="{% static '/base/images/mail_icon.png' %}" alt="#" />cdc@poltekpos.ac.id</a></li>
                             <li style="margin-left:-50px;margin-top:20px;"><a href="tel:exchang@gmail.com"><img src="{% static '/base/images/phone_icon.png' %}" alt="#" />(022)2009562</a></li>
                             {% comment %} <li><a href="#login" data-toggle="modal" data-target="#exampleModalCenter" class="join_bt">Login</a></li> {% endcomment %}
@@ -59,18 +56,20 @@
             </div>
         
         </div>
-        <div class="header_bottom">
-          <div class="container">
-            <div class="col-sm-12">
-                <div class="menu_orange_section" style="background: #ff880e;">
-                   <nav class="navbar header-nav navbar-expand-lg"> 
+        <div class="header_bottom" style="width:100%;">
+          {% comment %} <div class="container" style="width:100%;"> {% endcomment %}
+          <div>
+            <div>
+            {% comment %} <div class="col-sm-12" style="width:100%;"> {% endcomment %}
+                <div class="menu_orange_section" style="background: #ff880e;" style="width:100%;">
+                   <nav class="navbar header-nav navbar-expand-lg" style="width:100%;"> 
                      <div class="menu_section">
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false" aria-label="Toggle navigation">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
+                <div class="collapse navbar-collapse justify-content-end" id="navbar-wd" style="width:100%;">
                     <ul class="navbar-nav">
                         <li><a class="nav-link active" href="index.html">Home</a></li>
                         <li><a class="nav-link" href="about.html">About</a></li>
@@ -111,9 +110,9 @@
     <!-- End Banner -->
     
   <!-- section -->
-    <div class="section">
+    <div class="section" style="width:100%;">
         <div class="container">
-            <div class="row">
+            <div class="row" style="width:100%;">
                 <div class="col-md-6">
                     <div class="full text_align_right_img">
                         <img src="{% static '/base/images/wms.jpg' %}" alt="#" />
@@ -126,8 +125,8 @@
                <h2><span class="theme_color">Welcome</span> To WMS Politeknik Pos Indonesia</h2>  
                         </div>
                     </div>
-                    <div class="full paddding_left_15">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                    <div style="width:100%;">
+                        <p style="width:100%;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
                     </div>
                     <div class="full paddding_left_15">
                         <a class="main_bt" href="#">About more ></a>
