@@ -18,8 +18,8 @@
                 <tr>
                     <th scope="col">No</th>
                     <th scope="col">Item Id</th>
-                    <th scope="col">Item</th>
                     <th scope="col">Subcategory</th>
+                    <th scope="col">Item</th>
                     {% if role != 'OPR' %}
                     <th scope="col" style="width: 165px;">Action</th>
                     {% endif %}
@@ -30,8 +30,8 @@
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{item.id}}</td>
-                    <td>{{item.name}}</td>
                     <td>{{item.subcategory}}</td>
+                    <td>{{item.name}}</td>
                     {% if role != 'OPR' %}
                     <td>
                         <a href="{% url 'itemUpdate' item.id %}" class="btn btn-success btn-sm" role="button"
