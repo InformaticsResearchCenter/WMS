@@ -9,7 +9,12 @@ from django.http import JsonResponse,HttpResponse
 from json import dumps, loads
 
 def scanner(request):
-    return render(request, 'inside/wmsStorage/index.html')
+    context = {
+        'role': request.session['role'],
+        'username': request.session['username'],
+        'title': 'Item | Scanner',
+    }
+    return render(request, 'inside/wmsStorage/index.html',context)
 
 def getScannerData(request):
     items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name'))

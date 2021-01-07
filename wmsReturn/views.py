@@ -246,6 +246,7 @@ def supplierReturnIndex(request):
     else:
         context = {
             'username': request.session['username'],
+            'role': request.session['role'],
             'title': 'Supplier Return',
             'supplierReturn': SupplierReturn.objects.filter(deleted=0, userGroup=request.session['usergroup']),
         }
