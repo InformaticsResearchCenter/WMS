@@ -11,7 +11,10 @@
             {% if inb.status == "1" %}
         <a href="{% url 'add_inbounddata' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Inbound Data</a>
+            {% endif %}
             
+
+            {% if inb.status == '1' %}
             <form action="{% url 'confirm' %}" method="POST" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success btn-sm" style="margin-top: 10px; padding: 6px; float: right;width: 70px;">
@@ -78,14 +81,15 @@
                             {% if inb.status == "1" %}
                             <a href="{% url 'update_inbounddata' itdt.id  %}" class=" btn btn-success btn-sm" role="button"
                                 aria-pressed="true">Update</a>
-                            {% endif %}
-                        {% endfor %}
+                            
                         <form action="{% url 'delete_inbounddata' itdt.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 50px;">
                                 <i class="text-white">Delete</i>
                             </button>
                         </form>
+                        {% endif %}
+                        {% endfor %}
                     </td>
                     {% endif %}
                 </tr>

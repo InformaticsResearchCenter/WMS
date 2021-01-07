@@ -32,9 +32,9 @@
                         <div class="form-group">
                             <label for="item">Inbound Data</label>
                             <select class="form-control" name="item" id="item">
-                                {% for i in inbounddata %}
-                                    {% if i.rejectCounter != 0 %}
-                                    <option value='{{i.item.id}}'>{{i.item.name}} || reject = {{i.rejectCounter}}</option>
+                                {% for i in data %}
+                                    {% if i.rejectCounter > 0 %}
+                                    <option value='{{i.item_id}}'>{{i.item}}|| reject = {{i.rejectCounter}}</option>
                                     {% endif %}
                                 {% endfor %}    
                             </select>

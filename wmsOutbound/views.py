@@ -177,9 +177,14 @@ def outbounddata(request, id=0):
                                         out = OutboundData.objects.filter(
                                             item=i['item'], outbound=request.session['outbound_id'], userGroup=request.session['usergroup'])
                                         outqty = out.first().quantity
-                                        out.update(
-                                            quantity=outqty + int(formqty))
-                                        return redirect('view_outbound', id=request.session['outbound_id'])
+                                        if id == 0:
+                                            out.update(
+                                                quantity=outqty + int(formqty))
+                                            return redirect('view_outbound', id=request.session['outbound_id'])
+                                        else:
+                                            out.update(
+                                                quantity=int(formqty))
+                                            return redirect('view_outbound', id=request.session['outbound_id'])
                                     j += 1
                                 form.save()
                                 if id == 0:

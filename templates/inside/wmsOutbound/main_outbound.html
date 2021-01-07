@@ -22,7 +22,7 @@
                   <tbody>
                   {% for onb in outbound %}
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row">{{ forloop.counter }}</th>
                         <td>{{onb.id}}</td>
                         <td>{{onb.name}}</td>
                         <td>{{onb.address}}</td>

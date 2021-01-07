@@ -67,7 +67,7 @@
             <tbody>
                 {% for itdt in Outbounddata %}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{forloop.counter}}</th>
                     <td>{{itdt.id}}</td>
                     <td>{{itdt.item.name}}</td>
                     <td>{{itdt.quantity}}</td>

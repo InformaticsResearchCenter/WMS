@@ -7,8 +7,11 @@
 <div class="card">
     <div class="card-header">
         {% if role != 'OPR' %}
+        {% if supplierReturnst == '1' %}
         <a href="{% url 'supplierReturndataCreate' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
             Supplier Return Data</a>
+        {% endif %}
+
         {% if supplierReturnDataStats.supplierReturn.status == '1' %}
         <form action="{% url 'supplierReturnConfirm' %}" method="POST" class="d-inline">
             {% csrf_token %}
@@ -71,8 +74,8 @@
                     {% if role != 'OPR' %}
                     {% if crd.supplierReturn.status == '1' %}
                     <td>
-                        <a href="{% url 'supplierReturndataUpdate' crd.id %}" class=" btn btn-success btn-sm" role="button"
-                            aria-pressed="true">Update</a>
+                        {% comment %} <a href="{% url 'supplierReturndataUpdate' crd.id %}" class=" btn btn-success btn-sm" role="button"
+                            aria-pressed="true">Update</a> {% endcomment %}
                         <form action="{% url 'supplierReturndataDelete' crd.id %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 80px;">
