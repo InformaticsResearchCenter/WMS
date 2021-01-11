@@ -16,16 +16,16 @@
                                 value="ITM{{item_id}}">
                         </div>
                         <div class="form-group">
-                            <label for="category">Item</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Input Item">
-                        </div>
-                        <div class="form-group">
                             <label for="category">Subcategory</label>
                             <select class="form-control" name="subcategory">
                                 {% for subcategory in subcategory %}
                                 <option value='{{subcategory.id}}'>{{subcategory.subcategory}}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Item</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Input Item">
                         </div>
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="userGroup" id="userGroup"

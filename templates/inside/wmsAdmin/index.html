@@ -2,7 +2,6 @@
 {% load static %}
 {%  block content %}
 <div class="card-body">
-<button class="btn-primary btn-sm">Create Usergroup</button>
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
@@ -34,8 +33,6 @@
                             </form>
                         <td>
                               <a href="{% url 'deactive' i.id %}"><button class="btn-danger btn-sm" >deactive</button></a>
-                              <a href=""><button class="btn-default btn-sm">Update</button></a>
-                              <a href=""><button class="btn-danger btn-sm">Delete</button></a>
                         </td>
                     </tr>
                     {% endfor %}
