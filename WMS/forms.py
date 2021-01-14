@@ -15,7 +15,6 @@ class UserForm(forms.ModelForm):
             'role',
             'userGroup',
             'name',
-            'address',
             'postalCode',
             'phoneNumber',
         ]
@@ -61,10 +60,26 @@ class SupplierForm(forms.ModelForm):
             'name',
             'email',
             'phoneNumber',
-            'address',
             'postalCode',
             'userGroup',
         ]
+
+# class CustomerForm(forms.ModelForm):
+#     class Meta:
+#         model = Customer
+#         fields = [
+#             'id',
+#             'name',
+#             'email',
+#             'phoneNumber',
+#             'postalCode',
+#             'userGroup',
+#             'rt',
+#             'rw',
+#             'kecamatan',
+#             'kota',
+#             'provinsi'
+#         ]        
 
 
 class InboundForm(forms.ModelForm):
@@ -109,10 +124,6 @@ class OutboundForm(forms.ModelForm):
         model = Outbound
         fields = [
             'id',
-            'name',
-            'address',
-            'phoneNumber',
-            'postalCode',
             'date',
             'confirm',
             'create',
