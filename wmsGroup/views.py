@@ -5,8 +5,18 @@ from django.http import HttpResponse
 import datetime
 from django.db import IntegrityError
 from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.core.mail import send_mail
 from sequences import get_next_value, get_last_value
 # Create your views here.
+
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+from django.views.generic import View
+from django.urls import reverse
+from pprint import pprint
 
 
 def index(request):
@@ -26,15 +36,24 @@ def login(request):
             messages.error(request, 'Email tidak terdaftar')
             return redirect('groupLogin')
 
-        data = list(UserGroup.objects.filter(email=request.POST['email']).values(
-            'id', 'password', 'name', 'limit'))
+        usergroup = UserGroup.objects.get(email=request.POST['email'])
+        print(usergroup.active)
+        if usergroup.active != '0':
+            data = list(UserGroup.objects.filter(email=request.POST['email']).values(
+                'id', 'password', 'name', 'limit'))
 
-        if data[0]['password'] == request.POST['password']:
-            request.session['groupId'] = data[0]['id']
-            request.session['groupName'] = data[0]['name']
-            request.session['groupLimit'] = str(data[0]['limit'])
-            request.session['group_is_login'] = True
-        return redirect('groupIndex')
+            if data[0]['password'] == request.POST['password']:
+                request.session['groupId'] = data[0]['id']
+                request.session['groupName'] = data[0]['name']
+                request.session['groupLimit'] = str(data[0]['limit'])
+                request.session['group_is_login'] = True
+                return redirect('groupIndex')
+            else:
+                messages.error(request, 'Email atau password salah')
+                return redirect('groupLogin')
+        else:
+            messages.error(request, 'Email belum verifikasi')
+            return redirect('groupLogin')
     else:
         return render(request, "inside/wmsGroup/form/login.html")
 
@@ -62,6 +81,22 @@ def register(request):
                 role=Role.objects.get(pk='MAN')
             )
             man_user.save()
+
+            email = urlsafe_base64_encode(force_bytes(request.POST['email']))
+            domain = get_current_site(request).domain
+            link = reverse('activate', kwargs={'email': email})
+
+            activate_url = 'http://'+domain+link
+
+            email_subject = 'Activate WMS Polpos account'
+            email_body = 'Hello '+request.POST['name']+' link activate is '+activate_url
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                settings.EMAIL_HOST_USER,
+                [request.POST['email']],
+            )
+            email.send(fail_silently=False)
             get_next_value('usergroup_seq')
             return redirect('groupLogin')
         except:
@@ -74,3 +109,12 @@ def register(request):
 def logout(request):
     request.session.flush()
     return redirect('groupLogin')
+
+
+class VerificationView(View):
+    def get(self, request, email):
+        email_group = str(urlsafe_base64_decode(email))
+        usergroup = UserGroup.objects.filter(email=email_group[2 : -1])
+        usergroup.update(active=1)
+        messages.success(request, 'Verifikasi Berhasil')
+        return redirect('groupLogin')

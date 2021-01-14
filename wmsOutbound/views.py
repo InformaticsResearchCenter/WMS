@@ -24,6 +24,68 @@ from django.http import HttpResponse
 from django.views.generic import View
 from django.shortcuts import get_list_or_404, get_object_or_404
 
+
+
+
+# ----------------------- Customer ---------------------
+def main_customer(request):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        context = {
+            'role': request.session['role'],
+            'username': request.session['username'],
+            'title': 'Username | WMS Poltekpos'
+        }
+        return render(request, "inside/wmsOutbound/main_customer.html", context)
+
+def customer(request, id=0):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            if request.method == "GET":
+                if id == 0:
+                    context = {
+                        'form': OutboundForm(),
+                        'title': 'Add Outbound | Outbound',
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                        'id_outbound_date': datetime.datetime.now().strftime("%d%m%Y"),
+                        'id_outbound': get_last_value('outbound_seq'),
+                        'role': request.session['role'],
+                        'username': request.session['username'],
+                        'group_id': request.session['usergroup'],
+                        'con_cre': request.session['id'],
+                    }
+                    return render(request, 'inside/wmsOutbound/customer.html', context)
+                else:
+                    outbound = Outbound.objects.get(pk=id)
+                    context = {
+                        'form': OutboundForm(instance=outbound),
+                        'outbound': outbound,
+                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                        'group_id': request.session['usergroup'],
+                        'role': request.session['role'],
+                        'username': request.session['username'],
+                        'title': 'Update Outbound | Outbound'
+                    }
+                return render(request, 'inside/wmsOutbound/update_customer.html', context)
+            else:
+                if id == 0:
+                    form = OutboundForm(request.POST)
+                else:
+                    outbound = Outbound.objects.get(pk=id)
+                    form = OutboundForm(request.POST, instance=outbound)
+                if form.is_valid():
+                    form.save()
+                    if id == 0:
+                        get_next_value('outbound_seq')
+                    return redirect('outbound')
+            return render(request, 'inside/wmsOutbound/customer.html')        
+
+
 # ----------------------- Outbound ----------------------
 
 

@@ -6,6 +6,9 @@ class External(models.Model):
     address = models.TextField(default="NULL")
     phoneNumber = models.CharField(max_length=13, default="NULL")
     postalCode = models.CharField(max_length=10, default="NULL")
+    districts = models.CharField(max_length=50, default="NULL")
+    city = models.CharField(max_length=50, default="NULL")
+    province = models.CharField(max_length=50, default="NULL")
 
     class Meta:
         abstract = True
@@ -35,6 +38,7 @@ class UserGroup(External):
     limit = models.DateField(default="1000-10-10")
     email = models.EmailField(max_length=254, unique=True, null=True)
     password = models.CharField(max_length=100, null=True)
+    active = models.CharField(max_length=1, default=0)
 
 
 class Category(models.Model):
@@ -119,8 +123,14 @@ class InboundData(models.Model):
         else:
             return "COMPLETE"
 
+class Customer(External):
+    id = models.TextField(primary_key=True)
+    userGroup = models.ForeignKey(
+        UserGroup, on_delete=models.CASCADE, null=True)
+    deleted = models.CharField(max_length=1, default=0)
+    email = models.CharField(max_length=50, default="NULL")
 
-class Outbound(External):
+class Outbound(models.Model):
     status_choices = [
         ('1', 'Open document'),
         ('2', 'Document ready'),
@@ -134,6 +144,8 @@ class Outbound(External):
     status = models.CharField(max_length=2, choices=status_choices, default=1)
     confirm = models.ForeignKey(
         User, related_name="oConfirm", on_delete=models.CASCADE, null=True)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=True)    
     create = models.ForeignKey(
         User, related_name="oCreate", on_delete=models.CASCADE, null=True)
 

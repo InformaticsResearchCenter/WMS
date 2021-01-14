@@ -18,4 +18,8 @@ urlpatterns = [
     path('update_outbound/<slug:id>/', views.outbound, name="update_outbound"),
     # -------------------- PDFOutbound --------------------------
     path('<slug:pk>/', views.PdfOutbound.as_view(),),
+
+
+    path('customer', views.main_customer, name="customer"),
+    path('add_customer', views.customer, name="add_customer"),
 ]

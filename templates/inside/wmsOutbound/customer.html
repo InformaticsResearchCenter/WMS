@@ -1,0 +1,83 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Page Content  -->
+<div id="content" width="80%">
+    <h2>Input Customer</h2>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Add Customer
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="id" id="id" value="{{id_customer}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier">Customer Name</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier">Address</label>
+                            <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier">Phone Number</label>
+                            <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
+                                placeholder="Phone Number">
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier">Postal Code</label>
+                            <input type="text" class="form-control" name="postalCode" id="postalCode"
+                                placeholder="Postal Code">
+                        </div>
+                         <div class="form-group">
+                            <label for="category">RT</label>
+                            <input type="text" class="form-control" name="rt" id="rt"
+                                placeholder="Input RT">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">RW</label>
+                            <input type="text" class="form-control" name="rw" id="rw"
+                                placeholder="Input RW">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Kecamatan</label>
+                            <input type="text" class="form-control" name="kecamatan" id="kecamatan"
+                                placeholder="Input Kecamatan">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Kota</label>
+                            <input type="text" class="form-control" name="kota" id="kota"
+                                placeholder="Input Kota">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Provinsi</label>
+                            <input type="text" class="form-control" name="provinsi" id="provinsi"
+                                placeholder="Input Provinsi">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="userGroup" id="userGroup"
+                                value="{{group_id}}">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="confirm" id="confirm" value="{{con_cre}}">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="create" id="create" value="{{con_cre}}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </form>
+            <a href="{% url 'outbound' %}"><button type="submit" class="btn btn-success">Back</button></a>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
