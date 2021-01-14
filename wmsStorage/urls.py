@@ -4,6 +4,7 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
+    path('item/', views.getItemData, name="itemdata"),
     path('scanner/', views.scanner, name="scanner"),
     path('scanner/getScannerData', views.getScannerData, name="scannerdata"),
     path('scanner/checkOutbound', views.getOutboundData, name="outbounddata"),
