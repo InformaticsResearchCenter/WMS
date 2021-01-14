@@ -134,7 +134,6 @@
                         {% endif %}
                     </ul>
                     </li>
-<<<<<<< HEAD
                     <li class="nav-item">
                         <a href="" class="nav-link">
                             <i class="nav-icon fas fa-table"></i>
@@ -151,58 +150,6 @@
                                 </a>
                             </li>
                         </ul>
-=======
-                        <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
-                                <p>
-                                    Outbound
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'customer' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Customer</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'add_outbound' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Process Order</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'outbound' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Outbound Data</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
-                                <p>
-                                    Borrow
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'borrowIndex' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Borrow Data</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
->>>>>>> 0ef655ebbf0672dea0435183d7a3b6c5dffe2db6
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'outbound' %}" class="nav-link">
@@ -211,6 +158,15 @@
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'outbound' %}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Outbound Data</p>
+                            </a>
+                        </li>
+                    </ul>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -286,6 +242,12 @@
                                 <a href="{% url 'rackIndex' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Rack</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'customer' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Customer</p>
                                 </a>
                             </li>
                         </ul>
