@@ -15,6 +15,35 @@ def scanner(request):
         'title': 'Item | Scanner',
     }
     return render(request, 'inside/wmsStorage/index.html',context)
+def getItemData(request):
+    avaibleItem = ItemData.objects.select_related('inbound').filter(
+            status='1', deleted=0, userGroup=request.session['usergroup']).values('inbound__item')
+    rawitem = []
+    for i in avaibleItem:
+        found = False
+        for a in rawitem:
+            if i['inbound__item'] == a['item']:
+                a['qty'] += 1
+                found = True
+                break
+        if found == False:
+            try:
+                rawitem.append({'item': i['inbound__item'], 'name': Item.objects.filter(
+                    id=i['inbound__item']).values('name')[0]['name'], 'qty': 1})
+            except:
+                pass
+    name=[]
+    qty=[]
+    for i in rawitem:
+        qty.append(i['qty'])
+        name.append(i['name'])
+
+    return JsonResponse({'name':name,'qty':qty})
+
+def getStockOpname(request):
+    inbound=request.POST.get('inbound',None)
+    return JsonResponse({"@@":"a"},status = 200)
+
 
 def getScannerData(request):
     items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name'))

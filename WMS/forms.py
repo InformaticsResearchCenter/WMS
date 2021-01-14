@@ -49,7 +49,7 @@ class SubcategoryForm(forms.ModelForm):
             'subcategory',
             'category',
             'userGroup',
-            'size'
+            'size',
         ]
 
 
@@ -65,22 +65,17 @@ class SupplierForm(forms.ModelForm):
             'userGroup',
         ]
 
-# class CustomerForm(forms.ModelForm):
-#     class Meta:
-#         model = Customer
-#         fields = [
-#             'id',
-#             'name',
-#             'email',
-#             'phoneNumber',
-#             'postalCode',
-#             'userGroup',
-#             'rt',
-#             'rw',
-#             'kecamatan',
-#             'kota',
-#             'provinsi'
-#         ]        
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = [
+            'id',
+            'name',
+            'email',
+            'phoneNumber',
+            'postalCode',
+            'userGroup',
+        ]        
 
 
 class InboundForm(forms.ModelForm):

@@ -1,29 +1,36 @@
-var customer, itemData = [];
-var code = [];
-var itemLimit = [];
-var items = [];
+var code, customer, items, itemData = [];
+var code = []
+var itemLimit = []
+var items = []
 var validation = {
 	"outbound": false,
 	"binlocation": false,
 	"borrow": false,
 	"return": false
-};
+}; // [0] outboundid, [1] binlocation, [2] item
+// var scanPoint = null;
 var pointer, action, itemCode, itemExist, binlocationExist, itemLimitExist, checkLimit, qtyLimit = null;
+
+
 
 function removeItem(a, id) {
 	if (confirm('remove item ?')) {
 		for (let i = 0; i < itemData["item"].length; i++) {
 			if (itemData["item"][i]["id"] == a) {
 				for (let a = 0; a < itemLimit.length; a++) {
+					console.log(itemLimit[a]["name"])
+					console.log(itemData["item"][i]["name"])
 					if (itemLimit[a]["name"] == itemData["item"][i]["name"]) {
-						itemLimit[a]["qty"] -= 1;
-						break;
+						itemLimit[a]["qty"] -= 1
+						break
 					}
 				}
 				break
 			}
 		}
-		$("#" + id).remove();
+		$("#" + id).remove()
+		code.splice(code.indexOf(a), 1)
+		console.log(code)
 		$("#itemData").empty();
 		$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
 		for (let i = 0; i < itemLimit.length; i++) {
@@ -34,6 +41,7 @@ function removeItem(a, id) {
 
 	}
 }
+
 $(document).ready(function () {
 	var csrf = $("input[name='csrfmiddlewaretoken']").val();
 	var html5QrcodeScanner = new Html5QrcodeScanner('qr-reader', {
@@ -43,6 +51,14 @@ $(document).ready(function () {
 	html5QrcodeScanner.render(onScanSuccess);
 	$(".overlay").show();
 	$(".card-body").hide();
+
+
+	/*
+	============================================================
+		fungsi untuk mengambil data yang dibutuhkan scanner
+		untuk melakukan verifikasi item yang discan
+	============================================================
+	*/
 	$.ajax({
 		type: 'post',
 		url: '/app/storage/scanner/getScannerData',
@@ -51,6 +67,9 @@ $(document).ready(function () {
 		},
 		success: function (response) {
 			itemData = response
+			console.log(itemData['itemlist'])
+			console.log(itemData['item'])
+			console.log(itemData['binlocation'])
 			$(".overlay").hide();
 		},
 		fail: function (xhr, textStatus, errorThrown) {
@@ -62,65 +81,98 @@ $(document).ready(function () {
 	function onScanSuccess(qrCodeMessage) {
 		if (pointer == "binLocation") {
 			$("#binLocation").val(qrCodeMessage);
-			validation["binlocation"] = false;
+			validation["binlocation"] = false
 
 		} else if (pointer == "itemCode") {
 			$("#itemCode").val(qrCodeMessage);
 		} else if (pointer == "outboundId") {
 			$("#outboundId").val(qrCodeMessage);
-			validation["outbound"] = false;
+			validation["outbound"] = false
 			$("#itemCodeContainer").hide();
-			itemLimit = [];
-			items = [];
-			code = [];
+			itemLimit = []
+			items = []
+			code = []
 		} else if (pointer == "borrow") {
 			$("#borrowCode").val(qrCodeMessage);
-			validation["borrow"] = false;
-			itemLimit = [];
-			items = [];
-			code = [];
+			validation["borrow"] = false
+			itemLimit = []
+			items = []
+			code = []
 			$("#itemCodeContainer").hide();
 		} else if (pointer == "return") {
 			$("#returnCode").val(qrCodeMessage);
-			validation["return"] = false;
-			itemLimit = [];
-			items = [];
-			code = [];
+			validation["return"] = false
+			itemLimit = []
+			items = []
+			code = []
 			$("#itemCodeContainer").hide();
 		}
 	}
+
+
+
+	/*
+	============================================================
+		fungsi untuk melakukan testing
+	============================================================
+	*/
+	$("#ajaxTesting").click(function (e) {
+		e.preventDefault();
+		$.ajax({
+			type: 'post',
+			url: '/storage/testing/',
+			data: {
+				itemCode: "lol",
+				csrfmiddlewaretoken: csrf
+			},
+			success: function (response) {
+				alert("Success")
+			}
+		});
+
+	});
+
 	$("#binLocation").change(function (e) {
-		validation["binlocation"] = false;
-		items = [];
-		code = [];
-		itemLimit = [];
+		validation["binlocation"] = false
+		items = []
+		code = []
+		itemLimit = []
 	});
 	$("#borrowCode").change(function (e) {
-		validation["borrow"] = false;
+		validation["borrow"] = false
 		$("#itemCodeContainer").hide();
-		items = [];
-		code = [];
-		itemLimit = [];
+		items = []
+		code = []
+		itemLimit = []
+
 	});
 	$("#outboundId").change(function (e) {
-		validation["outbound"] = false;
+		validation["outbound"] = false
 		$("#itemCodeContainer").hide();
-		items = [];
-		code = [];
-		itemLimit = [];
+		items = []
+		code = []
+		itemLimit = []
 	});
 	$("#returnCode").change(function (e) {
-		validation["return"] = false;
+		validation["return"] = false
 		$("#itemCodeContainer").hide();
-		items = [];
-		code = [];
-		itemLimit = [];
+		items = []
+		code = []
+		itemLimit = []
+
 	});
+
+
+	/*
+	============================================================
+		fungsi saat value berubah pada action selection box
+	============================================================
+	*/
 	$("#action").change(function (e) {
 		e.preventDefault();
-		items = [];
-		code = [];
-		itemLimit = [];
+		items = []
+		code = []
+		itemLimit = []
 		$("#data").empty();
 		$("#itemData").empty();
 		$("#itemData").append(`<tr><td>none</td></tr>`);
@@ -169,84 +221,97 @@ $(document).ready(function () {
 			$("#outboundId").val("");
 			$("#borrowCode").val("");
 			$("#returnCode").val("");
-		} else if ($("#action").val() == "return") {
-			$("#binLocationContainer").hide();
-			$("#outboundIdContainer").hide();
-			$("#itemCodeContainer").hide();
-			$("#borrowCodeContainer").hide();
-			$("#returnCodeContainer").show();
-			$("#binLocation").val("");
-			$("#itemCode").val("");
-			$("#outboundId").val("");
-			$("#borrowCode").val("");
-			$("#returnCode").val("");
 		}
 	});
 
+
+
+	/*
+	============================================================
+		fungsi untuk mengubah pointer saat melakukan scan 
+		qrcode pointer berfungsi agar scanner memasukan data 
+		pada element form yang dipilih
+	============================================================
+	*/
 	$("#binLocation").click(function (e) {
 		e.preventDefault();
-		pointer = "binLocation";
+		pointer = "binLocation"
 	});
 	$("#itemCode").click(function (e) {
 		e.preventDefault();
-		pointer = "itemCode";
+		pointer = "itemCode"
 	});
 	$("#outboundId").click(function (e) {
 		e.preventDefault();
-		pointer = "outboundId";
+		pointer = "outboundId"
 	});
 	$("#borrowCode").click(function (e) {
 		e.preventDefault();
-		pointer = "borrow";
+		pointer = "borrow"
 	});
 	$("#returnCode").click(function (e) {
 		e.preventDefault();
-		pointer = "return";
+		pointer = "return"
 	});
+
+
+
+	/*
+	============================================================
+		fungsi untuk memasukan code item hasil scan pada array
+		dan membuat element baru, juga mengecek eksistensi item
+	============================================================
+	*/
+
 	$("#inputItem").click(function (e) {
 		e.preventDefault();
+
 		for (i = 0; i < itemData['item'].length; i++) {
 			if (itemData['item'][i]['id'] == $("#itemCode").val()) {
 				if (code.includes($("#itemCode").val())) {
-					alert("Item telah di scan");
+					alert("Item telah di scan")
 				} else {
+					console.log(items)
 					if (items != []) {
 						for (let a = 0; a < items.length; a++) {
-							checkLimit = null;
+							checkLimit = null
+							console.log(itemData['item'][i]['itemId'], items[a]['item'])
 							if (itemData['item'][i]['itemId'] == items[a]['item']) {
 								for (let e = 0; e < itemLimit.length; e++) {
+									console.log(parseInt(itemLimit[e]['qty']), items[a]['quantity'])
 									if (itemLimit[e]['name'] == itemData['item'][i]['name']) {
 										if (parseInt(itemLimit[e]['qty']) >= items[a]['quantity']) {
-											checkLimit = 1;
-											break;
+											checkLimit = 1
+											break
 										}
 									}
+
 								}
-								break;
+								break
 							}
-							checkLimit = 2;
+							checkLimit = 2
 						}
 						if (checkLimit == 1) {
-							alert("Melebihi kapasitas");
+							alert("Melebihi kapasitas")
 						} else if (checkLimit == 2) {
-							alert("Item tidak ada dalam list");
+							alert("Item tidak ada dalam list")
 						} else {
 							$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
-							code.push($("#itemCode").val());
+							code.push($("#itemCode").val())
 
 							if (itemLimit.length == 0) {
 								itemLimit.push({
 									"name": itemData['item'][i]['name'],
 									"id": itemData['item'][i]['itemId'],
 									"qty": 1
-								});
+								})
 							} else {
 								for (let a = 0; a < itemLimit.length; a++) {
 									itemLimitExist = null
 									if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
-										itemLimit[a]['qty'] += 1;
-										itemLimitExist = 1;
-										break;
+										itemLimit[a]['qty'] += 1
+										itemLimitExist = 1
+										break
 									}
 								}
 								if (itemLimitExist != 1) {
@@ -254,32 +319,33 @@ $(document).ready(function () {
 										"name": itemData['item'][i]['name'],
 										"id": itemData['item'][i]['itemId'],
 										"qty": 1
-									});
+									})
 								}
 								$("#itemData").empty();
 								$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
 								for (let i = 0; i < itemLimit.length; i++) {
 									$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
 								}
+
 							}
 						}
 					} else {
 						$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
-						code.push($("#itemCode").val());
+						code.push($("#itemCode").val())
 
 						if (itemLimit.length == 0) {
 							itemLimit.push({
 								"name": itemData['item'][i]['name'],
 								"id": itemData['item'][i]['itemId'],
 								"qty": 1
-							});
+							})
 						} else {
 							for (let a = 0; a < itemLimit.length; a++) {
 								itemLimitExist = null
 								if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
-									itemLimit[a]['qty'] += 1;
-									itemLimitExist = 1;
-									break;
+									itemLimit[a]['qty'] += 1
+									itemLimitExist = 1
+									break
 								}
 							}
 							if (itemLimitExist != 1) {
@@ -287,52 +353,77 @@ $(document).ready(function () {
 									"name": itemData['item'][i]['name'],
 									"id": itemData['item'][i]['itemId'],
 									"qty": 1
-								});
+								})
 							}
 							$("#itemData").empty();
 							$("#itemData").append(`<tr><td style="font-weight:bold;">Item</td><td style="font-weight:bold;">Qty</td></tr>`);
 							for (let i = 0; i < itemLimit.length; i++) {
 								$("#itemData").append(`<tr><td>` + itemLimit[i]['name'] + `</td><td>` + itemLimit[i]['qty'] + `</td></tr>`);
 							}
+
 						}
 					}
+
+
 				}
 				itemExist = 1;
 				$("#itemCode").val("");
 				break;
 			} else {
-				itemExist = null;
+				itemExist = null
 			}
 		}
+
 		if (!itemExist) {
 			alert("Item tidak tersedia")
 			$("#itemCode").val("");
-			itemExist = null;
+			itemExist = null
 		}
 	});
+
+
+
+	/*
+	============================================================
+		fungsi untuk mengecek eksistensi binlocation
+	============================================================
+	*/
 	$("#binlocationCheckButton").click(function (e) {
 		e.preventDefault();
-		validation["binlocation"] = false;
+		validation["binlocation"] = false
+		console.log(itemData['binlocation'][1]['id'])
 		for (let i = 0; i < itemData['binlocation'].length; i++) {
+			console.log(itemData['binlocation'][i]['id'])
 			if ($("#binLocation").val() == itemData['binlocation'][i]['id']) {
-				alert("found");
-				binlocationExist = 1;
-				validation["binlocation"] = true;
+				alert("found")
+				binlocationExist = 1
+				validation["binlocation"] = true
 				break;
 			} else {
-				binlocationExist = null;
+				binlocationExist = null
 			}
 		}
 		if (!binlocationExist) {
-			alert("not found");
+			alert("not found")
 			$("#binLocation").val("");
-			binlocationExist = null;
+			binlocationExist = null
 		}
 	});
+
+
+
+
+
+
+	/*
+	============================================================
+		fungsi untuk mengecek dan mengambil data outbound	
+	============================================================
+	*/
 	$("#outboundCheckButton").click(function (e) {
 		e.preventDefault();
 		$(".overlay").show();
-		validation["outbound"] = false;
+		validation["outbound"] = false
 		$.ajax({
 			type: 'post',
 			url: '/app/storage/scanner/checkOutbound',
@@ -342,10 +433,13 @@ $(document).ready(function () {
 			},
 			success: function (response) {
 				if (typeof response['msg'] != "undefined") {
-					alert("Data tidak ditemukan");
+					alert("Data tidak ditemukan")
 					$("#outboundData").empty();
 					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
+					console.log(response)
+					customer = Object.values(response['customer'][0])
+					console.log(customer)
 					$("#outboundData").empty();
 					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
 					$("#outboundData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
@@ -354,20 +448,21 @@ $(document).ready(function () {
 					$("#outboundData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
 					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#outboundData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-					items = response['items'];
+					items = response['items']
 					for (let index = 0; index < items.length; index++) {
-						var itemName;
+						var itemName
 						for (let i = 0; i < itemData['itemlist'].length; i++) {
 							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
-								itemName = itemData['itemlist'][i]['name'];
-								break;
+								itemName = itemData['itemlist'][i]['name']
+								break
 							} else {
-								itemName = "undefined";
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
 							}
 						}
 						$("#outboundData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
-					validation["outbound"] = true;
+					validation["outbound"] = true
 					$("#itemCodeContainer").show();
 				}
 				$(".overlay").hide();
@@ -375,12 +470,14 @@ $(document).ready(function () {
 			fail: function (xhr, textStatus, errorThrown) {
 				alert('request failed');
 			}
+
+
 		});
 	});
 	$("#borrowCheckButton").click(function (e) {
 		e.preventDefault();
 		$(".overlay").show();
-		validation["borrow"] = false;
+		validation["borrow"] = false
 
 		$.ajax({
 			type: 'post',
@@ -396,6 +493,7 @@ $(document).ready(function () {
 					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
 					employee = Object.values(response['employee'][0])
+					console.log(employee)
 					$("#borrowData").empty();
 					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
 					$("#borrowData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
@@ -406,31 +504,35 @@ $(document).ready(function () {
 					$("#borrowData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
 					items = response['items']
 					for (let index = 0; index < items.length; index++) {
-						var itemName;
+						var itemName
 						for (let i = 0; i < itemData['itemlist'].length; i++) {
 							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
-								itemName = itemData['itemlist'][i]['name'];
-								break;
+								itemName = itemData['itemlist'][i]['name']
+								break
 							} else {
-								itemName = "undefined";
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
 							}
 						}
 						$("#borrowData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 					$("#itemCodeContainer").show();
-					validation["borrow"] = true;
+					validation["borrow"] = true
+
 				}
 				$(".overlay").hide();
 			},
 			fail: function (xhr, textStatus, errorThrown) {
 				alert('request failed');
 			}
+
+
 		});
 	});
 	$("#returnCheckButton").click(function (e) {
 		e.preventDefault();
 		$(".overlay").show();
-		validation["return"] = false;
+		validation["return"] = false
 		$.ajax({
 			type: 'post',
 			url: '/app/storage/scanner/checkReturn',
@@ -440,11 +542,13 @@ $(document).ready(function () {
 			},
 			success: function (response) {
 				if (typeof response['msg'] != "undefined") {
-					alert("Data tidak ditemukan");
+					alert("Data tidak ditemukan")
 					$("#returnData").empty();
 					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
-					customer = Object.values(response['customer'][0]);
+					console.log(response)
+					customer = Object.values(response['customer'][0])
+					console.log(customer)
 					$("#returnData").empty();
 					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
 					$("#returnData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
@@ -453,37 +557,48 @@ $(document).ready(function () {
 					$("#returnData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
 					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#returnData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-					items = response['items'];
+					items = response['items']
 					for (let index = 0; index < items.length; index++) {
-						var itemName;
+						var itemName
 						for (let i = 0; i < itemData['itemlist'].length; i++) {
 							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
-								itemName = itemData['itemlist'][i]['name'];
-								break;
+								itemName = itemData['itemlist'][i]['name']
+								break
 							} else {
-								itemName = "undefined";
+								console.log(itemData['itemlist'][i]['id'], items[index]['item'])
+								itemName = "undefined"
 							}
 						}
 						$("#returnData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 
 					$("#itemCodeContainer").show();
-					validation["return"] = true;
+					validation["return"] = true
 				}
 				$(".overlay").hide();
 			},
 			fail: function (xhr, textStatus, errorThrown) {
 				alert('request failed');
 			}
+
+
 		});
 	});
+
+
+
+	/*
+	============================================================
+		fungsi untuk mengecek dan mengambil data outbound	
+	============================================================
+	*/
 	$("#confirmButton").click(function (e) {
 		e.preventDefault();
 		if ($("#action").val() == "inbound") {
 			if (!validation["binlocation"]) {
-				alert("Data Invalid, Binlocation belum di check");
+				alert("Data Invalid, Binlocation belum di check")
 			} else if (code == "") {
-				alert("Data Invalid, belum ada item yang di scan");
+				alert("Data Invalid, belum ada item yang di scan")
 			} else {
 				$(".overlay").show();
 				$.ajax({
@@ -497,10 +612,10 @@ $(document).ready(function () {
 					success: function (response) {
 						if (response['binlocation'] == "" || response['itemCode'] == "") {
 							$(".overlay").hide();
-							alert("error data kosong/tidak ditemukan");
+							alert("error data kosong/tidak ditemukan")
 						} else {
 							$(".overlay").hide();
-							alert("inbound berhasil");
+							alert("inbound berhasil")
 						}
 					},
 					fail: function (xhr, textStatus, errorThrown) {
@@ -511,11 +626,13 @@ $(document).ready(function () {
 				code = [];
 				$("#binLocation").val("");
 			}
+
+
 		} else if ($("#action").val() == "move") {
 			if (!validation["binlocation"]) {
-				alert("Data Invalid, Binlocation belum di check");
+				alert("Data Invalid, Binlocation belum di check")
 			} else if (code == "") {
-				alert("Data Invalid, belum ada item yang di scan");
+				alert("Data Invalid, belum ada item yang di scan")
 			} else {
 				$(".overlay").show();
 				$.ajax({
@@ -529,7 +646,7 @@ $(document).ready(function () {
 					success: function (response) {
 						if (response['binlocation'] == "" || response['itemCode'] == "") {
 							$(".overlay").hide();
-							alert("error data kosong/tidak ditemukan");
+							alert("error data kosong/tidak ditemukan")
 						} else {
 							$(".overlay").hide();
 							alert("move barang berhasil")
@@ -548,16 +665,16 @@ $(document).ready(function () {
 		} else if ($("#action").val() == "outbound") {
 			qtyLimit = null
 			if (!validation["outbound"]) {
-				alert("Data Invalid, Outbound id belum di check");
+				alert("Data Invalid, Outbound id belum di check")
 			} else if (code == "") {
-				alert("Data Invalid, belum ada item yang di scan");
+				alert("Data Invalid, belum ada item yang di scan")
 			} else {
 				if (itemLimit.length == items.length) {
 					for (let a = 0; a < items.length; a++) {
 						for (let i = 0; i < itemLimit.length; i++) {
 							if (itemLimit[i]['id'] == items[a]['item']) {
 								if (itemLimit[i]['qty'] != items[a]['quantity']) {
-									qtyLimit = 1;
+									qtyLimit = 1
 								}
 							}
 						}
@@ -575,10 +692,10 @@ $(document).ready(function () {
 							success: function (response) {
 								if (response['outboundId'] == "" || response['itemCode'] == "") {
 									$(".overlay").hide();
-									alert("error data kosong/tidak ditemukan");
+									alert("error data kosong/tidak ditemukan")
 								} else {
 									$(".overlay").hide();
-									alert("Outbound berhasil");
+									alert("Outbound berhasil")
 								}
 							},
 							fail: function (xhr, textStatus, errorThrown) {
@@ -590,26 +707,29 @@ $(document).ready(function () {
 						itemLimit = [];
 						items = [];
 					} else {
-						alert("jumlah item tidak sesuai");
+						alert("jumlah item tidak sesuai")
 					}
+
 				} else {
-					alert("jumlah item tidak sesuai");
+					alert("jumlah item tidak sesuai")
 				}
+
+
 			}
 
 		} else if ($("#action").val() == "return") {
-			qtyLimit = null;
+			qtyLimit = null
 			if (!validation["return"]) {
-				alert("Data Invalid, return id belum di check");
+				alert("Data Invalid, return id belum di check")
 			} else if (code == "") {
-				alert("Data Invalid, belum ada item yang di scan");
+				alert("Data Invalid, belum ada item yang di scan")
 			} else {
 				if (itemLimit.length == items.length) {
 					for (let a = 0; a < items.length; a++) {
 						for (let i = 0; i < itemLimit.length; i++) {
 							if (itemLimit[i]['id'] == items[a]['item']) {
 								if (itemLimit[i]['qty'] != items[a]['quantity']) {
-									qtyLimit = 1;
+									qtyLimit = 1
 								}
 							}
 						}
@@ -627,10 +747,10 @@ $(document).ready(function () {
 							success: function (response) {
 								if (response['returnId'] == "" || response['itemCode'] == "") {
 									$(".overlay").hide();
-									alert("error data kosong/tidak ditemukan");
+									alert("error data kosong/tidak ditemukan")
 								} else {
 									$(".overlay").hide();
-									alert("return berhasil");
+									alert("return berhasil")
 								}
 							},
 							fail: function (xhr, textStatus, errorThrown) {
@@ -642,26 +762,28 @@ $(document).ready(function () {
 						itemLimit = [];
 						items = [];
 					} else {
-						alert("jumlah item tidak sesuai");
+						alert("jumlah item tidak sesuai")
 					}
 
 				} else {
-					alert("jumlah item tidak sesuai");
+					alert("jumlah item tidak sesuai")
 				}
+
+
 			}
 		} else if ($("#action").val() == "borrow") {
 			qtyLimit = null
 			if (!validation["borrow"]) {
-				alert("Data Invalid, borrow id belum di check");
+				alert("Data Invalid, borrow id belum di check")
 			} else if (code == "") {
-				alert("Data Invalid, belum ada item yang di scan");
+				alert("Data Invalid, belum ada item yang di scan")
 			} else {
 				if (itemLimit.length == items.length) {
 					for (let a = 0; a < items.length; a++) {
 						for (let i = 0; i < itemLimit.length; i++) {
 							if (itemLimit[i]['id'] == items[a]['item']) {
 								if (itemLimit[i]['qty'] != items[a]['quantity']) {
-									qtyLimit = 1;
+									qtyLimit = 1
 								}
 							}
 						}
@@ -679,10 +801,10 @@ $(document).ready(function () {
 							success: function (response) {
 								if (response['borrowCode'] == "" || response['itemCode'] == "") {
 									$(".overlay").hide();
-									alert("error data kosong/tidak ditemukan");
+									alert("error data kosong/tidak ditemukan")
 								} else {
 									$(".overlay").hide();
-									alert("borrow berhasil");
+									alert("borrow berhasil")
 								}
 							},
 							fail: function (xhr, textStatus, errorThrown) {
@@ -694,16 +816,19 @@ $(document).ready(function () {
 						itemLimit = [];
 						items = [];
 					} else {
-						alert("jumlah item tidak sesuai");
+						alert("jumlah item tidak sesuai")
 					}
 
 				} else {
-					alert("jumlah item tidak sesuai");
+					alert("jumlah item tidak sesuai")
 				}
+
+
 			}
 		} else {
-			alert("Select option");
+			alert("Select option")
 		}
+
 	});
 	$("#clearButton").click(function (e) {
 		e.preventDefault();
@@ -713,10 +838,13 @@ $(document).ready(function () {
 			$("#outboundId").val("");
 			$("#borrowCode").val("");
 			$("#returnCode").val("");
-			items = [];
-			code = [];
-			itemLimit = [];
+			items = []
+			code = []
+			itemLimit = []
 			$("#itemData").append(`<tr><td>none</td></tr>`);
 		}
+
 	});
+
+
 });

@@ -450,8 +450,6 @@ def inbound_data(request, id=0):
                                 j = 0
                                 print('HELLO')
                                 while j < len(qtyInbounddata):
-                                    print(qtyInbounddata[j][0])
-                                    print(formitem)
                                     if qtyInbounddata[j][0] == formitem:
                                         InData = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['inbound_id'],userGroup=request.session['usergroup'], deleted=0)
                                         print(InData)
