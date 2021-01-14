@@ -38,6 +38,7 @@ class UserGroup(External):
     limit = models.DateField(default="1000-10-10")
     email = models.EmailField(max_length=254, unique=True, null=True)
     password = models.CharField(max_length=100, null=True)
+    active = models.CharField(max_length=1, default=0)
 
 
 class Category(models.Model):
@@ -55,6 +56,7 @@ class Subcategory(models.Model):
     deleted = models.CharField(max_length=1, default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     subcategory = models.CharField(max_length=50, default="NULL")
+    size = models.CharField(max_length=50, null=True)
 
 
 class Item(models.Model):

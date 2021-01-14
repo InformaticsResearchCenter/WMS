@@ -157,6 +157,9 @@ def categoryDelete(request, id):
             Category.objects.filter(
                 pk=id, userGroup=request.session['usergroup']).update(deleted=1)
             return redirect('categoryIndex')
+            # Subcategory.objects.filter(
+            #     category
+            # )
 
 
 # ============================= SUBCATEGORY =================================
@@ -171,7 +174,7 @@ def subcategoryIndex(request, id):
             'role': request.session['role'],
             'username': request.session['username'],
             'title': 'Subcategory | Inbound',
-            'subcategory': Subcategory.objects.filter(deleted=0, userGroup=request.session['usergroup'], category=id).values('id', 'subcategory', 'category_id')
+            'subcategory': Subcategory.objects.filter(deleted=0, userGroup=request.session['usergroup'], category=id).values('id', 'subcategory', 'category_id', 'size')
         }
         return render(request, 'inside/wmsInbound/subcategoryIndex.html', context)
 
@@ -397,7 +400,7 @@ def inbound_data(request, id=0):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
-            item = Item.objects.all()
+            item = Item.objects.filter(userGroup=request.session['usergroup'], deleted=0).all() 
             if request.method == "GET":
                 if id == 0:
                     context = {

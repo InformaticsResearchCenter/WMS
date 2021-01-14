@@ -49,6 +49,7 @@ class SubcategoryForm(forms.ModelForm):
             'subcategory',
             'category',
             'userGroup',
+            'size'
         ]
 
 
