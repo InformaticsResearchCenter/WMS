@@ -9,6 +9,7 @@ class External(models.Model):
     districts = models.CharField(max_length=50, default="NULL")
     city = models.CharField(max_length=50, default="NULL")
     province = models.CharField(max_length=50, default="NULL")
+    village = models.CharField(max_length=50, default="NULL")
 
     class Meta:
         abstract = True
@@ -39,6 +40,12 @@ class UserGroup(External):
     email = models.EmailField(max_length=254, unique=True, null=True)
     password = models.CharField(max_length=100, null=True)
     active = models.CharField(max_length=1, default=0)
+    imageCompany = models.CharField(max_length=100, default="NULL")
+    nameCompany = models.CharField(max_length=50, default="NULL")
+    addressCompany = models.TextField(default="NULL")
+    namaOperator = models.CharField(max_length=50, default="NULL")
+    profileOperator = models.CharField(max_length=100, default="NULL")
+    
 
 
 class Category(models.Model):

@@ -9,6 +9,18 @@ from django.contrib import messages
 from sequences import get_next_value
 from WMS.forms import UserForm
 
+def view_user(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        user = User.objects.get(pk=id)
+        form = UserForm(instance=user)
+        context = {
+            'form': form,
+            'user': user,
+            'title': 'Detail User'
+        }
+        return render(request, 'inside/wmsUser/detail_user.html', context)
 
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):

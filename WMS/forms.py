@@ -17,6 +17,10 @@ class UserForm(forms.ModelForm):
             'name',
             'postalCode',
             'phoneNumber',
+            'address',
+            'districts',
+            'city',
+            'province',
         ]
 
 
@@ -60,9 +64,13 @@ class SupplierForm(forms.ModelForm):
             'id',
             'name',
             'email',
+            'address',
             'phoneNumber',
             'postalCode',
             'userGroup',
+            'districts',
+            'city',
+            'province',
         ]
 
 class CustomerForm(forms.ModelForm):

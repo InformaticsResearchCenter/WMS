@@ -36,7 +36,7 @@
                         <td>{{ list.postalCode }}</td>
                         <td>{{ list.username }}</td>
                         <td>{{ list.role_id }}</td>
-                        <td><a href="#">View</a></td>
+                        <td><a href="{% url 'view_user' list.id %}">View</a></td>
                         <td>
                             <a href="{% url 'userUpdate' list.id %}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Update</a>
                             {% if list.role_id != 'MAN' %}
