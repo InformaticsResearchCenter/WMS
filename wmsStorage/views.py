@@ -41,7 +41,23 @@ def getItemData(request):
     return JsonResponse({'name':name,'qty':qty})
 
 def getStockOpname(request):
-    inbound=request.POST.get('inbound',None)
+    inboundId=request.POST.get('inbound',None)
+    inbound = Binlocation.objects.filter(pk=inboundId,deleted=0).values()
+    inbounddata = InboundData.objects.filter(inbound=inboundId,deleted=0).values()
+    item = []
+    for i in inbounddata:
+        ref = list(ItemData.objects.filter(inbound=i['id'],deleted=0).values())
+        for e in ref:
+            item.append(e)
+    
+    print(inbound)
+    print(inbounddata)
+    print(item)
+    a=0
+    for i in item:
+        print(i)
+        a+=1
+    print(a)
     return JsonResponse({"@@":"a"},status = 200)
 
 

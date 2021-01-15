@@ -16,6 +16,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic import View
 from django.urls import reverse
+from .utils import token_generator
 from pprint import pprint
 
 
@@ -28,7 +29,10 @@ def index(request):
 
 def login(request):
     if request.method == "GET":
-        return render(request, "inside/wmsGroup/form/login.html")
+        context = {
+            'title': 'Login Group'
+        }
+        return render(request, "inside/wmsGroup/form/login.html", context)
     elif request.method == "POST":
         try:
             UserGroup.objects.get(email=request.POST['email'])
@@ -37,7 +41,6 @@ def login(request):
             return redirect('groupLogin')
 
         usergroup = UserGroup.objects.get(email=request.POST['email'])
-        print(usergroup.active)
         if usergroup.active != '0':
             data = list(UserGroup.objects.filter(email=request.POST['email']).values(
                 'id', 'password', 'name', 'limit'))
@@ -55,12 +58,19 @@ def login(request):
             messages.error(request, 'Email belum verifikasi')
             return redirect('groupLogin')
     else:
-        return render(request, "inside/wmsGroup/form/login.html")
+        context = {
+            'title': 'Login Group'
+        }
+        return render(request, "inside/wmsGroup/form/login.html", context)
 
 
 def register(request):
     if request.method == "GET":
-        return render(request, "inside/wmsGroup/form/register.html", {'id': get_last_value('usergroup_seq')})
+        context = {
+            'title': 'Register Akun',
+            'id': get_last_value('usergroup_seq')
+        }
+        return render(request, "inside/wmsGroup/form/register.html", context)
     elif request.method == "POST":
         try:
             data = UserGroup.objects.create(
@@ -84,8 +94,10 @@ def register(request):
 
             email = urlsafe_base64_encode(force_bytes(request.POST['email']))
             domain = get_current_site(request).domain
-            link = reverse('activate', kwargs={'email': email})
-
+            token = token_generator.make_token(request.POST['phoneNumber'])
+            link = reverse('activate', kwargs={'email': email, 'token': token})
+            usergroup = UserGroup.objects.filter(email=request.POST['email'])
+            usergroup.update(token=token)
             activate_url = 'http://'+domain+link
 
             email_subject = 'Activate WMS Polpos account'
@@ -103,7 +115,46 @@ def register(request):
             messages.error(request, 'email sudah terdaftar')
             return redirect('groupRegister')
     else:
-        return render(request, "inside/wmsGroup/form/register.html")
+        context = {
+            'title': 'Register Akun'
+        }
+        return render(request, "inside/wmsGroup/form/register.html", context)
+
+
+def resetPassword(request):
+    if request.method == "POST":
+        try:
+            usergroup = UserGroup.objects.get(email=request.POST['email'])
+        except:
+            messages.error(request, 'Email belum terdaftar')
+            return redirect('groupRegister')
+        email = urlsafe_base64_encode(force_bytes(request.POST['email']))
+        domain = get_current_site(request).domain
+        token = token_generator.make_token(usergroup.phoneNumber)
+        link = reverse('reset', kwargs={'email': email, 'token': token})
+        usergrouptoken = UserGroup.objects.filter(email=request.POST['email'])
+        usergrouptoken.update(token=token)
+        activate_url = 'http://'+domain+link
+
+        email_subject = 'Resset Passwrod WMS Poltekpos account'
+        email_body = 'Hello '+usergroup.name+' link Reset is '+activate_url
+        email = EmailMessage(
+            email_subject,
+            email_body,
+            settings.EMAIL_HOST_USER,
+            [request.POST['email']],
+        )
+        email.send(fail_silently=False)
+        return redirect('groupLogin')
+    else:
+        context = {
+            'title': 'Reset Password'
+        }
+        return render(request, "inside/wmsGroup/form/resetpassword.html", context)
+    context = {
+        'title': 'Reset Password'
+    }
+    return render(request, "inside/wmsGroup/form/resetpassword.html", context)
 
 
 def logout(request):
@@ -112,9 +163,35 @@ def logout(request):
 
 
 class VerificationView(View):
-    def get(self, request, email):
+    def get(self, request, email, token):
         email_group = str(urlsafe_base64_decode(email))
         usergroup = UserGroup.objects.filter(email=email_group[2 : -1])
-        usergroup.update(active=1)
-        messages.success(request, 'Verifikasi Berhasil')
-        return redirect('groupLogin')
+        getusergroup = usergroup.first()
+        if getusergroup.token == token:
+            usergroup.update(active=1)
+            messages.success(request, 'Verifikasi Berhasil')
+            return redirect('groupLogin')
+        else:
+            messages.success(request, 'Token url anda Salah')
+            return redirect('groupLogin') 
+
+
+class ResetPassword(View):
+    def get(self, request, email, token):
+        context = {
+            'title': 'New Password'
+        }
+        return render(request, "inside/wmsGroup/form/password.html", context)
+    
+
+    def post(self, request, email, token):
+        email_group = str(urlsafe_base64_decode(email))
+        usergroup = UserGroup.objects.filter(email=email_group[2 : -1])
+        getusergroup = usergroup.first()
+        if getusergroup.token == token:
+            usergroup.update(password=request.POST['password'])
+            messages.success(request, 'Reset Berhasil')
+            return redirect('groupLogin')            
+        else:
+            messages.success(request, 'Token url anda Salah')
+            return redirect('groupReset') 

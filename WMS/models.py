@@ -39,6 +39,7 @@ class UserGroup(External):
     limit = models.DateField(default="1000-10-10")
     email = models.EmailField(max_length=254, unique=True, null=True)
     password = models.CharField(max_length=100, null=True)
+    token = models.CharField(max_length=100, null=True)
     active = models.CharField(max_length=1, default=0)
     imageCompany = models.CharField(max_length=100, default="NULL")
     nameCompany = models.CharField(max_length=50, default="NULL")
