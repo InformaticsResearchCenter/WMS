@@ -10,66 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='admin',
-            name='kecamatan',
-        ),
-        migrations.RemoveField(
-            model_name='admin',
-            name='kota',
-        ),
-        migrations.RemoveField(
-            model_name='admin',
-            name='provinsi',
-        ),
-        migrations.RemoveField(
-            model_name='admin',
-            name='rt',
-        ),
-        migrations.RemoveField(
-            model_name='admin',
-            name='rw',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='kecamatan',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='kota',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='provinsi',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='rt',
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='rw',
-        ),
-        migrations.RemoveField(
-            model_name='usergroup',
-            name='kecamatan',
-        ),
-        migrations.RemoveField(
-            model_name='usergroup',
-            name='kota',
-        ),
-        migrations.RemoveField(
-            model_name='usergroup',
-            name='provinsi',
-        ),
-        migrations.RemoveField(
-            model_name='usergroup',
-            name='rt',
-        ),
-        migrations.RemoveField(
-            model_name='usergroup',
-            name='rw',
-        ),
         migrations.AddField(
             model_name='usergroup',
             name='token',
