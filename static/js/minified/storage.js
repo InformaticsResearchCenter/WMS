@@ -310,6 +310,22 @@ $(document).ready(function () {
 			itemExist = null;
 		}
 	});
+	$("#inboundCheckButton").click(function (e) {
+		e.preventDefault();
+		alert("kakoy")
+		$.ajax({
+			type: "post",
+			url: "/app/storage/scanner/getStockOpname",
+			data: {
+				inbound: $("#inboundId").val(),
+				csrfmiddlewaretoken: csrf
+			},
+			success: function (response) {
+
+			}
+		});
+
+	});
 	$("#binlocationCheckButton").click(function (e) {
 		e.preventDefault();
 		validation["binlocation"] = false;

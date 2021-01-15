@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     path('item/', views.getItemData, name="itemdata"),
     path('scanner/', views.scanner, name="scanner"),
+    path('scanner/getStockOpname', views.getStockOpname, name="stockopname"),
     path('scanner/getScannerData', views.getScannerData, name="scannerdata"),
     path('scanner/checkOutbound', views.getOutboundData, name="outbounddata"),
     path('scanner/checkReturn', views.getReturnData, name="returndata"),
