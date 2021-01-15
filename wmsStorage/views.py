@@ -41,23 +41,26 @@ def getItemData(request):
     return JsonResponse({'name':name,'qty':qty})
 
 def getStockOpname(request):
-    inboundId=request.POST.get('inbound',None)
-    inbound = Binlocation.objects.filter(pk=inboundId,deleted=0).values()
-    inbounddata = InboundData.objects.filter(inbound=inboundId,deleted=0).values()
-    item = []
-    for i in inbounddata:
-        ref = list(ItemData.objects.filter(inbound=i['id'],deleted=0).values())
-        for e in ref:
-            item.append(e)
-    
-    print(inbound)
-    print(inbounddata)
-    print(item)
-    a=0
-    for i in item:
-        print(i)
-        a+=1
-    print(a)
+    rackId=request.POST.get('inbound',None)
+    print(rackId)
+    rack = Rack.objects.filter(pk=rackId, userGroup=request.session['usergroup'], deleted=0).values()
+    bin = Binlocation.objects.filter(rack=rackId).values()
+    print(rack)
+    print(bin)
+    itemBulk=[]
+    quantity=0
+    for a in bin:
+        item = ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values()
+        for b in item:
+            ibd = InboundData.objects.filter( pk=b['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values('item__name')
+            print(ibd)
+            b['name'] = ibd[0]['item__name']
+            itemBulk.append(b)
+            quantity+=1
+    print("here we go")
+    print(itemBulk)
+    print("quantity")
+    print(quantity)
     return JsonResponse({"@@":"a"},status = 200)
 
 
