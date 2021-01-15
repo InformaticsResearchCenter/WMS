@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.db.models import Max
 from django.http import JsonResponse,HttpResponse
 from json import dumps, loads
+from collections import Counter
 
 def scanner(request):
     context = {
@@ -42,21 +43,25 @@ def getItemData(request):
 
 def getStockOpname(request):
     rackId=request.POST.get('inbound',None)
-    print(rackId)
     rack = Rack.objects.filter(pk=rackId, userGroup=request.session['usergroup'], deleted=0).values()
     bin = Binlocation.objects.filter(rack=rackId).values()
-    print(rack)
-    print(bin)
     itemBulk=[]
+    rawItem=[]
     quantity=0
     for a in bin:
         item = ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values()
         for b in item:
             ibd = InboundData.objects.filter( pk=b['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values('item__name')
             print(ibd)
+            rawItem.append(ibd[0]['item__name'])
             b['name'] = ibd[0]['item__name']
             itemBulk.append(b)
             quantity+=1
+    
+    
+    
+    print("Raw Item")
+    print(Counter(rawItem))
     print("here we go")
     print(itemBulk)
     print("quantity")
