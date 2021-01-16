@@ -116,6 +116,7 @@ class RackForm(forms.ModelForm):
         model = Rack
         fields = [
             'id',
+            'rack',
             'userGroup',
         ]
 

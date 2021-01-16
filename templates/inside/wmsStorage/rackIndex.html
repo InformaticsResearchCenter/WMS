@@ -22,8 +22,8 @@
             <tbody>
                 {% for r in rack %}
                 <tr>
-                    <th scope="row">1</th>
-                    <td>{{r.id}}</td>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{r.rack}}</td>
                     <td>{{r.numbin}}</td>
                     <td>
                         <a href="{% url 'rackView' r.id %}" class="btn btn-primary btn-sm" role="button"

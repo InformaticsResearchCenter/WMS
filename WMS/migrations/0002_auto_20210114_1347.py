@@ -10,44 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='customer',
-            name='kecamatan',
-        ),
-        migrations.RemoveField(
-            model_name='customer',
-            name='kota',
-        ),
-        migrations.RemoveField(
-            model_name='customer',
-            name='provinsi',
-        ),
-        migrations.RemoveField(
-            model_name='customer',
-            name='rt',
-        ),
-        migrations.RemoveField(
-            model_name='customer',
-            name='rw',
-        ),
-        migrations.RemoveField(
-            model_name='supplier',
-            name='kecamatan',
-        ),
-        migrations.RemoveField(
-            model_name='supplier',
-            name='kota',
-        ),
-        migrations.RemoveField(
-            model_name='supplier',
-            name='provinsi',
-        ),
-        migrations.RemoveField(
-            model_name='supplier',
-            name='rt',
-        ),
-        migrations.RemoveField(
-            model_name='supplier',
-            name='rw',
-        ),
     ]

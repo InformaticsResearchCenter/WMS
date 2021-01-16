@@ -10,9 +10,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='usergroup',
-            name='token',
-            field=models.CharField(max_length=100, null=True),
-        ),
+
     ]
