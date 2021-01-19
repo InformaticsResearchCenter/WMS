@@ -14,10 +14,28 @@
                 {% csrf_token %}
                 <div class="row justify-content-left">
                     <div class="col-7">
-                        <div class="form-group">
-                            <label for="id">Id Rack</label>
-                            <input type="text" class="form-control" name="id" id="id"
-                                placeholder="Input Id Rack">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="id">Rack Name</label>
+                                    <input type="text" class="form-control" name="rack" id="rack"
+                                        placeholder="Input Id Rack">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="row">Row</label>
+                                    <input type="text" class="form-control" name="row" id="row"
+                                        placeholder="Input Number of row">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="col">Col</label>
+                                    <input type="text" class="form-control" name="col" id="col"
+                                        placeholder="Input Number of col">
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="row">Row</label>
@@ -42,6 +60,10 @@
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="userGroup" id="userGroup"
                                     value="{{group_id}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="id" id="id"
+                                    value="{{id}}">
                             </div>
                         </div>
                     </div>

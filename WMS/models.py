@@ -259,14 +259,16 @@ class CostumerReturnData(models.Model):
 
 
 class Rack(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    rack = models.CharField(max_length=50, null=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
-    id = models.CharField(max_length=10, primary_key=True)
 
 
 class Binlocation(models.Model):
-    id = models.CharField(primary_key=True, max_length=5, default="NULL")
+    id = models.AutoField(primary_key=True)
+    binlocation = models.CharField(max_length=50, null=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)

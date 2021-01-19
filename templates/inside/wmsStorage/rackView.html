@@ -19,8 +19,8 @@
             <tbody>
                 {% for b in binlocation %}
                 <tr>
-                    <th scope="row">1</th>
-                    <td><b>{{b.id}}</b></td>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td><b>{{b.binlocation}}</b></td>
                     <td>{{b.capacity}}</td>
                 </tr>
                 {% endfor %}

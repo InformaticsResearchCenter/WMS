@@ -160,6 +160,7 @@ from category.utils import render_to_pdf
 from django.http import HttpResponse
 from django.views.generic import View
 from django.shortcuts import get_list_or_404, get_object_or_404
+from sequences import get_next_value, get_last_value
 
 
 # ===================================== RACK =========================================
@@ -190,21 +191,25 @@ def rack(request):
                     'role': request.session['role'],
                     'group_id': request.session['usergroup'],
                     'username': request.session['username'],
+                    'id': get_last_value('rack_seq'),
                     'title': 'Add Rack',
                 }
                 return render(request, 'inside/wmsStorage/rackCreate.html', context)
             else:
                 form = RackForm(request.POST)
+                print('1')
                 if form.is_valid():
+                    print('2')
                     form.save()
                     numberbin = int(
                         request.POST['row']) * int(request.POST['col'])
                     data_bin = []
                     for i in range(int(numberbin)):
-                        bin_id = request.POST['id']+(str(i+1))
-                        data_bin.append(Binlocation(id=bin_id, rack=Rack.objects.get(pk=request.POST['id']),
+                        binlocation = request.POST['rack']+(str(i+1))
+                        data_bin.append(Binlocation(binlocation=binlocation, rack=Rack.objects.get(pk=request.POST['id']),
                                                     capacity=request.POST['capacity'], userGroup=UserGroup.objects.get(pk=request.session['usergroup'])))
                     Binlocation.objects.bulk_create(data_bin)
+                    get_next_value('rack_seq')
                     return redirect('rackIndex')
 
             return render(request, 'inside/wmsStorage/rackIndex.html')
@@ -238,7 +243,7 @@ class PdfRack(View):
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Rack, pk=kwargs['pk'])
         datas = list(Binlocation.objects.all().select_related(
-            'Rack').filter(rack=obj).values_list('id', 'rack__id', 'capacity'))
+            'Rack').filter(rack=obj).values_list('binlocation', 'rack__rack', 'capacity'))
         pdf = render_to_pdf('inside/wmsStorage/pdf_rack.html', {
                             'datas': datas, 'obj': obj})
         if pdf:
