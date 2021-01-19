@@ -1,0 +1,52 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+        <h2>Data Supplier</h2>
+        <hr>
+        <div class="card">
+          <div class="card-header">
+            {% if role != 'OPR' %}
+            <a href="{% url 'add_supplier' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Add
+            Supplier</a>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">Usergroup id</th>
+              <th scope="col">Name Operator</th>
+              <th scope="col">ImageCompany</th>
+              <th scope="col">ImageOperator</th>
+              <th scope="col">Detail</th>
+              {% if role != 'OPR' %}
+              <th scope="col">Action</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in usergroup %}
+            <tr>
+              <th scope="row">1</th>
+              <td>{{ list.id }}</td>
+              <td>{{ list.name }}</td>
+              <td>{{ list.imageCompany.url }}</td>
+              <td>{{ list.profileOperator }}</td>
+              <td><a href="" class="btn btn-primary btn-sm"role="button">View</a></td>
+              {% if role != 'OPR' %}
+              <td>
+                  <a href="{% url 'update_supplier' list.id %}" class="btn btn-success btn-sm"role="button" aria-pressed="true">Update</a>
+                  <a href=""><button class="btn btn-danger btn-sm">Delete</button></a>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

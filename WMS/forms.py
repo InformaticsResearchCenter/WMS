@@ -21,6 +21,7 @@ class UserForm(forms.ModelForm):
             'districts',
             'city',
             'province',
+            'village',
         ]
 
 
@@ -71,6 +72,7 @@ class SupplierForm(forms.ModelForm):
             'districts',
             'city',
             'province',
+            'village',
         ]
 
 class CustomerForm(forms.ModelForm):
@@ -80,9 +82,14 @@ class CustomerForm(forms.ModelForm):
             'id',
             'name',
             'email',
+            'address',
             'phoneNumber',
             'postalCode',
             'userGroup',
+            'districts',
+            'city',
+            'province',
+            'village',
         ]        
 
 
@@ -132,6 +139,7 @@ class OutboundForm(forms.ModelForm):
             'confirm',
             'create',
             'userGroup',
+            'customer',
         ]
 
 
