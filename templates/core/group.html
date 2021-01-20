@@ -43,7 +43,7 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="{% url 'home' %}" class="nav-link">Home</a>
+          <a href="{% url 'groupIndex' %}" class="nav-link">Home</a>
         </li>
 
       </ul>
@@ -70,11 +70,13 @@
         <span class="brand-text font-weight-light">WMS POLTEKPOS</span>
       </a>
 
+      
       <!-- Sidebar -->
       <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="info text-light">
+            
           </div>
         </div>
 
@@ -85,7 +87,9 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-
+              <div class="col-sm-6">
+                            <button class="btn btn-primary"><a href="{% url 'edit_userGroup' %}">Edit Profile</button>
+                        </div>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

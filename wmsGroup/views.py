@@ -30,6 +30,25 @@ def main_usergroup(request):
         }
         return render(request, "inside/wmsGroup/data_usergroup.html", context)
 
+def edit_usergroup(request, id=0):
+    if request.method == "GET":
+        # usergroup = UserGroup.objects.get(pk=id)
+        context = {
+            # 'form': UserGroupForm(instance=usergroup),
+            # 'usergroup': usergroup,
+            # 'group_id': request.session['usergroup'],
+            'title': 'Update usergroup | usergroup'
+        }
+        return render(request, 'inside/wmsGroup/form/edit_usergroup.html', context)
+    else:
+        #     usergroup = UserGroup.objects.get(pk=id)
+        #     form = UserGroupForm(request.POST, instance=usergroup)
+        # if form.is_valid():
+        #     form.save()
+        #     print(form.save())
+        return render(request, 'inside/wmsGroup/form/edit_usergroup.html')        
+
+
 def index(request):
     if 'group_is_login' in request.session:
         return render(request, "inside/wmsGroup/content/index.html")

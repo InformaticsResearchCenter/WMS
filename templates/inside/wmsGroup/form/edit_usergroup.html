@@ -1,0 +1,104 @@
+{% extends 'core/group.html' %}
+{% load static %}
+
+{% block content %}
+<div id="content" class="p-4 p-md-5">
+    <h2>Update Profile</h2>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            Update Data Profile
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {%csrf_token%}
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label for="category">Id</label>
+                            <input type="text" readonly="true" class="form-control" name="id" id="id"
+                                value="{{supplier.id}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">imageCompany</label>
+                            <input type="file" class="form-control" name="imageCompany" id="imageCompany" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Nama Company</label>
+                            <input type="text" class="form-control" name="nameCompany" id="nameCompany" value=""
+                                placeholder="Input Name Company">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Address Company</label>
+                            <textarea class="form-control" name="addressCompany" id="addressCompany"
+                                value="" placeholder="Address Company"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Province</label>
+                            <input type="text" class="form-control" name="province" id="province" value=""
+                                placeholder="Province">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">City</label>
+                            <input type="text" class="form-control" name="city" id="city" value=""
+                                placeholder="City">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Districts</label>
+                            <input type="text" class="form-control" name="districts" id="districts" value=""
+                                placeholder="Districts">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Village</label>
+                            <input type="text" class="form-control" name="village" id="village" value=""
+                                placeholder="Village">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Address</label>
+                            <textarea type="text" class="form-control" name="address" id="address"
+                                value="" placeholder="Input Address"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">PostalCode</label>
+                            <input type="text" class="form-control" name="postalCode" id="postalCode"
+                                value="" placeholder="Input PostalCode">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Phone Number</label>
+                            <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
+                                value="" placeholder="Input PostalCode">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Email</label>
+                            <input type="email" class="form-control" name="email" id="email"
+                                value="" placeholder="Input Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Nama Operator</label>
+                            <input type="text" class="form-control" name="namaOperator" id="namaOperator"
+                                value="" placeholder="Input PostalCode">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Name</label>
+                            <input type="text" class="form-control" name="name" id="name"
+                                value="" placeholder="Input Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Profile Operator</label>
+                            <input type="file" class="form-control" name="profileOperator" id="profileOperator"
+                                value="" placeholder="Input Profile Operator">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">PostalCode</label>
+                            <input type="text" class="form-control" name="password" id="password"
+                                value="" placeholder="Input password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </form>
+            <a href="{% url 'list_supplier' %}"><button type="submit" class="btn btn-success">Back</button></a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
