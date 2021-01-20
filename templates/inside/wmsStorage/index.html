@@ -31,20 +31,25 @@
                 </div>
             <!-- /.card-header -->
                 <div class="card-body">
+                <input type="button" name="" value="view document detail" id="UniversalViewButton" data-toggle="modal"
+                            data-target="#UniversalModal">
+                <input type="button" name="" value="View scanned item" id="itemViewButton" data-toggle="modal"
+                            data-target="#itemModal">
 
-                    <div id="inboundIdContainer">
-                        <input type="text" name="" id="inboundId" placeholder="Click to Scan - inbound ID">
-                        <input type="button" name="" value="check" id="inboundCheckButton">
-                        <input type="button" name="" value="view" id="inboundViewButton" data-toggle="modal"
-                            data-target="#inboundModal">
-                        <input type="email" name="" id="">
+                    <div id="rackIdContainer">
+                        <input type="text" name="" id="rackId" placeholder="Click to Scan - rack ID">
+                        <input type="button" name="" value="check" id="rackCheckButton">
+
+                        <input type="text" name="" id="opnameId" placeholder="Click to Scan - Item ID">
+                        <input type="button" name="" value="broken" id="inputBrokenButton">
+                        <input type="button" name="" value="normal" id="inputNormalButton">
+                        
                     </div>
 
                     <div id="outboundIdContainer">
                         <input type="text" name="" id="outboundId" placeholder="Click to Scan - outbound ID">
                         <input type="button" name="" value="check" id="outboundCheckButton">
-                        <input type="button" name="" value="view" id="outboundViewButton" data-toggle="modal"
-                            data-target="#outboundModal">
+  
                     </div>
                     <div id="binLocationContainer">
                         <input type="text" name="" id="binLocation" placeholder="Click to Scan - Bin Location">
@@ -54,20 +59,17 @@
                     <div id="borrowCodeContainer">
                         <input type="text" name="" id="borrowCode" placeholder="Click to Scan - borrow code">
                         <input type="button" name="" value="check" id="borrowCheckButton">
-                        <input type="button" name="" value="View" id="borrowViewButton" data-toggle="modal"
-                            data-target="#borrowModal">
+
                     </div>
                     <div id="returnCodeContainer">
                         <input type="text" name="" id="returnCode" placeholder="Click to Scan - return code">
                         <input type="button" name="" value="check" id="returnCheckButton">
-                        <input type="button" name="" value="View" id="returnViewButton" data-toggle="modal"
-                            data-target="#returnModal">
+
                     </div>
                     <div id="itemCodeContainer">
                         <input type="text" name="" id="itemCode" placeholder="Click to Scan - Item code">
                         <input type="button" name="" value="Input" id="inputItem">
-                        <input type="button" name="" value="View" id="itemViewButton" data-toggle="modal"
-                            data-target="#itemModal">
+                        
                     </div>
                     <hr>
                     <div id="utilityContainer">
@@ -85,97 +87,22 @@
 </div>
 
 </div>
-<div class="modal fade" id="borrowModal" tabindex="-1" role="dialog" aria-labelledby="borrowModalTitle"
+<div class="modal fade" id="UniversalModal" tabindex="-1" role="dialog" aria-labelledby="UniversalModalTitle"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="borrowModalTitle">borrow data</h5>
+                <h5 class="modal-title" id="UniversalModalTitle">Universal data</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body mx-auto">
-                <table id="borrowData" border="1">
+                <table id="UniversalData" border="1">
                     <tr>
-                        <td>Qr borrow belum di check</td>
+                        <td>Qr document belum di check</td>
                     </tr>
                 </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalTitle"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="returnModalTitle">return data</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body mx-auto">
-                <table id="returnData" border="1">
-                    <tr>
-                        <td>Qr return belum di check</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="outboundModal" tabindex="-1" role="dialog" aria-labelledby="outboundModalTitle"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="outboundModalTitle">Outbound data</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body mx-auto">
-                <table id="outboundData" border="1">
-                    <tr>
-                        <td>Qr outbound belum di check</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="itemModalTitle">Scanned item</h5>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body mx-auto">
-                <table id="itemData" border="1">
-                    <tr>
-                        <td>None</td>
-                    </tr>
-                </table>
-                <hr>
-                <h3>item list</h3>
-                <ul id="data"></ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
