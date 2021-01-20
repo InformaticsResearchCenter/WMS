@@ -44,7 +44,6 @@ class UserGroup(External):
     imageCompany = models.CharField(max_length=100, default="NULL")
     nameCompany = models.CharField(max_length=50, default="NULL")
     addressCompany = models.TextField(default="NULL")
-    namaOperator = models.CharField(max_length=50, default="NULL")
     profileOperator = models.CharField(max_length=100, default="NULL")
     
 
