@@ -35,9 +35,9 @@
             {% for otb in Outbound %}
             <div class="col">
                 <h6><b>: {{otb.id}}</b></h6>
-                <h6><b>: {{otb.name}}</b></h6>
-                <h6><b>: {{otb.address}}</b></h6>
-                <h6><b>: {{otb.phoneNumber}}</b></h6>
+                <h6><b>: {{otb.customer.name}}</b></h6>
+                <h6><b>: {{otb.customer.address}}</b></h6>
+                <h6><b>: {{otb.customer.phoneNumber}}</b></h6>
                 <h6><b>: {{otb.date}}</b></h6>
                 <h6><b>: {{otb.get_status_display}}
                     </b></h6>

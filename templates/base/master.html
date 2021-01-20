@@ -134,6 +134,7 @@
                         {% endif %}
                     </ul>
                     </li>
+<<<<<<< HEAD
                         <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
@@ -168,6 +169,24 @@
                             </ul>
                         </li>
                         
+=======
+                    <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                Outbound
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'add_outbound' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Process Order</p>
+                                </a>
+                            </li>
+                        </ul>
+>>>>>>> 10aff4c6d3cb294aebb5c34aad5de45fe590d425
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'outbound' %}" class="nav-link">
@@ -268,11 +287,21 @@
                                     <p>Customer</p>
                                 </a>
                             </li>
+                            {% comment %} <li class="nav-item">
+                                <a href="{% url 'userGroup' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>UserGroup</p>
+                                </a>
+                            </li> {% endcomment %}
                         </ul>
                     </li>
                     {% if role == 'MAN' %}
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a href="{% url 'userIndex' %}" class="nav-link">
+=======
+                        <a href="{% url 'userIndex'%}" class="nav-link">
+>>>>>>> 10aff4c6d3cb294aebb5c34aad5de45fe590d425
                             <i class="nav-icon fas fa-file"></i>
                             <p>Management User</p>
                         </a>

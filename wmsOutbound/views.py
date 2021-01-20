@@ -28,11 +28,25 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 # ----------------------- Customer ---------------------
+def customer_detail(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        customer = Customer.objects.get(pk=id)
+        form = CustomerForm(instance=customer)
+        context = {
+            'form': form,
+            'customer': customer,
+            'title': 'Detail customer'
+        }
+        return render(request, 'inside/wmsOutbound/detail_customer.html', context)
+
 def main_customer(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
     else:
         context = {
+            'customer': Customer.objects.filter(deleted=0, userGroup=request.session['usergroup']),
             'role': request.session['role'],
             'username': request.session['username'],
             'title': 'Username | WMS Poltekpos'
@@ -49,11 +63,9 @@ def customer(request, id=0):
             if request.method == "GET":
                 if id == 0:
                     context = {
-                        'form': OutboundForm(),
-                        'title': 'Add Outbound | Outbound',
-                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
-                        'id_outbound_date': datetime.datetime.now().strftime("%d%m%Y"),
-                        'id_outbound': get_last_value('outbound_seq'),
+                        'form': CustomerForm(),
+                        'id_customer': get_last_value('customer_seq'),
+                        'title': 'Add Customer | Customer',
                         'role': request.session['role'],
                         'username': request.session['username'],
                         'group_id': request.session['usergroup'],
@@ -61,30 +73,38 @@ def customer(request, id=0):
                     }
                     return render(request, 'inside/wmsOutbound/customer.html', context)
                 else:
-                    outbound = Outbound.objects.get(pk=id)
+                    customer = Customer.objects.get(pk=id)
                     context = {
-                        'form': OutboundForm(instance=outbound),
-                        'outbound': outbound,
-                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                        'form': CustomerForm(instance=customer),
+                        'customer': customer,
                         'group_id': request.session['usergroup'],
-                        'role': request.session['role'],
-                        'username': request.session['username'],
-                        'title': 'Update Outbound | Outbound'
+                        'title': 'Update customer | customer'
                     }
                 return render(request, 'inside/wmsOutbound/update_customer.html', context)
             else:
                 if id == 0:
-                    form = OutboundForm(request.POST)
+                    form = CustomerForm(request.POST)
                 else:
-                    outbound = Outbound.objects.get(pk=id)
-                    form = OutboundForm(request.POST, instance=outbound)
+                    customer = Customer.objects.get(pk=id)
+                    form = CustomerForm(request.POST, instance=customer)
                 if form.is_valid():
                     form.save()
+                    print(form.save())
                     if id == 0:
-                        get_next_value('outbound_seq')
-                    return redirect('outbound')
+                        get_next_value('customer_seq')
+                    return redirect('customer')
             return render(request, 'inside/wmsOutbound/customer.html')        
 
+def delete_customer(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            customer = Customer.objects.get(pk=id)
+            customer.delete()
+            return redirect('customer')
 
 # ----------------------- Outbound ----------------------
 
@@ -114,6 +134,7 @@ def outbound(request, id=0):
                     context = {
                         'form': OutboundForm(),
                         'title': 'Add Outbound | Outbound',
+                        'customer': Customer.objects.filter(deleted=0, userGroup=request.session['usergroup']),
                         'date': datetime.datetime.now().strftime("%Y-%m-%d"),
                         'id_outbound_date': datetime.datetime.now().strftime("%d%m%Y"),
                         'id_outbound': get_last_value('outbound_seq'),

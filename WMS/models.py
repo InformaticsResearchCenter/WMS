@@ -41,10 +41,14 @@ class UserGroup(External):
     password = models.CharField(max_length=100, null=True)
     token = models.CharField(max_length=100, null=True)
     active = models.CharField(max_length=1, default=0)
-    imageCompany = models.CharField(max_length=100, default="NULL")
+    imageCompany = models.ImageField(null=True, blank=True, upload_to="images/")
     nameCompany = models.CharField(max_length=50, default="NULL")
     addressCompany = models.TextField(default="NULL")
+<<<<<<< HEAD
     profileOperator = models.CharField(max_length=100, default="NULL")
+=======
+    profileOperator = models.ImageField(null=True, blank=True, upload_to="images/")
+>>>>>>> 10aff4c6d3cb294aebb5c34aad5de45fe590d425
     
 
 

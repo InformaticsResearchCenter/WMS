@@ -18,9 +18,16 @@
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="id" id="id" value="OTB{{id_outbound_date}}{{id_outbound}}">
                         </div>
+                         <div class="form-group">
+                                <label for="supplier">Customer</label>
+                                <select class="form-control" name="customer" id="customer">
+                                    {% for customer in customer %}
+                                    <option value='{{customer.id}}'>{{customer.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         <div class="form-group">
-                            <label for="supplier">Date</label>
-                            <input type="text" class="form-control" name="date" id="date" value="{{date}}"
+                            <input type="hidden" class="form-control" name="date" id="date" value="{{date}}"
                                 readonly="true">
                         </div>
                         <div class="form-group">
@@ -29,9 +36,6 @@
                         </div>
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="confirm" id="confirm" value="{{con_cre}}">
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" name="customer" id="customer" value="">
                         </div>
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="create" id="create" value="{{con_cre}}">

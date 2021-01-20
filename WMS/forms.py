@@ -5,6 +5,26 @@ from WMS.models import User, Category, Subcategory
 from WMS.models import User, Category
 from WMS.models import User, Category
 
+class UserGroupForm(forms.ModelForm):
+    class Meta:
+        model = UserGroup
+        fields = [
+            'id',
+            'name',
+            'address',
+            'phoneNumber',
+            'postalCode',
+            'email',
+            'password',
+            'city',
+            'districts',
+            'province',
+            'addressCompany',
+            'imageCompany',
+            'nameCompany',
+            'profileOperator',
+            'village',
+        ]
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -21,6 +41,7 @@ class UserForm(forms.ModelForm):
             'districts',
             'city',
             'province',
+            'village',
         ]
 
 
@@ -71,6 +92,7 @@ class SupplierForm(forms.ModelForm):
             'districts',
             'city',
             'province',
+            'village',
         ]
 
 class CustomerForm(forms.ModelForm):
@@ -80,9 +102,14 @@ class CustomerForm(forms.ModelForm):
             'id',
             'name',
             'email',
+            'address',
             'phoneNumber',
             'postalCode',
             'userGroup',
+            'districts',
+            'city',
+            'province',
+            'village',
         ]        
 
 
@@ -133,6 +160,7 @@ class OutboundForm(forms.ModelForm):
             'confirm',
             'create',
             'userGroup',
+            'customer',
         ]
 
 
