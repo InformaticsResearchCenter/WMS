@@ -31,6 +31,8 @@ def main_usergroup(request):
         }
         return render(request, "inside/wmsGroup/data_usergroup.html", context)        
 
+def edit_usergroup(request):    
+    return render(request, "inside/wmsGroup/form/edit_usergroup.html")
 
 def index(request):
     if 'group_is_login' in request.session:
