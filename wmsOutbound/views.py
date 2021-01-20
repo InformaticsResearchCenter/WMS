@@ -28,6 +28,19 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 # ----------------------- Customer ---------------------
+def customer_detail(request, id):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        customer = Customer.objects.get(pk=id)
+        form = CustomerForm(instance=customer)
+        context = {
+            'form': form,
+            'customer': customer,
+            'title': 'Detail customer'
+        }
+        return render(request, 'inside/wmsOutbound/detail_customer.html', context)
+
 def main_customer(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
@@ -72,7 +85,7 @@ def customer(request, id=0):
                 if id == 0:
                     form = CustomerForm(request.POST)
                 else:
-                    Customer = Customer.objects.get(pk=id)
+                    customer = Customer.objects.get(pk=id)
                     form = CustomerForm(request.POST, instance=customer)
                 if form.is_valid():
                     form.save()

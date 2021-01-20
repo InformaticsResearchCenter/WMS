@@ -15,5 +15,5 @@ urlpatterns = [
 
 
 
-    path('usergroup/', views.edit_usergroup, name="edit_userGroup"),
+    # path('usergroup/', views.edit_usergroup, name="edit_userGroup"),
 ]

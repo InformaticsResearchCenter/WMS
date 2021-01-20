@@ -34,7 +34,7 @@
                         <td>{{onb.phoneNumber}}</td>
                         <td>{{onb.postalCode}}</td>
                         <td>
-                            <a href="{% url 'view_outbound' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
+                            <a href="{% url 'detail_customer' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
                             {% if role != 'OPR' %}
                               {% if onb.status != "3" %}
                               <a href="{% url 'delete_customer' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>

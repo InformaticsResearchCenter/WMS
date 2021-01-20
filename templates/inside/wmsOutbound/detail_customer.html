@@ -1,0 +1,82 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<!-- <div class="wrapper d-flex align-items-stretch">
+ -->     <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5">
+      {% if role == 'ADM' %}
+        <h2 class="mb-4">Ini Role ADM</h2>
+        {% elif role == 'MAN' %}
+        <h2 class="mb-4">Ini Role MAN</h2>
+        {% elif role == 'OPR' %}
+        <h2 class="mb-4">Ini Role OPR</h2>
+        {% endif %}
+
+        <h1>Customer</h1>
+        <hr>
+        <div class="card">
+          <div class="card-header">
+            Detail Customer
+          </div>
+          <div class="card-body">
+               <table>
+                <tr>
+                  <td>Customer id</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.id}}</td>
+                </tr>
+                <tr>
+                  <td>Customer Name</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.name}}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.email}}</td>
+                </tr>
+                <tr>
+                  <td>Phone</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.phoneNumber}}</td>
+                </tr>
+                <tr>
+                  <td>Districts</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.districts}}</td>
+                </tr>
+                <tr>
+                  <td>City</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.city}}</td>
+                </tr>
+                <tr>
+                  <td>Province</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.province}}</td>
+                </tr>
+                <tr>
+                  <td>Address</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.address}}</td>
+                </tr>
+                <tr>
+                  <td>Village</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.village}}</td>
+                </tr>
+                <tr>
+                  <td>Postal Code</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.postalCode}}</td>
+                </tr>
+            </table>
+            <br>
+            <a href="{% url 'customer' %}" class="btn btn-primary btn-sm">Kembali</a>
+          </div>
+        </div>  
+        <hr>
+    </div>
+</div>
+{% endblock content %}

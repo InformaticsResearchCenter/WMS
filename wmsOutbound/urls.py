@@ -25,5 +25,7 @@ urlpatterns = [
     path('delete_customer/<slug:id>/',
          views.delete_customer, name="delete_customer"),
     path('update_customer/<slug:id>/',
-         views.customer, name="update_customer"),     
+         views.customer, name="update_customer"),
+    path('customer/detail/<slug:id>/',
+         views.customer_detail, name="detail_customer"),          
 ]

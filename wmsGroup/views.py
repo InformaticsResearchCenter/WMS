@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from WMS.models import *
+from WMS.forms import *
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 import datetime
@@ -28,25 +29,7 @@ def main_usergroup(request):
             'usergroup': UserGroup.objects.all(),
             'title': 'UserGroup | WMS Poltekpos'
         }
-        return render(request, "inside/wmsGroup/data_usergroup.html", context)
-
-def edit_usergroup(request, id=0):
-    if request.method == "GET":
-        # usergroup = UserGroup.objects.get(pk=id)
-        context = {
-            # 'form': UserGroupForm(instance=usergroup),
-            # 'usergroup': usergroup,
-            # 'group_id': request.session['usergroup'],
-            'title': 'Update usergroup | usergroup'
-        }
-        return render(request, 'inside/wmsGroup/form/edit_usergroup.html', context)
-    else:
-        #     usergroup = UserGroup.objects.get(pk=id)
-        #     form = UserGroupForm(request.POST, instance=usergroup)
-        # if form.is_valid():
-        #     form.save()
-        #     print(form.save())
-        return render(request, 'inside/wmsGroup/form/edit_usergroup.html')        
+        return render(request, "inside/wmsGroup/data_usergroup.html", context)        
 
 
 def index(request):
@@ -94,6 +77,55 @@ def login(request):
         return render(request, "inside/wmsGroup/form/login.html", context)
 
 
+def registerr(request, id=0):
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "OPR":
+            raise PermissionDenied
+        else:
+            if request.method == "GET":
+                if id == 0:
+                    context = {
+                        'form': UserGroupForm(),
+                        'title': 'Register Akun',
+                        'id': get_last_value('usergroup_seq')
+                    }
+                    return render(request, 'inside/wmsGroup/form/register.html', context)
+                else:
+                    print(gagal)
+                    # supplier = Supplier.objects.get(pk=id)
+                    # context = {
+                    #     'form': SupplierForm(instance=supplier),
+                    #     'supplier': supplier,
+                    #     'group_id': request.session['usergroup'],
+                    #     'username': request.session['username'],
+                    #     'role': request.session['role'],
+                    #     'title': 'Update Supplier | Inbound'
+                    # }
+                return render(request, 'inside/wmsGroup/form/register.html', context)
+            else:
+                if id == 0:
+                    form = UserGroupForm(request.POST)
+                else:
+                    usergroup = UserGroup.objects.get(pk=id)
+                    form = UserGroupForm(request.POST, instance=usergroup)
+                if form.is_valid():
+                    form.save()
+                    man_user = User.objects.create(
+                        name='MAN_'+request.POST['name'],
+                        username=request.POST['email'],
+                        password=request.POST['password'],
+                        userGroup=UserGroup.objects.get(pk=request.POST['id']),
+                        role=Role.objects.get(pk='MAN')
+                    )
+                    man_user.save()
+                    if id == 0:
+                        get_next_value('usergroup_seq')
+                    return redirect('groupLogin')
+            return render(request, 'inside/wmsGroup/form/register.html')
+
+
 def register(request):
     if request.method == "GET":
         context = {
@@ -116,7 +148,6 @@ def register(request):
             province=request.POST['province'],
             addressCompany=request.POST['addressCompany'],
             imageCompany=request.POST['imageCompany'],
-            namaOperator=request.POST['namaOperator'],
             nameCompany=request.POST['nameCompany'],
             profileOperator=request.POST['profileOperator'],
             village=request.POST['village'],
