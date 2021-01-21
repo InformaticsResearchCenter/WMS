@@ -22,4 +22,10 @@ urlpatterns = [
 
     path('customer', views.main_customer, name="customer"),
     path('add_customer', views.customer, name="add_customer"),
+    path('delete_customer/<slug:id>/',
+         views.delete_customer, name="delete_customer"),
+    path('update_customer/<slug:id>/',
+         views.customer, name="update_customer"),
+    path('customer/detail/<slug:id>/',
+         views.customer_detail, name="detail_customer"),          
 ]

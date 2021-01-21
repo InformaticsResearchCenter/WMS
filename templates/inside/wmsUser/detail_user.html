@@ -13,67 +13,62 @@
         <h2 class="mb-4">Ini Role OPR</h2>
         {% endif %}
 
-        <h1>Supplier</h1>
+        <h1>User</h1>
         <hr>
         <div class="card">
           <div class="card-header">
-            Detail Supplier
+            Detail User
           </div>
           <div class="card-body">
                <table>
                 <tr>
-                  <td>Supplier id</td>
+                  <td>User id</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.id}}</td>
+                  <td>{{user.id}}</td>
                 </tr>
                 <tr>
-                  <td>Supplier</td>
+                  <td>User</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.name}}</td>
-                </tr>
-                <tr>
-                  <td>Email</td>
-                  <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.email}}</td>
+                  <td>{{user.name}}</td>
                 </tr>
                 <tr>
                   <td>Phone</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.phoneNumber}}</td>
+                  <td>{{user.phoneNumber}}</td>
+                </tr>    
+                <tr>
+                  <td>Province</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{user.province}}</td>
+                </tr>
+                <tr>  
+                  <td>City</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{user.city}}</td>
                 </tr>
                 <tr>
                   <td>Districts</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.districts}}</td>
+                  <td>{{user.districts}}</td>
                 </tr>
-                <tr>
-                  <td>City</td>
+                 <tr>
+                  <td>Village</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.city}}</td>
-                </tr>
-                <tr>
-                  <td>Province</td>
-                  <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.province}}</td>
+                  <td>{{user.village}}</td>
                 </tr>
                 <tr>
                   <td>Address</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.address}}</td>
-                </tr>
-                <tr>
-                  <td>Village</td>
-                  <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.village}}</td>
+                  <td>{{user.address}}</td>
                 </tr>
                 <tr>
                   <td>Postal Code</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.postalCode}}</td>
+                  <td>{{user.postalCode}}</td>
                 </tr>
             </table>
             <br>
-            <a href="{% url 'list_supplier' %}" class="btn btn-primary btn-sm">Kembali</a>
+            <a href="{% url 'userIndex' %}" class="btn btn-primary btn-sm">Kembali</a>
           </div>
         </div>  
         <hr>

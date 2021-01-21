@@ -13,67 +13,67 @@
         <h2 class="mb-4">Ini Role OPR</h2>
         {% endif %}
 
-        <h1>Supplier</h1>
+        <h1>Customer</h1>
         <hr>
         <div class="card">
           <div class="card-header">
-            Detail Supplier
+            Detail Customer
           </div>
           <div class="card-body">
                <table>
                 <tr>
-                  <td>Supplier id</td>
+                  <td>Customer id</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.id}}</td>
+                  <td>{{customer.id}}</td>
                 </tr>
                 <tr>
-                  <td>Supplier</td>
+                  <td>Customer Name</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.name}}</td>
+                  <td>{{customer.name}}</td>
                 </tr>
                 <tr>
                   <td>Email</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.email}}</td>
+                  <td>{{customer.email}}</td>
                 </tr>
                 <tr>
                   <td>Phone</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.phoneNumber}}</td>
+                  <td>{{customer.phoneNumber}}</td>
                 </tr>
                 <tr>
                   <td>Districts</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.districts}}</td>
+                  <td>{{customer.districts}}</td>
                 </tr>
                 <tr>
                   <td>City</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.city}}</td>
+                  <td>{{customer.city}}</td>
                 </tr>
                 <tr>
                   <td>Province</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.province}}</td>
+                  <td>{{customer.province}}</td>
                 </tr>
                 <tr>
                   <td>Address</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.address}}</td>
+                  <td>{{customer.address}}</td>
                 </tr>
                 <tr>
                   <td>Village</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.village}}</td>
+                  <td>{{customer.village}}</td>
                 </tr>
                 <tr>
                   <td>Postal Code</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{supplier.postalCode}}</td>
+                  <td>{{customer.postalCode}}</td>
                 </tr>
             </table>
             <br>
-            <a href="{% url 'list_supplier' %}" class="btn btn-primary btn-sm">Kembali</a>
+            <a href="{% url 'customer' %}" class="btn btn-primary btn-sm">Kembali</a>
           </div>
         </div>  
         <hr>

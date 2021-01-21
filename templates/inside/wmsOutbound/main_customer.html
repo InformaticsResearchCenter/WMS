@@ -25,22 +25,22 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% for onb in outbound %}
+                  {% for onb in customer %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{onb.id}}</td>
                         <td>{{onb.name}}</td>
                         <td>{{onb.address}}</td>
-                        <td>{{onb.date}}</td>
-                        <td>{{onb.get_status_display}}</td>
+                        <td>{{onb.phoneNumber}}</td>
+                        <td>{{onb.postalCode}}</td>
                         <td>
-                            <a href="{% url 'view_outbound' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
+                            <a href="{% url 'detail_customer' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
                             {% if role != 'OPR' %}
                               {% if onb.status != "3" %}
-                              <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
+                              <a href="{% url 'delete_customer' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
                               {% endif %}
                               {% if onb.status != "2" and onb.status != "3" %}
-                              <a href="{% url 'update_outbound' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
+                              <a href="{% url 'update_customer' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
                               {% endif %}
                             {% endif %}
                             {% if onb.status == "2" or onb.status == "3" %}

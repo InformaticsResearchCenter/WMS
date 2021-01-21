@@ -12,4 +12,8 @@ urlpatterns = [
     path('logout/', views.logout, name="groupLogout"),
     path('activate/<email>/<token>', VerificationView.as_view(), name="activate"),
     path('reset/<email>/<token>', ResetPassword.as_view(), name="reset"),
+
+
+
+    path('usergroup/', views.edit_usergroup, name="edit_userGroup"),
 ]

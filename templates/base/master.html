@@ -135,22 +135,40 @@
                         {% endif %}
                     </ul>
                     </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link">
-                            <i class="nav-icon fas fa-table"></i>
-                            <p>
-                                Outbound
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'add_outbound' %}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Process Order</p>
-                                </a>
-                            </li>
-                        </ul>
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Outbound
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'customer' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Customer</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'add_outbound' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Process Order</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{% url 'outbound' %}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Outbound Data</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'outbound' %}" class="nav-link">
@@ -160,14 +178,6 @@
                             </li>
                         </ul>
                     </li>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'outbound' %}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Outbound Data</p>
-                            </a>
-                        </li>
-                    </ul>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -251,11 +261,17 @@
                                     <p>Customer</p>
                                 </a>
                             </li>
+                            {% comment %} <li class="nav-item">
+                                <a href="{% url 'userGroup' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>UserGroup</p>
+                                </a>
+                            </li> {% endcomment %}
                         </ul>
                     </li>
                     {% if role == 'MAN' %}
                     <li class="nav-item">
-                        <a href="{% url 'userIndex'%}" class="nav-link">
+                        <a href="{% url 'userIndex' %}" class="nav-link">
                             <i class="nav-icon fas fa-file"></i>
                             <p>Management User</p>
                         </a>

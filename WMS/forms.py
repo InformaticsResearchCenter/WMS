@@ -5,6 +5,26 @@ from WMS.models import User, Category, Subcategory
 from WMS.models import User, Category
 from WMS.models import User, Category
 
+class UserGroupForm(forms.ModelForm):
+    class Meta:
+        model = UserGroup
+        fields = [
+            'id',
+            'name',
+            'address',
+            'phoneNumber',
+            'postalCode',
+            'email',
+            'password',
+            'city',
+            'districts',
+            'province',
+            'addressCompany',
+            'imageCompany',
+            'nameCompany',
+            'profileOperator',
+            'village',
+        ]
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -17,6 +37,11 @@ class UserForm(forms.ModelForm):
             'name',
             'postalCode',
             'phoneNumber',
+            'address',
+            'districts',
+            'city',
+            'province',
+            'village',
         ]
 
 
@@ -49,7 +74,7 @@ class SubcategoryForm(forms.ModelForm):
             'subcategory',
             'category',
             'userGroup',
-            'size'
+            'size',
         ]
 
 
@@ -60,27 +85,32 @@ class SupplierForm(forms.ModelForm):
             'id',
             'name',
             'email',
+            'address',
             'phoneNumber',
             'postalCode',
             'userGroup',
+            'districts',
+            'city',
+            'province',
+            'village',
         ]
 
-# class CustomerForm(forms.ModelForm):
-#     class Meta:
-#         model = Customer
-#         fields = [
-#             'id',
-#             'name',
-#             'email',
-#             'phoneNumber',
-#             'postalCode',
-#             'userGroup',
-#             'rt',
-#             'rw',
-#             'kecamatan',
-#             'kota',
-#             'provinsi'
-#         ]        
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = [
+            'id',
+            'name',
+            'email',
+            'address',
+            'phoneNumber',
+            'postalCode',
+            'userGroup',
+            'districts',
+            'city',
+            'province',
+            'village',
+        ]        
 
 
 class InboundForm(forms.ModelForm):
@@ -116,6 +146,7 @@ class RackForm(forms.ModelForm):
         model = Rack
         fields = [
             'id',
+            'rack',
             'userGroup',
         ]
 
@@ -129,6 +160,7 @@ class OutboundForm(forms.ModelForm):
             'confirm',
             'create',
             'userGroup',
+            'customer',
         ]
 
 

@@ -9,6 +9,7 @@ class External(models.Model):
     districts = models.CharField(max_length=50, default="NULL")
     city = models.CharField(max_length=50, default="NULL")
     province = models.CharField(max_length=50, default="NULL")
+    village = models.CharField(max_length=50, default="NULL")
 
     class Meta:
         abstract = True
@@ -40,6 +41,11 @@ class UserGroup(External):
     password = models.CharField(max_length=100, null=True)
     token = models.CharField(max_length=100, null=True)
     active = models.CharField(max_length=1, default=0)
+    imageCompany = models.ImageField(null=True, blank=True, upload_to="images/")
+    nameCompany = models.CharField(max_length=50, default="NULL")
+    addressCompany = models.TextField(default="NULL")
+    profileOperator = models.CharField(max_length=100, default="NULL")
+    
 
 
 class Category(models.Model):
@@ -252,14 +258,16 @@ class CostumerReturnData(models.Model):
 
 
 class Rack(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    rack = models.CharField(max_length=50, null=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
-    id = models.CharField(max_length=10, primary_key=True)
 
 
 class Binlocation(models.Model):
-    id = models.CharField(primary_key=True, max_length=5, default="NULL")
+    id = models.AutoField(primary_key=True)
+    binlocation = models.CharField(max_length=50, null=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
