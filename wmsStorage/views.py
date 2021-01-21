@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.db.models import Max
 from django.http import JsonResponse,HttpResponse
 from json import dumps, loads
+from collections import Counter
 
 def scanner(request):
     context = {
@@ -41,24 +42,44 @@ def getItemData(request):
     return JsonResponse({'name':name,'qty':qty})
 
 def getStockOpname(request):
-    inboundId=request.POST.get('inbound',None)
-    inbound = Binlocation.objects.filter(pk=inboundId,deleted=0).values()
-    inbounddata = InboundData.objects.filter(inbound=inboundId,deleted=0).values()
-    item = []
-    for i in inbounddata:
-        ref = list(ItemData.objects.filter(inbound=i['id'],deleted=0).values())
-        for e in ref:
-            item.append(e)
+    print("Start modul stock opname started")
+    rackId=request.POST.get('rack',None)
+    rack = Rack.objects.filter(pk=rackId, userGroup=request.session['usergroup'], deleted=0).values()
+    bin = Binlocation.objects.filter(rack=rackId).values()
+    # print(rack)
+    # print(bin)
+    itemBulk=[]
+    rawItem=[]
+    quantity=0
+    for a in bin:
+        item = list(ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values())
+        # print(item)
+        try:
+            if item != []:
+                for b in item:
+                    ibd = list(InboundData.objects.filter(pk=b['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values('item__name'))
+                    if ibd != []:
+                        b['name'] = ibd[0]['item__name']
+                        rawItem.append(ibd[0]['item__name'])
+                        itemBulk.append(b)
+                        quantity+=1
+                    else:
+                        pass
+        except:
+            pass
     
-    print(inbound)
-    print(inbounddata)
-    print(item)
-    a=0
-    for i in item:
-        print(i)
-        a+=1
-    print(a)
-    return JsonResponse({"@@":"a"},status = 200)
+    
+    itemlist=[list(i) for i in Counter(rawItem).items()]
+    # print("here we go")
+    # print(itemBulk)
+    # print("quantity")
+    # # print(quantity)
+    # # print("itemlist" )
+    # # print(itemlist)
+    data = {'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity}
+
+    print(data)
+    return JsonResponse({'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity},status = 200)
 
 
 def getScannerData(request):
