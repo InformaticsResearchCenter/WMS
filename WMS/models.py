@@ -45,7 +45,7 @@ class UserGroup(External):
     nameCompany = models.CharField(max_length=50, default="NULL")
     addressCompany = models.TextField(default="NULL")
     profileOperator = models.CharField(max_length=100, default="NULL")
-    
+
 
 
 class Category(models.Model):

@@ -31,7 +31,7 @@
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="{% static 'images/img-01.png' %}" alt="IMG" />
                 </div>
-                <form method="POST"  class="login100-form validate-form">
+                <form method="POST" class="login100-form validate-form">
                     {% comment %} enctype="multipart/form-data" {% endcomment %}
                     {% csrf_token %}
                     {% for message in messages %}
@@ -42,7 +42,7 @@
                     {% endfor %}
                     <span class="login100-form-title">Register</span>
                     <div class="wrap-input100">
-                        <input class="input100" type="hidden" name="id" value="USG{{id}}"/>
+                        <input class="input100" type="hidden" name="id" value="USG{{id}}" />
                     </div>
                     <div class="wrap-input100" data-validate="Please input your email !">
                         <input type="file" class="input100" name="imageCompany">
@@ -59,7 +59,8 @@
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <textarea class="input100" type="text" name="addressCompany" placeholder="addressCompany" /></textarea>
+                        <textarea class="input100" type="text" name="addressCompany"
+                            placeholder="addressCompany" /></textarea>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -79,14 +80,14 @@
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
-                     <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="districts" placeholder="districts" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
-                     <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="village" placeholder="village" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -100,7 +101,7 @@
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
-                      <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="postalCode" placeholder="postal code" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -128,7 +129,7 @@
                             <i class="fa fa-users" aria-hidden="true"></i>
                         </span>
                     </div> {% endcomment %}
-                     <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="name" placeholder="name Operator" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">

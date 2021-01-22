@@ -42,7 +42,6 @@ def index(request):
             'itemSold' : ItemData.objects.filter(status="2", userGroup=request.session['usergroup'], deleted = 0).count(),
             'borrowedItem' : ItemData.objects.filter(status="3", userGroup=request.session['usergroup'], deleted = 0).count(),
             "detailAvaibleItem" : rawitem
-
         }
         return render(request, "inside/wmsApp/index.html", context)
 
