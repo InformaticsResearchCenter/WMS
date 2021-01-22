@@ -34,9 +34,7 @@
                               {% if onb.status != "3" %}
                               <a href="{% url 'delete_outbound' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
                               {% endif %}
-                              {% if onb.status != "2" and onb.status != "3" %}
-                              <a href="{% url 'update_outbound' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
-                              {% endif %}
+                              
                             {% endif %}
                             {% if onb.status == "2" or onb.status == "3" %}
                             <a href="{{onb.id}}"><button class="btn-success btn-sm">PDF</button></a>

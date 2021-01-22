@@ -35,8 +35,9 @@
                         </div>
                         <div class="form-group">
                             <label for="category">Province</label>
-                            <input type="text" class="form-control" name="province" id="province" value=""
-                                placeholder="Province">
+                            <select class="form-control" name="province" id="province" placeholder="Province">
+
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="category">City</label>
@@ -96,4 +97,11 @@
         </div>
     </div>
 </div>
+<script src="jquery.min.js"/>
+<script>
+    $.ajax(
+        {url: "https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json",
+         method: " GET", onsuccess: (response) => console.log(response.data)}
+         )
+</script>
 {% endblock content %}

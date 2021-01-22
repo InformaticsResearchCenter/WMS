@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+
 <head>
     <title>{{title}}</title>
     <meta charset="UTF-8" />
@@ -31,7 +33,7 @@
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="{% static 'images/img-01.png' %}" alt="IMG" />
                 </div>
-                <form method="POST"  class="login100-form validate-form">
+                <form method="POST" class="login100-form validate-form">
                     {% comment %} enctype="multipart/form-data" {% endcomment %}
                     {% csrf_token %}
                     {% for message in messages %}
@@ -42,7 +44,7 @@
                     {% endfor %}
                     <span class="login100-form-title">Register</span>
                     <div class="wrap-input100">
-                        <input class="input100" type="hidden" name="id" value="USG{{id}}"/>
+                        <input class="input100" type="hidden" name="id" value="USG{{id}}" />
                     </div>
                     <div class="wrap-input100" data-validate="Please input your email !">
                         <input type="file" class="input100" name="imageCompany">
@@ -59,14 +61,19 @@
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <textarea class="input100" type="text" name="addressCompany" placeholder="addressCompany" /></textarea>
+                        <textarea class="input100" type="text" name="addressCompany"
+                            placeholder="addressCompany" /></textarea>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <input class="input100" type="text" name="province" placeholder="province" />
+                        <select class="input100" type="text" name="province" placeholder="province">
+                            {% for provinsi in provinsi %}
+                                <option>{{provinsi.name}}</option>
+                            {% endfor %}        
+                        </select>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -79,14 +86,14 @@
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
-                     <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="districts" placeholder="districts" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
-                     <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="village" placeholder="village" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -100,7 +107,7 @@
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
-                      <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="postalCode" placeholder="postal code" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -128,7 +135,7 @@
                             <i class="fa fa-users" aria-hidden="true"></i>
                         </span>
                     </div> {% endcomment %}
-                     <div class="wrap-input100" data-validate="Please input your username correctly !">
+                    <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="name" placeholder="name Operator" />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -156,6 +163,32 @@
             </div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        console.log("door");
+        $.ajax({
+            type: "get",
+            url: "https://dev.farizdotid.com/api/daerahindonesia/provinsi/",
+            data: "data",
+            dataType: "dataType",
+            success: function (response) {
+                console.log(response)
+            }
+        });
+
+        $.getJSON"({% static 'js/provinces.json' %}", function (json) {
+            console.log(json)
+        });
+        {% comment %} let urlApi = 'https://dev.farizdotid.com/api/daerahindonesia/provinsi'
+        fetch(urlApi)
+            .then(data => data.json)
+            .then(hasil => console.log(hasil.provinsi))
+            .catch(error => console.log(error)); {% endcomment %}
+    </script>
+    {% comment %}
+    <script>
+        $.ajax({ url: "Access-Control-Allow-Origin: https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json", method: " GET", onsuccess: (response) => console.log(response.data) })
+    </script> {% endcomment %}
     <!--===============================================================================================-->
     <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
     <!--===============================================================================================-->

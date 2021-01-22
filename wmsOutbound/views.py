@@ -144,24 +144,24 @@ def outbound(request, id=0):
                         'con_cre': request.session['id'],
                     }
                     return render(request, 'inside/wmsOutbound/outbound.html', context)
-                else:
-                    outbound = Outbound.objects.get(pk=id)
-                    context = {
-                        'form': OutboundForm(instance=outbound),
-                        'outbound': outbound,
-                        'date': datetime.datetime.now().strftime("%Y-%m-%d"),
-                        'group_id': request.session['usergroup'],
-                        'role': request.session['role'],
-                        'username': request.session['username'],
-                        'title': 'Update Outbound | Outbound'
-                    }
+                # else:
+                #     outbound = Outbound.objects.get(pk=id)
+                #     context = {
+                #         'form': OutboundForm(instance=outbound),
+                #         'outbound': outbound,
+                #         'date': datetime.datetime.now().strftime("%Y-%m-%d"),
+                #         'group_id': request.session['usergroup'],
+                #         'role': request.session['role'],
+                #         'username': request.session['username'],
+                #         'title': 'Update Outbound | Outbound'
+                #     }
                 return render(request, 'inside/wmsOutbound/update_outbound.html', context)
             else:
                 if id == 0:
                     form = OutboundForm(request.POST)
-                else:
-                    outbound = Outbound.objects.get(pk=id)
-                    form = OutboundForm(request.POST, instance=outbound)
+                # else:
+                #     outbound = Outbound.objects.get(pk=id)
+                #     form = OutboundForm(request.POST, instance=outbound)
                 if form.is_valid():
                     form.save()
                     if id == 0:
