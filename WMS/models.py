@@ -14,6 +14,15 @@ class External(models.Model):
     class Meta:
         abstract = True
 
+class Province(models.Model):
+    id = models.TextField(primary_key=True)
+    name = models.CharField(max_length=50)
+
+class City(models.Model):
+    id = models.TextField(primary_key=True)
+    provinsi = models.ForeignKey(
+        Province, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=50)     
 
 class Employee(models.Model):
     name = models.CharField(max_length=50, default="NULL")

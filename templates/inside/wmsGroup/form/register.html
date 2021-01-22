@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+
 <head>
     <title>{{title}}</title>
     <meta charset="UTF-8" />
@@ -66,7 +68,11 @@
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <input class="input100" type="text" name="province" placeholder="province" />
+                        <select class="input100" type="text" name="province" placeholder="province">
+                            {% for provinsi in provinsi %}
+                                <option>{{provinsi.name}}</option>
+                            {% endfor %}        
+                        </select>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -149,6 +155,32 @@
             </div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        console.log("door");
+        $.ajax({
+            type: "get",
+            url: "https://dev.farizdotid.com/api/daerahindonesia/provinsi/",
+            data: "data",
+            dataType: "dataType",
+            success: function (response) {
+                console.log(response)
+            }
+        });
+
+        $.getJSON"({% static 'js/provinces.json' %}", function (json) {
+            console.log(json)
+        });
+        {% comment %} let urlApi = 'https://dev.farizdotid.com/api/daerahindonesia/provinsi'
+        fetch(urlApi)
+            .then(data => data.json)
+            .then(hasil => console.log(hasil.provinsi))
+            .catch(error => console.log(error)); {% endcomment %}
+    </script>
+    {% comment %}
+    <script>
+        $.ajax({ url: "Access-Control-Allow-Origin: https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json", method: " GET", onsuccess: (response) => console.log(response.data) })
+    </script> {% endcomment %}
     <!--===============================================================================================-->
     <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
     <!--===============================================================================================-->

@@ -100,7 +100,8 @@ def register(request):
     if request.method == "GET":
         context = {
             'title': 'Register Akun',
-            'id': get_last_value('usergroup_seq')
+            'id': get_last_value('usergroup_seq'),
+            'provinsi': Province.objects.all(),
         }
         return render(request, "inside/wmsGroup/form/register.html", context)
     elif request.method == "POST":
