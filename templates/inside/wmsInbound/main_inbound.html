@@ -60,43 +60,6 @@
                     </td>
                 </tr>
                 {% endfor %}
-                <!-- {% for inb in Inbound %}
-                <tr>
-                    <th scope="row">1</th>
-                    <td>{{inb.name}}</td>
-                    <td>{{inb.1}}</td>
-                    <td>{{inb.2}}</td>
-                    <td>{{inb.3}}</td>
-                    <td>
-                        <a href="{% url 'view_inbound' inb.0 %}" class="btn btn-primary btn-sm" role="button"
-                            aria-pressed="true">View</a>
-                        {% if role != 'OPR' %}
-                        <form action="{% url 'delete_inbound' inb.0 %}" method="POST" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm" style="padding: 3px;width: 50px;">
-                                <i class="text-white">Delete</i>
-                            </button>
-                        </form>
-                        {% endif %}
-                        {% if inb.2 != "On - Check" %}
-                        <a href="{{inb.0}}"><button class="btn btn-success btn-sm">PDF</button></a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                {% comment %} 
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Inbound Id</th>
-                    <th scope="col">Supplier</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Date</th>
-                    <th scope="col" style="width: 165px;">Action</th>
-                </tr>
-                {% endcomment %}
-            </tfoot>  -->
         </table>
     </div>
 </div>

@@ -2,13 +2,17 @@ var customer, itemData = [];
 var code = [];
 var itemLimit = [];
 var items = [];
+var brokenItems = [];
+var itemStockData = [];
 var validation = {
 	"outbound": false,
 	"binlocation": false,
 	"borrow": false,
-	"return": false
+	"return": false,
+	"stockopname": false
 };
-var pointer, action, itemCode, itemExist, binlocationExist, itemLimitExist, checkLimit, qtyLimit = null;
+
+var pointer, action, itemCode, itemExist, binlocationExist, itemLimitExist, opnameItemExist, checkLimit, qtyLimit = null;
 
 function removeItem(a, id) {
 	if (confirm('remove item ?')) {
@@ -203,6 +207,59 @@ $(document).ready(function () {
 		e.preventDefault();
 		pointer = "return";
 	});
+	$("#inputBrokenButton").click(function (e) {
+		e.preventDefault();
+		if (itemStockData.length > 0) {
+			for (let index = 0; index < itemStockData.length; index++) {
+				const e = itemStockData[index];
+				if (e.id == $("#opnameId").val()) {
+					opnameItemExist = true
+					break
+				}
+			}
+			if (opnameItemExist == true) {
+				if (confirm("Input item to broken list ?")) {
+					if (confirm("Input item to normal list ?")) {
+						if (code.includes($("#opnameId").val()) || brokenItems.includes($("#opnameId").val())) {
+							alert("item already scanned")
+						} else {
+							brokenItems.push($("#opnameId").val());
+						}
+					}
+				}
+			}
+		} else {
+
+			alert('no item');
+		}
+
+
+	});
+	$("#inputNormalButton").click(function (e) {
+		e.preventDefault();
+		if (itemStockData.length > 0) {
+			for (let index = 0; index < itemStockData.length; index++) {
+				const e = itemStockData[index];
+				if (e.id == $("#opnameId").val()) {
+					opnameItemExist = true
+					break
+				}
+			}
+			if (opnameItemExist == true) {
+				if (confirm("Input item to normal list ?")) {
+					if (code.includes($("#opnameId").val()) || brokenItems.includes($("#opnameId").val())) {
+						alert("item already scanned")
+					} else {
+						code.push($("#opnameId").val());
+					}
+				}
+			}
+		} else {
+			alert('no item');
+		}
+
+
+	});
 	$("#inputItem").click(function (e) {
 		e.preventDefault();
 		for (i = 0; i < itemData['item'].length; i++) {
@@ -310,22 +367,37 @@ $(document).ready(function () {
 			itemExist = null;
 		}
 	});
-	$("#inboundCheckButton").click(function (e) {
+	$("#rackCheckButton").click(function (e) {
 		e.preventDefault();
-		alert("kakoy")
+		$(".overlay").show();
 		$.ajax({
 			type: "post",
 			url: "/app/storage/scanner/getStockOpname",
 			data: {
-				inbound: $("#inboundId").val(),
+				rack: $("#rackId").val(),
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
+				stockOpname = response
+				itemStockData = stockOpname.items
+				$("#UniversalData").empty();
+				$("#UniversalModalTitle").val("Stock opname");
+				$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+				$("#UniversalData").append(`<tr><td>Rack Id</td><td>` + stockOpname.rack[0].id + `</td></tr>`);
+				$("#UniversalData").append(`<tr><td>Bin total</td><td>` + stockOpname.bin.length + `</td></tr>`);
+				$("#UniversalData").append(`<tr><td>Item total</td><td>` + stockOpname.itemQuantity + `</td></tr>`);
+				$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+				$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+				for (let index = 0; index < stockOpname.itemdata.length; index++) {
+					const element = stockOpname.itemdata[index];
 
+					$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
+				}
+				$(".overlay").hide();
 			}
 		});
-
 	});
+
 	$("#binlocationCheckButton").click(function (e) {
 		e.preventDefault();
 		validation["binlocation"] = false;
@@ -359,17 +431,17 @@ $(document).ready(function () {
 			success: function (response) {
 				if (typeof response['msg'] != "undefined") {
 					alert("Data tidak ditemukan");
-					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
-					$("#outboundData").empty();
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
-					$("#outboundData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
-					$("#outboundData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-					$("#outboundData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
 					items = response['items'];
 					for (let index = 0; index < items.length; index++) {
 						var itemName;
@@ -381,7 +453,7 @@ $(document).ready(function () {
 								itemName = "undefined";
 							}
 						}
-						$("#outboundData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 					validation["outbound"] = true;
 					$("#itemCodeContainer").show();
@@ -408,18 +480,18 @@ $(document).ready(function () {
 			success: function (response) {
 				if (typeof response['msg'] != "undefined") {
 					alert("Data tidak ditemukan")
-					$("#borrowData").empty();
-					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
 					employee = Object.values(response['employee'][0])
-					$("#borrowData").empty();
-					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
-					$("#borrowData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
-					$("#borrowData").append(`<tr><td>Alamat</td><td id="alamat">` + employee[1] + `</td></tr>`);
-					$("#borrowData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
-					$("#borrowData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
-					$("#borrowData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-					$("#borrowData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Alamat</td><td id="alamat">` + employee[1] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
 					items = response['items']
 					for (let index = 0; index < items.length; index++) {
 						var itemName;
@@ -431,7 +503,7 @@ $(document).ready(function () {
 								itemName = "undefined";
 							}
 						}
-						$("#borrowData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 					$("#itemCodeContainer").show();
 					validation["borrow"] = true;
@@ -457,18 +529,18 @@ $(document).ready(function () {
 			success: function (response) {
 				if (typeof response['msg'] != "undefined") {
 					alert("Data tidak ditemukan");
-					$("#returnData").empty();
-					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
 					customer = Object.values(response['customer'][0]);
-					$("#returnData").empty();
-					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
-					$("#returnData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
-					$("#returnData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
-					$("#returnData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
-					$("#returnData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
-					$("#returnData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-					$("#returnData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
 					items = response['items'];
 					for (let index = 0; index < items.length; index++) {
 						var itemName;
@@ -480,7 +552,7 @@ $(document).ready(function () {
 								itemName = "undefined";
 							}
 						}
-						$("#returnData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 
 					$("#itemCodeContainer").show();

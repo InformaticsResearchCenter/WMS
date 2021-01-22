@@ -53,8 +53,8 @@ class UserGroup(External):
     imageCompany = models.ImageField(null=True, blank=True, upload_to="images/")
     nameCompany = models.CharField(max_length=50, default="NULL")
     addressCompany = models.TextField(default="NULL")
-    profileOperator = models.ImageField(null=True, blank=True, upload_to="images/")
-    
+    profileOperator = models.CharField(max_length=100, default="NULL")
+
 
 
 class Category(models.Model):
