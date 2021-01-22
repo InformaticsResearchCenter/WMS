@@ -79,14 +79,14 @@ def edit_usergroup(request):
     if request.method == "GET":
         usergroup = UserGroup.objects.get(pk=request.session['groupId'])
         context = {
-            'form': UserGroupForm(instance=usergroup),
+            'form': UpdateUserGroupForm(instance=usergroup),
             'usergroup': usergroup,
             'title': 'Edit Profile | UserGroup Management'
         }
         return render(request, "inside/wmsGroup/form/edit_usergroup.html", context)
     elif request.method == "POST":
         usergroup = UserGroup.objects.get(pk=request.session['groupId'])
-        form = UserGroupForm(request.POST, request.FILES, instance=usergroup)
+        form = UpdateUserGroupForm(request.POST, request.FILES, instance=usergroup)
         if form.is_valid():
             form.save()
             messages.error(request, 'Success, profile Updated!')

@@ -27,7 +27,6 @@ class UpdateUserGroupForm(forms.ModelForm):
     class Meta:
         model = UserGroup
         fields = [
-            'id',
             'name',
             'address',
             'phoneNumber',
