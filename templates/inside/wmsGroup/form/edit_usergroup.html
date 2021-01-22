@@ -10,83 +10,87 @@
             Update Data Profile
         </div>
         <div class="card-body">
-            <form method="POST" action="">
+        {% for message in messages %}
+        <div class="alert alert-danger">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+            {{ message }}
+        </div>
+        {% endfor %}
+            <form method="POST" enctype="multipart/form-data">
                 {%csrf_token%}
                 <div class="row justify-content-center">
                     <div class="col-8">
-                        <div class="form-group">
-                            <label for="category">Id</label>
-                            <input type="text" readonly="true" class="form-control" name="id" id="id"
-                                value="{{supplier.id}}">
+                        <div class="wrap-input100">
+                            <input class="input100" type="hidden" name="id" value="{{usergroup.id}}" />
                         </div>
                         <div class="form-group">
                             <label for="category">imageCompany</label>
-                            <input type="file" class="form-control" name="imageCompany" id="imageCompany" value="">
+                            <input type="file" class="form-control" name="imageCompany" id="imageCompany" value="{{usergroup.imageCompany}}">
                         </div>
                         <div class="form-group">
                             <label for="category">Nama Company</label>
-                            <input type="text" class="form-control" name="nameCompany" id="nameCompany" value=""
+                            <input type="text" class="form-control" name="nameCompany" id="nameCompany" value="{{usergroup.nameCompany}}"
                                 placeholder="Input Name Company">
                         </div>
                         <div class="form-group">
                             <label for="category">Address Company</label>
-                            <textarea class="form-control" name="addressCompany" id="addressCompany"
-                                value="" placeholder="Address Company"></textarea>
+                            <input class="form-control" name="addressCompany" id="addressCompany"
+                                value="{{usergroup.addressCompany}}" placeholder="Address Company"></input>
                         </div>
                         <div class="form-group">
                             <label for="category">Province</label>
-                            <input type="text" class="form-control" name="province" id="province" value=""
+                            <input type="text" class="form-control" name="province" id="province" value="{{usergroup.province}}"
                                 placeholder="Province">
                         </div>
                         <div class="form-group">
                             <label for="category">City</label>
-                            <input type="text" class="form-control" name="city" id="city" value=""
+                            <input type="text" class="form-control" name="city" id="city" value="{{usergroup.city}}"
                                 placeholder="City">
                         </div>
                         <div class="form-group">
                             <label for="category">Districts</label>
-                            <input type="text" class="form-control" name="districts" id="districts" value=""
+                            <input type="text" class="form-control" name="districts" id="districts" value="{{usergroup.districts}}"
                                 placeholder="Districts">
                         </div>
                         <div class="form-group">
                             <label for="category">Village</label>
-                            <input type="text" class="form-control" name="village" id="village" value=""
+                            <input type="text" class="form-control" name="village" id="village" value="{{usergroup.village}}"
                                 placeholder="Village">
                         </div>
                         <div class="form-group">
                             <label for="category">Address</label>
-                            <textarea type="text" class="form-control" name="address" id="address"
-                                value="" placeholder="Input Address"></textarea>
+                            <input type="text" class="form-control" name="address" id="address"
+                                value="{{usergroup.address}}" placeholder="Input Address"></input>
                         </div>
                         <div class="form-group">
                             <label for="category">PostalCode</label>
                             <input type="text" class="form-control" name="postalCode" id="postalCode"
-                                value="" placeholder="Input PostalCode">
+                                value="{{usergroup.postalCode}}" placeholder="Input PostalCode">
                         </div>
                         <div class="form-group">
                             <label for="category">Phone Number</label>
-                            <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
-                                value="" placeholder="Input PostalCode">
+                            <input type="number" class="form-control" name="phoneNumber" id="phoneNumber"
+                                value="{{usergroup.phoneNumber}}" placeholder="Input PostalCode">
                         </div>
                         <div class="form-group">
                             <label for="category">Email</label>
                             <input type="email" class="form-control" name="email" id="email"
-                                value="" placeholder="Input Email">
+                                value="{{usergroup.email}}" placeholder="Input Email">
                         </div>
                         <div class="form-group">
                             <label for="category">Nama Operator</label>
-                            <input type="text" class="form-control" name="namaOperator" id="namaOperator"
-                                value="" placeholder="Input PostalCode">
+                            <input type="text" class="form-control" name="name" id="name"
+                                value="{{usergroup.name}}" placeholder="Input PostalCode">
                         </div>
                         <div class="form-group">
                             <label for="category">Profile Operator</label>
                             <input type="file" class="form-control" name="profileOperator" id="profileOperator"
-                                value="" placeholder="Input Profile Operator">
+                                value="{{usergroup.profileOperator}}" placeholder="Input Profile Operator">
                         </div>
                         <div class="form-group">
-                            <label for="category">PostalCode</label>
-                            <input type="text" class="form-control" name="password" id="password"
-                                value="" placeholder="Input password">
+                            <label for="category">Password</label>
+                            <input type="password" class="form-control" name="password" id="password"
+                                value="{{usergroup.password}}" placeholder="Input password">
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>

@@ -31,8 +31,7 @@
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="{% static 'images/img-01.png' %}" alt="IMG" />
                 </div>
-                <form method="POST" class="login100-form validate-form">
-                    {% comment %} enctype="multipart/form-data" {% endcomment %}
+                <form method="POST" enctype="multipart/form-data" class="login100-form validate-form">
                     {% csrf_token %}
                     {% for message in messages %}
                     <div class="alert alert-danger">
@@ -122,13 +121,6 @@
                             <i class="fa fa-envelope" aria-hidden="true"></i>
                         </span>
                     </div>
-                    {% comment %} <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <input class="input100" type="text" name="namaOperator" placeholder="namaOperator" />
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="fa fa-users" aria-hidden="true"></i>
-                        </span>
-                    </div> {% endcomment %}
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="name" placeholder="name Operator" />
                         <span class="focus-input100"></span>
