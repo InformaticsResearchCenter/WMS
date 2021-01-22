@@ -46,9 +46,6 @@ INSTALLED_APPS = [
     'wmsStorage',
     'wmsReturn',
     'sequences.apps.SequencesConfig'
-    # 'category',
-    # 'storage',
-    # 'outbound',
 ]
 
 MIDDLEWARE = [
