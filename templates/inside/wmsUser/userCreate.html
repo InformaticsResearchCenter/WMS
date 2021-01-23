@@ -38,24 +38,28 @@
                             <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{group_id}}">
                         </div>
                         <div class="form-group">
-                            <label for="category">Province</label>
-                            <input type="text" class="form-control" name="province" id="province"
-                                placeholder="Province">
+                            <label for="supplier">Province</label>
+                            <select class="form-control" type="text" name="province" id="selectProvinsi" placeholder="province" onchange="fetchCity()">  
+                                
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="category">City</label>
-                            <input type="text" class="form-control" name="city" id="city"
-                                placeholder="City">
+                            <label for="supplier">City</label>
+                            <select class="form-control" type="text" name="city" id="selectKota" placeholder="province" onchange="fetchDistrict()">
+                                <option>--Select City</option>  
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="category">Districts</label>
-                            <input type="text" class="form-control" name="districts" id="districts"
-                                placeholder="Districts">
+                            <label for="supplier">Districts</label>
+                            <select class="form-control" type="text" name="districts" id="selectKecamatan" placeholder="province" onchange="fetchVillage()">  
+                                <option>--Select Districts</option>
+                            </select>
                         </div>
-                         <div class="form-group">
-                            <label for="category">Village</label>
-                            <input type="text" class="form-control" name="village" id="village"
-                                placeholder="Village">
+                        <div class="form-group">
+                            <label for="supplier">Village</label>
+                            <select class="form-control" type="text" name="village" id="selectDesa" placeholder="province">  
+                                <option>--Select Village</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="supplier">Address</label>
@@ -77,4 +81,101 @@
         </div>
     </div>
 </div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
+        .then(response => response.json())
+        .then(result => {
+            var option = '<option>--Select Province</option>';
+            Object.keys(result).map(function (key, index) {
+            option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectProvinsi').html(option);
+        });
+        
+        $('#selectProvinsi').on('change', function () {
+        let id = $(this).val();
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`)
+            .then(response => response.json())
+            .then(result => {
+            var option = '<option>--Select City</option>';
+            Object.keys(result).map(function (key, index) {
+                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectKota').html(option);
+            })
+        })
+
+        $('#selectKota').on('change', function () {
+        let id = $(this).val();
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`)
+            .then(response => response.json())
+            .then(result => {
+            var option = '<option>--Select Districts</option>';
+            Object.keys(result).map(function (key, index) {
+                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectKecamatan').html(option);
+            })
+        })
+
+
+        $('#selectKecamatan').on('change', function () {
+        let id = $(this).val();
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`)
+            .then(response => response.json())
+            .then(result => {
+            var option = '<option>--Select Village</option>';
+            Object.keys(result).map(function (key, index) {
+                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectDesa').html(option);
+            })
+        })
+
+        {% comment %} function fetchCity(){
+            // get id provinsi
+            let idProvinsi = $('#selectProvinsi').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${idProvinsi}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectKota').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        } {% endcomment %}
+
+        {% comment %} function fetchDistrict(){
+            // get id kota
+            let idCity = $('#selectKota').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/districts/${idCity}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectKecamatan').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        } {% endcomment %}
+
+        {% comment %} function fetchVillage(){
+            // get id kota
+            let idVillage = $('#selectKecamatan').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/villages/${idVillage}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectDesa').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        } {% endcomment %}
+    </script>
 {% endblock content %}
