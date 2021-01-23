@@ -34,8 +34,7 @@
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="{% static 'images/img-01.png' %}" alt="IMG" />
                 </div>
-                <form method="POST" class="login100-form validate-form">
-                    {% comment %} enctype="multipart/form-data" {% endcomment %}
+                <form method="POST" enctype="multipart/form-data" class="login100-form validate-form">
                     {% csrf_token %}
                     {% for message in messages %}
                     <div class="alert alert-danger">
