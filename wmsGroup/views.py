@@ -135,7 +135,7 @@ def register(request):
             'id': get_last_value('usergroup_seq'),
             'provinsi': Province.objects.all(),
         }
-        return render(request, "inside/wmsGroup/form/register.html", context)
+        return render(request, "inside/wmsGroup/register.html", context)
     elif request.method == "POST":
         # try:
         data = UserGroup.objects.create(
@@ -191,7 +191,7 @@ def register(request):
         context = {
             'title': 'Register Akun'
         }
-        return render(request, "inside/wmsGroup/form/register.html", context)
+        return render(request, "inside/wmsGroup/register.html", context)
 
 
 def resetPassword(request):

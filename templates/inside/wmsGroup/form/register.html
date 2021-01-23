@@ -24,6 +24,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
     <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
@@ -47,7 +48,7 @@
                         <input class="input100" type="hidden" name="id" value="USG{{id}}" />
                     </div>
                     <div class="wrap-input100" data-validate="Please input your email !">
-                        <input type="file" class="input100" name="imageCompany">
+                        <input type="file" class="form-control" name="imageCompany">
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-user" aria-hidden="true"></i>
@@ -69,10 +70,8 @@
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <select class="input100" type="text" name="province" placeholder="province">
-                            {% for provinsi in provinsi %}
-                                <option>{{provinsi.name}}</option>
-                            {% endfor %}        
+                        <select class="form-control" type="text" name="province" id="selectProvinsi" placeholder="province" onchange="fetchCity()">  
+                            <option>--Select Province</option>
                         </select>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
@@ -80,21 +79,27 @@
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <input class="input100" type="text" name="city" placeholder="city" />
+                        <select class="input100" type="text" name="city" id="selectKota" placeholder="province" onchange="fetchDistrict()">
+                            <option>--Select City</option>  
+                        </select>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <input class="input100" type="text" name="districts" placeholder="districts" />
+                        <select class="input100" type="text" name="districts" id="selectKecamatan" placeholder="province" onchange="fetchVillage()">  
+                            <option>--Select Districts</option>
+                        </select>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                         </span>
                     </div>
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <input class="input100" type="text" name="village" placeholder="village" />
+                        <select class="input100" type="text" name="village" id="selectDesa" placeholder="province">  
+                            <option>--Select Village</option>
+                        </select>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -128,13 +133,6 @@
                             <i class="fa fa-envelope" aria-hidden="true"></i>
                         </span>
                     </div>
-                    {% comment %} <div class="wrap-input100" data-validate="Please input your username correctly !">
-                        <input class="input100" type="text" name="namaOperator" placeholder="namaOperator" />
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="fa fa-users" aria-hidden="true"></i>
-                        </span>
-                    </div> {% endcomment %}
                     <div class="wrap-input100" data-validate="Please input your username correctly !">
                         <input class="input100" type="text" name="name" placeholder="name Operator" />
                         <span class="focus-input100"></span>
@@ -163,32 +161,91 @@
             </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://api.iksgroup.co.id/apijs/lokasiapi.js"></script>
     <script>
-        console.log("door");
-        $.ajax({
-            type: "get",
-            url: "https://dev.farizdotid.com/api/daerahindonesia/provinsi/",
-            data: "data",
-            dataType: "dataType",
-            success: function (response) {
-                console.log(response)
-            }
-        });
+        var render=createwidgetlokasi("provinsi","kabupaten","kecamatan","kelurahan");
+    </script> -->
 
-        $.getJSON"({% static 'js/provinces.json' %}", function (json) {
-            console.log(json)
-        });
-        {% comment %} let urlApi = 'https://dev.farizdotid.com/api/daerahindonesia/provinsi'
-        fetch(urlApi)
-            .then(data => data.json)
-            .then(hasil => console.log(hasil.provinsi))
-            .catch(error => console.log(error)); {% endcomment %}
-    </script>
-    {% comment %}
     <script>
-        $.ajax({ url: "Access-Control-Allow-Origin: https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json", method: " GET", onsuccess: (response) => console.log(response.data) })
-    </script> {% endcomment %}
+        fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
+        .then(response => response.json())
+        .then(result => {
+            result.map(item => {
+                $('#selectProvinsi').append(
+                    '<option value="' + item.id + '">' + item.name + '<option/>'
+                );
+            })
+        });
+        
+        function fetchCity(){
+            // get id provinsi
+            let idProvinsi = $('#selectProvinsi').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${idProvinsi}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectKota').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        }
+
+        function fetchDistrict(){
+            // get id kota
+            let idCity = $('#selectKota').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/districts/${idCity}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectKecamatan').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        }
+
+        function fetchVillage(){
+            // get id kota
+            let idVillage = $('#selectKecamatan').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/villages/${idVillage}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectDesa').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        }
+    </script>
+
+    <!-- <script src="http://api.iksgroup.co.id/assets//jquery.min.js"></script>
+    <script src="http://api.iksgroup.co.id/assets//js/bootstrap.min.js"></script>
+    <script src="http://api.iksgroup.co.id/apijs/lokasiapi.js"></script>
+    <script>
+        var render=createwidgetlokasi("provinsi","kabupaten","kecamatan","kelurahan");
+        $(document).ready(function(){
+            $("#show").click(function(){
+                $("#output").html(trackdatalokasi);
+            });
+            
+            $("#cara").click(function(){
+                if($("#guide").is(':visible'))
+                {
+                    $("#guide").hide();
+                }else{
+                    $("#guide").show();
+                }
+            });
+        });
+    </script>
+    <script async="" src="https://t.dtscdn.com/widget/?d=6D001610327902AEBD3989D8FB0EC3E1&amp;p=0&amp;t=-420&amp;s=1366x768x24&amp;u=http%3A%2F%2Fapi.iksgroup.co.id%2Flokasi%2Fdemolokasi&amp;r=https%3A%2F%2Fwww.google.com%2F"></script>
+    <script src="https://get.s-onetag.com/f0c84061-4182-4398-8e37-5ff5b5698a6f/tag.min.js" async="" defer=""></script> -->
     <!--===============================================================================================-->
     <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
     <!--===============================================================================================-->

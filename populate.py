@@ -144,7 +144,7 @@ provinces = [
     }
 ]
 
-province = [
+kabupaten = [
     {
         "id": "1101",
         "provinsi_id": "11",
@@ -2721,9 +2721,11 @@ province = [
 #     for i in province:
 #         provinsi = Province.objects.get_or_create(id= i['id'], name=i['name'])[0]
 
-def populate():
-    for i in province:
-        city = City.objects.get_or_create(id= i['id'], provinsi_id= i['provinsi_id'] ,name=i['name'])[0]
+# def populate():
+#     for i in kabupaten:
+#         city = City.objects.get_or_create(id= i['id'], provinsi_id= i['provinsi_id'] ,name=i['name'])[0]
+
+
 
 if __name__ == '__main__':
     print("Populating the database ... please wait!")

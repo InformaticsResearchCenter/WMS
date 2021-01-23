@@ -1,0 +1,243 @@
+{% load static %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<html>
+<body>
+<div class="container register">
+                <div class="row">
+                    <div class="col-md-3 register-left">
+                        <img src="{% static 'images/img-01.png' %}"  alt=""/ style="width:200px;">
+                        <h3>Welcome</h3>
+                        <p>Warehouse Management System<br>Politeknik Pos Indonesia</p>
+                        <a href="{% url 'groupLogin' %}"><input type="submit" name="" value="Login"/><br/></a>
+                    </div>
+                    <div class="col-md-9 register-right">
+                        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Group</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="{% url 'login'%}" role="tab" aria-controls="profile" aria-selected="false">Member</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <h3 class="register-heading">Register</h3>
+                                 <form method="POST" class="login100-form validate-form">
+                                    {% comment %} enctype="multipart/form-data" {% endcomment %}
+                                    {% csrf_token %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-danger">
+                                        <a class="close" href="#" data-dismiss="alert">×</a>
+                                        {{ message }}
+                                    </div>
+                                    {% endfor %}
+                                <div class="row register-form">
+                                    <div class="col-md-6">
+                                        <input type="hidden" class="form-control" name="id" value="USG{{id}}" />
+                                        <div class="form-group">
+                                            <label style="color:black;">Logo Company</label>
+                                            <input type="file" class="form-control" placeholder="Choose Logo" name="imageCompany" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="nameCompany" placeholder="Name Company *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea class="form-control" type="text" name="addressCompany"placeholder="addressCompany" /></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" type="text" name="province" id="selectProvinsi" placeholder="province" onchange="fetchCity()">  
+                                                
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" type="text" name="city" id="selectKota" placeholder="province" onchange="fetchDistrict()">
+                                                <option>--Select City</option>  
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" type="text" name="districts" id="selectKecamatan" placeholder="province" onchange="fetchVillage()">  
+                                                <option>--Select Districts</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" type="text" name="village" id="selectDesa" placeholder="province">  
+                                                <option>--Select Village</option>
+                                            </select>
+                                        </div>
+                                         <div class="form-group">
+                                            <textarea class="form-control" type="text" name="address" placeholder="address" /></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="postalCode" placeholder="postal code" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                         <div class="form-group">
+                                         <label style="color:black;">Profile Operator</label>
+                                            <input type="file" class="form-control" name="profileOperator">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="name" placeholder="name Operator" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" name="phoneNumber" placeholder="phone number" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="email" name="email" placeholder="email" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="password" name="password" placeholder="password" />
+                                        </div>
+                                        <input type="submit" class="btnRegister"  value="Register"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <h3  class="register-heading">Apply as a Hirer</h3>
+                                <div class="row register-form">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="First Name *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Last Name *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="Email *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" maxlength="10" minlength="10" class="form-control" placeholder="Phone *" value="" />
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" placeholder="Password *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" placeholder="Confirm Password *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control">
+                                                <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
+                                                <option>What is your Birthdate?</option>
+                                                <option>What is Your old Phone Number</option>
+                                                <option>What is your Pet Name?</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="`Answer *" value="" />
+                                        </div>
+                                        <input type="submit" class="btnRegister"  value="Register"/>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</body>          
+<script>
+        fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
+        .then(response => response.json())
+        .then(result => {
+            var option = '<option>--Select Province</option>';
+            Object.keys(result).map(function (key, index) {
+            option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectProvinsi').html(option);
+        });
+        
+        $('#selectProvinsi').on('change', function () {
+        let id = $(this).val();
+        fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`)
+            .then(response => response.json())
+            .then(result => {
+            var option = '<option>--Select City</option>';
+            Object.keys(result).map(function (key, index) {
+                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectKota').html(option);
+            })
+        })
+
+        $('#selectKota').on('change', function () {
+        let id = $(this).val();
+        fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`)
+            .then(response => response.json())
+            .then(result => {
+            var option = '<option>--Select Districts</option>';
+            Object.keys(result).map(function (key, index) {
+                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectKecamatan').html(option);
+            })
+        })
+
+
+        $('#selectKecamatan').on('change', function () {
+        let id = $(this).val();
+        fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`)
+            .then(response => response.json())
+            .then(result => {
+            var option = '<option>--Select Village</option>';
+            Object.keys(result).map(function (key, index) {
+                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+            });
+            $('#selectDesa').html(option);
+            })
+        })
+
+        {% comment %} function fetchCity(){
+            // get id provinsi
+            let idProvinsi = $('#selectProvinsi').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${idProvinsi}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectKota').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        } {% endcomment %}
+
+        {% comment %} function fetchDistrict(){
+            // get id kota
+            let idCity = $('#selectKota').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/districts/${idCity}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectKecamatan').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        } {% endcomment %}
+
+        {% comment %} function fetchVillage(){
+            // get id kota
+            let idVillage = $('#selectKecamatan').val()
+
+            fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/villages/${idVillage}.json`)
+            .then(response => response.json())
+            .then(result => {
+                result.map(item => {
+                    $('#selectDesa').append(
+                        '<option value="' + item.id + '">' + item.name + '<option/>'
+                    );
+                })
+            });
+        } {% endcomment %}
+    </script>
+
+</html>
