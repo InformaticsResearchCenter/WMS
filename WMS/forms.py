@@ -1,15 +1,32 @@
 from django import forms
 from WMS.models import *
-from WMS.models import User, Category, Subcategory
-
-from WMS.models import User, Category
-from WMS.models import User, Category
 
 class UserGroupForm(forms.ModelForm):
     class Meta:
         model = UserGroup
         fields = [
             'id',
+            'name',
+            'address',
+            'phoneNumber',
+            'postalCode',
+            'email',
+            'password',
+            'city',
+            'districts',
+            'province',
+            'addressCompany',
+            'imageCompany',
+            'nameCompany',
+            'profileOperator',
+            'village',
+        ]
+
+
+class UpdateUserGroupForm(forms.ModelForm):
+    class Meta:
+        model = UserGroup
+        fields = [
             'name',
             'address',
             'phoneNumber',
