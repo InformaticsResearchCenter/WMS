@@ -3,9 +3,10 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
-<html>
-<body>
+<html style="width:100%;">
+<body style="width:100%;">
 <div class="container register">
                 <div class="row">
                     <div class="col-md-3 register-left">
@@ -26,7 +27,7 @@
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 <h3 class="register-heading">Register</h3>
-                                 <form method="POST" class="login100-form validate-form">
+                                 <form method="POST" enctype="multipart/form-data" class="login100-form validate-form">
                                     {% comment %} enctype="multipart/form-data" {% endcomment %}
                                     {% csrf_token %}
                                     {% for message in messages %}
@@ -36,7 +37,7 @@
                                     </div>
                                     {% endfor %}
                                 <div class="row register-form">
-                                    <div class="col-md-6">
+                                    <div class="col-md-20">
                                         <input type="hidden" class="form-control" name="id" value="USG{{id}}" />
                                         <div class="form-group">
                                             <label style="color:black;">Logo Company</label>

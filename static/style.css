@@ -3,7 +3,8 @@
 }
 body{
 	background: -webkit-linear-gradient(left, #090808, #706d62);
-	color: #fff;
+    color: #fff;
+    width: 100%;
 }
 .register{
     background: -webkit-linear-gradient(left, #fd7e14, #ffcc00);
@@ -100,3 +101,5 @@ body{
     margin-bottom: -15%;
     color: #495057;
 }
+
+/* For mobile phones: */
