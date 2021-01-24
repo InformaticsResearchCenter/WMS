@@ -91,6 +91,9 @@ $(document).ready(function () {
 			items = [];
 			code = [];
 			$("#itemCodeContainer").hide();
+		} else if (pointer == "stockOpname") {
+			validation["stockopname"] = false;
+			$("#rackId").val(qrCodeMessage);
 		}
 	}
 	$("#binLocation").change(function (e) {
@@ -131,6 +134,7 @@ $(document).ready(function () {
 		$(".card-body").show();
 		if ($("#action").val() == "move" || $("#action").val() == "inbound") {
 			$("#outboundIdContainer").hide();
+			$("#opnameContainer").hide();
 			$("#binLocationContainer").show();
 			$("#itemCodeContainer").show();
 			$("#borrowCodeContainer").hide();
@@ -143,6 +147,7 @@ $(document).ready(function () {
 		} else if ($("#action").val() == "outbound") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").show();
+			$("#opnameContainer").hide();
 			$("#itemCodeContainer").hide();
 			$("#borrowCodeContainer").hide();
 			$("#returnCodeContainer").hide();
@@ -151,9 +156,12 @@ $(document).ready(function () {
 			$("#outboundId").val("");
 			$("#borrowCode").val("");
 			$("#returnCode").val("");
+			$("#rackId").val("");
+			$("#opnameId").val("");
 		} else if ($("#action").val() == "borrow") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").hide();
+			$("#opnameContainer").hide();
 			$("#itemCodeContainer").hide();
 			$("#borrowCodeContainer").show();
 			$("#returnCodeContainer").hide();
@@ -162,9 +170,12 @@ $(document).ready(function () {
 			$("#outboundId").val("");
 			$("#borrowCode").val("");
 			$("#returnCode").val("");
+			$("#rackId").val("");
+			$("#opnameId").val("");
 		} else if ($("#action").val() == "return") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").hide();
+			$("#opnameContainer").hide();
 			$("#itemCodeContainer").hide();
 			$("#borrowCodeContainer").hide();
 			$("#returnCodeContainer").show();
@@ -173,17 +184,24 @@ $(document).ready(function () {
 			$("#outboundId").val("");
 			$("#borrowCode").val("");
 			$("#returnCode").val("");
-		} else if ($("#action").val() == "return") {
+			$("#rackId").val("");
+			$("#opnameId").val("");
+		} else if ($("#action").val() == "opname") {
 			$("#binLocationContainer").hide();
 			$("#outboundIdContainer").hide();
+			$("#opnameContainer").show();
 			$("#itemCodeContainer").hide();
 			$("#borrowCodeContainer").hide();
-			$("#returnCodeContainer").show();
+			$("#returnCodeContainer").hide();
 			$("#binLocation").val("");
 			$("#itemCode").val("");
 			$("#outboundId").val("");
 			$("#borrowCode").val("");
 			$("#returnCode").val("");
+			$("#rackId").val("");
+			$("#opnameId").val("");
+		} else {
+
 		}
 	});
 
@@ -207,52 +225,60 @@ $(document).ready(function () {
 		e.preventDefault();
 		pointer = "return";
 	});
+	$("#rackId").click(function (e) {
+		e.preventDefault();
+		pointer = "stockOpname";
+
+	});
 	$("#inputBrokenButton").click(function (e) {
+		alert("clicked");
 		e.preventDefault();
 		if (itemStockData.length > 0) {
 			for (let index = 0; index < itemStockData.length; index++) {
 				const e = itemStockData[index];
 				if (e.id == $("#opnameId").val()) {
-					opnameItemExist = true
-					break
+					opnameItemExist = true;
+					break;
 				}
 			}
 			if (opnameItemExist == true) {
 				if (confirm("Input item to broken list ?")) {
-					if (confirm("Input item to normal list ?")) {
-						if (code.includes($("#opnameId").val()) || brokenItems.includes($("#opnameId").val())) {
-							alert("item already scanned")
-						} else {
-							brokenItems.push($("#opnameId").val());
-						}
+					if (code.includes($("#opnameId").val()) || brokenItems.includes($("#opnameId").val())) {
+						alert("item already scanned")
+					} else {
+						brokenItems.push($("#opnameId").val());
 					}
 				}
+			} else {
+				alert('Item listed on this rack');
 			}
 		} else {
-
 			alert('no item');
 		}
 
 
 	});
 	$("#inputNormalButton").click(function (e) {
+		alert("clicked");
 		e.preventDefault();
 		if (itemStockData.length > 0) {
 			for (let index = 0; index < itemStockData.length; index++) {
 				const e = itemStockData[index];
 				if (e.id == $("#opnameId").val()) {
-					opnameItemExist = true
-					break
+					opnameItemExist = true;
+					break;
 				}
 			}
 			if (opnameItemExist == true) {
 				if (confirm("Input item to normal list ?")) {
 					if (code.includes($("#opnameId").val()) || brokenItems.includes($("#opnameId").val())) {
-						alert("item already scanned")
+						alert("item already scanned");
 					} else {
 						code.push($("#opnameId").val());
 					}
 				}
+			} else {
+				alert('Item listed on this rack');
 			}
 		} else {
 			alert('no item');
