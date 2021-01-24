@@ -14,7 +14,6 @@ import datetime
 def index(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
-
     else:
         avaibleItem = ItemData.objects.select_related('inbound').filter(
             status='1', deleted=0, userGroup=request.session['usergroup']).values('inbound__item')
@@ -32,7 +31,6 @@ def index(request):
                         id=i['inbound__item']).values('name')[0]['name'], 'qty': 1})
                 except:
                     pass
-        print(rawitem)
         context = {
             'title': 'Home | WMS Poltekpos',
             'role': request.session['role'],
@@ -41,6 +39,8 @@ def index(request):
             'avaibleItem' : ItemData.objects.filter(status="1", userGroup=request.session['usergroup'], deleted = 0).count(),
             'itemSold' : ItemData.objects.filter(status="2", userGroup=request.session['usergroup'], deleted = 0).count(),
             'borrowedItem' : ItemData.objects.filter(status="3", userGroup=request.session['usergroup'], deleted = 0).count(),
+            'brokenItem' : ItemData.objects.filter(status="4", userGroup=request.session['usergroup'], deleted = 0).count(),
+            'lostItem' : ItemData.objects.filter(status="5", userGroup=request.session['usergroup'], deleted = 0).count(),
             "detailAvaibleItem" : rawitem
         }
         return render(request, "inside/wmsApp/index.html", context)

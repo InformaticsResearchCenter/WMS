@@ -120,6 +120,7 @@ def register(request):
                     role=Role.objects.get(pk='MAN')
                 )
                 man_user.save()
+                get_next_value('usergroup_seq')
                 email = urlsafe_base64_encode(force_bytes(request.POST['email']))
                 domain = get_current_site(request).domain
                 token = token_generator.make_token(request.POST['phoneNumber'])
@@ -137,7 +138,6 @@ def register(request):
                     [request.POST['email']],
                 )
                 email.send(fail_silently=False)
-                get_next_value('usergroup_seq')
                 return redirect('groupLogin')
             else:
                 messages.error(request, 'Terjadi Error')
