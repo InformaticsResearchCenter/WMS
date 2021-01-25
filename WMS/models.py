@@ -120,6 +120,8 @@ class Inbound(models.Model):
         User, related_name="iConfirm", on_delete=models.CASCADE, null=True)
     create = models.ForeignKey(
         User, related_name="iCreate", on_delete=models.CASCADE, null=True)
+    class Meta:
+        ordering = ['date']
 
 
 class InboundData(models.Model):

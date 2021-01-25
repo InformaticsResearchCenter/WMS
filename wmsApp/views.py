@@ -45,6 +45,8 @@ def index(request):
         }
         return render(request, "inside/wmsApp/index.html", context)
 
+
+
 def login(request):
     context = {
         'title': 'Welcome | WMS Poltekpos',
