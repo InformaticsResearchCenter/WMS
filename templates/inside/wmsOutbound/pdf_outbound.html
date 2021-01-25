@@ -1,133 +1,208 @@
 {% load static %}
 {% block content %}
-    <div id="content">
-        <h1>Outbound Invoice</h1>
-    </div>
-    <html>
-    <head>
-        <title>Title</title>
-        <style type="text/css">
-            body {
-                font-weight: 200;
-                font-size: 14px;
-            }
-            .header {
-                font-size: 20px;
-                font-weight: 100;
-                text-align: center;
-                color: #007cae;
-            }
-            .title {
-                font-size: 22px;
-                font-weight: 100;
-               /* text-align: right;*/
-               padding: 10px 20px 0px 20px;  
-            }
-            .title span {
-                color: #007cae;
-            }
-            .details {
-                padding: 10px 20px 0px 20px;
-                text-align: left !important;
-                /*margin-left: 40%;*/
-            }
-            .hrItem {
-                border: none;
-                height: 1px;
-                /* Set the hr color */
-                color: #333; /* old IE */
-                background-color: #fff; /* Modern Browsers */
-            }
-        </style>
-        <script src="{% static 'Admin/qrcode.min.js' %}"></script>
-        <!-- <script src="qrcode.min.js"></script> -->
-    </head>
-    <body style="margin-bottom: 40px;">
-        <div class='wrapper'>
-            <div class='header'>
-                <p class='title'><u>Invoice #{{obj.id}}</u></p>
-                
-            </div>
-        <div>
-            <table>
-                <tr>
-                    <td>
-                        <table width="450px">
-                            <tr>
-                                <td width="100px">Outbound ID</td>
-                                <td>:</td>
-                                <td width="200px">{{obj.id}}</td>
+<html>
 
-                            </tr>
-                            <tr>
-                                <td width="100px">Customer</td>
-                                <td>:</td>
-                                <td width="200px">{{obj.customer.name}}</td>
-                            </tr>
-                            <tr>
-                                <td width="100px">Address</td>
-                                <td>:</td>
-                                <td width="200px">{{obj.customer.address}}</td>
-                            </tr>
-                            <tr>
-                                <td width="100px">Date</td>
-                                <td>:</td>
-                                <td width="200px">{{obj.date}}</td>
-                            </tr>
-                            <tr>
-                                <td width="100px">Confirm</td>
-                                <td>:</td>
-                                <td width="200px">{{obj.confirm.name}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td style="width: 100px;">&nbsp;</td>
-                    <td>
-                        <img src='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl={{obj.id}}'>
-                    </td>
-                </tr>
-            </table>
-        	
-            <hr class='hrItem' />
-            <h2>Outbounddata</h2>
-            <table class="table" border="1" style="text-align: center;padding-top: 5px;">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Item</th>
-                            <th scope="col">Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for itdt in datas %}
-                        <tr>
-                            <th scope="row">1</th>
-                            <!-- <td>{{itdt.0}}</td> -->
-                            <td>{{itdt.1}}</td>
-                            <td>{{itdt.2}}</td>
-                            <!-- <td>{{itdt.3}}</td>
-                            <td><img src='https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={{itdt.0}}'></td> -->
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+<head>
+    <title>Title</title>
+    <style type="text/css">
+        body {
+            font-weight: 200;
+            font-size: 14px;
+        }
+
+        .header {
+            font-size: 20px;
+            font-weight: 100;
+            text-align: center;
+            color: #007cae;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 100;
+            /* text-align: right;*/
+            padding: 10px 20px 0px 20px;
+        }
+
+        .title span {
+            color: #007cae;
+        }
+
+        .details {
+            padding: 10px 20px 0px 20px;
+            text-align: left !important;
+            /*margin-left: 40%;*/
+        }
+
+        .hrItem {
+            border: none;
+            height: 1px;
+            /* Set the hr color */
+            color: #333;
+            /* old IE */
+            background-color: #fff;
+            /* Modern Browsers */
+        }
+    </style>
+    <script src="{% static 'Admin/qrcode.min.js' %}"></script>
+    <!-- <script src="qrcode.min.js"></script> -->
+</head>
+
+<body style="margin-bottom: 40px;">
+    <div style=" font-family: arial;">
+        <table>
+            <tr>
+                <td style="width:18%;"> <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl={{obj.id}}"
+                        style="float: right;width:150px;"></td>
+                <td style="width:82%;">
+                    <h2 style="margin-top: 0px;text-align: center;">{{ug.nameCompany}}</h2>
+                    <h5 style="margin-top: -15px;text-align: center;">{{ug.addressCompany}}, {{ug.province}}<td id="province"></td></h5>
+                    <input type="hidden" id="get_prov" value="{{ug.province}}">
+                    <h3 style="margin-top: -15px;text-align: center;"><i>RT 02/RW 11</i></h3>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <br>
+    <tr>
+        <td>Province</td>
+        <td>&nbsp; : &nbsp;</td>
+        <td id="province"></td>
+        <input type="hidden" id="get_prov" value="{{ug.province}}">
+    </tr>
+    <div class='header'>
+        <p class='title'><u>Outbound Invoice #{{obj.id}}</u></p>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <table width="450px">
+                    <tr>
+                        <td width="100px">Outbound ID</td>
+                        <td>:</td>
+                        <td width="200px">{{obj.id}}</td>
+                    </tr>
+                    <tr>
+                        <td width="100px">Customer</td>
+                        <td>:</td>
+                        <td width="200px">{{obj.customer.name}}</td>
+                    </tr>
+                    <tr>
+                        <td width="100px">Address</td>
+                        <td>:</td>
+                        <td width="200px">{{obj.customer.address}}</td>
+                    </tr>
+                    <tr>
+                        <td width="100px">Date</td>
+                        <td>:</td>
+                        <td width="200px">{{obj.date}}</td>
+                    </tr>
+                    <tr>
+                        <td width="100px">Confirm</td>
+                        <td>:</td>
+                        <td width="200px">{{obj.confirm.name}}</td>
+                    </tr>
                 </table>
+            </td>
+            <td style="width: 100px;">&nbsp;</td>
+            <td>
+                <img src='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl={{obj.id}}'>
+            </td>
+        </tr>
+    </table>
+
+    <hr class='hrItem' />
+    <h2>Outbounddata</h2>
+    <table class="table" border="1" style="text-align: center;padding-top: 5px;">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Item</th>
+                <th scope="col">Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for itdt in datas %}
+            <tr>
+                <th scope="row">1</th>
+                <!-- <td>{{itdt.0}}</td> -->
+                <td>{{itdt.1}}</td>
+                <td>{{itdt.2}}</td>
+                <!-- <td>{{itdt.3}}</td>
+                            <td><img src='https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={{itdt.0}}'></td> -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     </div>
-    </body>
-    <footer style="margin-top: 40px;">
+</body>
+<footer style="margin-top: 40px;">
     <p style="font-family: arial;margin-left: 500px;margin-top: 20px;">Bandung, 18 Sep 2020</p>
-     <p style="font-family: arial;margin-left: 530px;"><b>Pemilik WMS</b></p>
-     <p style="font-family: arial;margin-left: 480px;padding-top: 50px;">
-      <b>(  Politeknik Pos Indonesia )</b></p>
-  </footer> 
-  <script>
-      var qrdata = document.getElementById('qr-data');
-      var qrcode = new QRCode(document.getElementById('qrcode'));
+    <p style="font-family: arial;margin-left: 530px;"><b>Pemilik WMS</b></p>
+    <p style="font-family: arial;margin-left: 480px;padding-top: 50px;">
+        <b>( Politeknik Pos Indonesia )</b></p>
+</footer>
+<script>
+    var qrdata = document.getElementById('qr-data');
+    var qrcode = new QRCode(document.getElementById('qrcode'));
 
-      function generateQR(){
+    function generateQR() {
         var data = qrdata.value;
-
         qrcode.makeCode(data);
-      }
-  </script>
+    }
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    let get_prov = $('#get_prov').val()
+
+    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
+    .then(response => response.json())
+    .then(result => {
+        Object.keys(result).map(function (key, index){
+            if (get_prov == result[key].id){
+                console.log(result[key])
+                $('#province').html(result[key].name);
+            }
+        });
+    });
+
+    let get_city = $('#get_city').val()
+    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${get_prov}.json`)
+    .then(response => response.json())
+    .then(result => {
+        Object.keys(result).map(function (key, index){
+            if (get_city == result[key].id){
+                console.log(result[key])
+                $('#city').html(result[key].name);
+            }
+        });
+    });
+
+    let get_districts = $('#get_districts').val()
+    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/districts/${get_city}.json`)
+    .then(response => response.json())
+    .then(result => {
+        Object.keys(result).map(function (key, index){
+            if (get_districts == result[key].id){
+                console.log(result[key])
+                $('#districts').html(result[key].name);
+            }
+        });
+    });
+
+    let get_village = $('#get_village').val()
+    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/villages/${get_districts}.json`)
+    .then(response => response.json())
+    .then(result => {
+        Object.keys(result).map(function (key, index){
+            if (get_village == result[key].id){
+                console.log(result[key])
+                $('#village').html(result[key].name);
+            }
+        });
+    });
+</script>
+
 </html>
 {% endblock %}

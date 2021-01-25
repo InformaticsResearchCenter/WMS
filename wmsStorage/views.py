@@ -67,12 +67,6 @@ def getStockOpname(request):
     
     
     itemlist=[list(i) for i in Counter(rawItem).items()]
-    # print("here we go")
-    # print(itemBulk)
-    # print("quantity")
-    # # print(quantity)
-    # # print("itemlist" )
-    # # print(itemlist)
     data = {'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity}
 
     print(data)
@@ -173,7 +167,20 @@ def retur(request):
     return JsonResponse({"@@":"a"},status = 200)
 
 def stockOpname(request):
-    print("AA")
+    rackid = request.POST.get('rackid', None)
+    item = loads(request.POST.get('item', None))
+    normal = loads(request.POST.get('normal', None))
+    broken = loads(request.POST.get('broken', None))
+    print("stock opname started ")
+    for i in item:
+        ItemData.objects.filter(pk=i['id']).update(status = '5')
+    for i in normal:
+        ItemData.objects.filter(pk=i).update(status='1')
+    for i in broken:
+        ItemData.objects.filter(pk=i).update(status='4')
+
+
+    return JsonResponse({"@@":"a"},status = 200)
     
 # -------- PDF -----------
 from django.template.loader import get_template

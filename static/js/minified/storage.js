@@ -39,6 +39,7 @@ function removeItem(a, id) {
 	}
 }
 $(document).ready(function () {
+
 	var csrf = $("input[name='csrfmiddlewaretoken']").val();
 	var html5QrcodeScanner = new Html5QrcodeScanner('qr-reader', {
 		fps: 10,
@@ -56,11 +57,14 @@ $(document).ready(function () {
 		success: function (response) {
 			itemData = response
 			$(".overlay").hide();
+
 		},
 		fail: function (xhr, textStatus, errorThrown) {
 			alert('request failed');
 			$(".overlay").hide();
+
 		}
+
 	});
 
 	function onScanSuccess(qrCodeMessage) {
@@ -94,6 +98,10 @@ $(document).ready(function () {
 		} else if (pointer == "stockOpname") {
 			validation["stockopname"] = false;
 			$("#rackId").val(qrCodeMessage);
+
+		} else if (pointer == "opname") {
+			validation["stockopname"] = false;
+			$("#opnameId").val(qrCodeMessage);
 		}
 	}
 	$("#binLocation").change(function (e) {
@@ -122,6 +130,12 @@ $(document).ready(function () {
 		items = [];
 		code = [];
 		itemLimit = [];
+	});
+	$('#rackId').change(function (e) {
+		e.preventDefault();
+		validation["stockopname"] = false;
+		brokenItems = [];
+		code = [];
 	});
 	$("#action").change(function (e) {
 		e.preventDefault();
@@ -204,7 +218,6 @@ $(document).ready(function () {
 
 		}
 	});
-
 	$("#binLocation").click(function (e) {
 		e.preventDefault();
 		pointer = "binLocation";
@@ -230,8 +243,12 @@ $(document).ready(function () {
 		pointer = "stockOpname";
 
 	});
+	$("#opnameId").click(function (e) {
+		e.preventDefault();
+		pointer = "opname"
+
+	});
 	$("#inputBrokenButton").click(function (e) {
-		alert("clicked");
 		e.preventDefault();
 		if (itemStockData.length > 0) {
 			for (let index = 0; index < itemStockData.length; index++) {
@@ -259,10 +276,10 @@ $(document).ready(function () {
 
 	});
 	$("#inputNormalButton").click(function (e) {
-		alert("clicked");
 		e.preventDefault();
 		if (itemStockData.length > 0) {
 			for (let index = 0; index < itemStockData.length; index++) {
+				opnameItemExist = false;
 				const e = itemStockData[index];
 				if (e.id == $("#opnameId").val()) {
 					opnameItemExist = true;
@@ -420,6 +437,7 @@ $(document).ready(function () {
 					$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
 				}
 				$(".overlay").hide();
+				validation["stockopname"] = true;
 			}
 		});
 	});
@@ -815,6 +833,37 @@ $(document).ready(function () {
 					alert("jumlah item tidak sesuai");
 				}
 			}
+		} else if ($("#action").val() == "opname") {
+			if (!validation["stockopname"]) {
+				alert("Data Invalid, rack id belum di check");
+			} else if (code == "" && brokenItems == "") {
+				alert("Data Invalid, belum ada item yang di scan");
+			} else {
+				$(".overlay").show();
+
+				$.ajax({
+					type: 'post',
+					url: '/app/storage/scanner/stockOpname',
+					data: {
+						rackid: stockOpname.rack[0].id,
+						item: JSON.stringify(stockOpname.items),
+						normal: JSON.stringify(code),
+						broken: JSON.stringify(brokenItems),
+						csrfmiddlewaretoken: csrf
+					},
+					success: function (response) {
+
+						$(".overlay").hide();
+						alert("stock opname " + stockOpname.rack[0].id + " berhasil");
+
+					},
+					fail: function (xhr, textStatus, errorThrown) {
+						alert('request failed');
+						$(".overlay").hide();
+					}
+				});
+			}
+
 		} else {
 			alert("Select option");
 		}
