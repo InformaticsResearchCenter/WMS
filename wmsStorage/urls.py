@@ -16,6 +16,7 @@ urlpatterns = [
     path('scanner/move', views.move, name="move"),
     path('scanner/borrow', views.borrow, name="borrow"),
     path('scanner/return', views.retur, name="return"),
+    path('scanner/stockOpname', views.stockOpname, name="stockOpname"),
 
 
     # ======================================= RACK =============================================

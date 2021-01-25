@@ -39,8 +39,6 @@ def login(request):
                 messages.error(request, 'username does not exists!')
                 return redirect('adminLogin')
             data = list(Admin.objects.filter(username=request.POST['username']).values('id','username','password','deleted'))
-            print(data)
-            print(request.POST['password'])
 
             if data[0]['deleted'] == "1":
                 messages.error(request, 'username does not exists!')
@@ -61,20 +59,10 @@ def logout(request):
     request.session.flush()
     return redirect('adminLogin')
 
-    # try:
-    #     del request.session['adminId']
-    #     del request.session['adminUsername']
-    #     del request.session['admin_is_login']
-    #     return redirect('adminLogin')
-    # except KeyError as e:
-    #     return HttpResponse(e)
-
 def limit(request,id):
     if 'admin_is_login' not in request.session:
         return redirect('adminLogin')
     else:
-        print(id)
-        print(request.POST['limit'])
         UserGroup.objects.filter(pk=id).update(
                 limit=request.POST['limit']
                 )
@@ -84,7 +72,6 @@ def deactive(request,id):
     if 'admin_is_login' not in request.session:
         return redirect('adminLogin')
     else:
-        print(id)
         UserGroup.objects.filter(pk=id).update(
                 limit="1000-10-10"
                 )

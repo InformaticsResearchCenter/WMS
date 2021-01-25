@@ -46,14 +46,11 @@ def getStockOpname(request):
     rackId=request.POST.get('rack',None)
     rack = Rack.objects.filter(pk=rackId, userGroup=request.session['usergroup'], deleted=0).values()
     bin = Binlocation.objects.filter(rack=rackId).values()
-    # print(rack)
-    # print(bin)
     itemBulk=[]
     rawItem=[]
     quantity=0
     for a in bin:
         item = list(ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values())
-        # print(item)
         try:
             if item != []:
                 for b in item:
@@ -70,12 +67,6 @@ def getStockOpname(request):
     
     
     itemlist=[list(i) for i in Counter(rawItem).items()]
-    # print("here we go")
-    # print(itemBulk)
-    # print("quantity")
-    # # print(quantity)
-    # # print("itemlist" )
-    # # print(itemlist)
     data = {'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity}
 
     print(data)
@@ -173,6 +164,22 @@ def retur(request):
     for i in itemCode:
         ItemData.objects.filter(id=i).update(status = "2", outbound = Outbound.objects.get(pk=outbound[0]["outbound__id"]))
     CostumerReturn.objects.filter(id=returnId).update(status = "3")
+    return JsonResponse({"@@":"a"},status = 200)
+
+def stockOpname(request):
+    rackid = request.POST.get('rackid', None)
+    item = loads(request.POST.get('item', None))
+    normal = loads(request.POST.get('normal', None))
+    broken = loads(request.POST.get('broken', None))
+    print("stock opname started ")
+    for i in item:
+        ItemData.objects.filter(pk=i['id']).update(status = '5')
+    for i in normal:
+        ItemData.objects.filter(pk=i).update(status='1')
+    for i in broken:
+        ItemData.objects.filter(pk=i).update(status='4')
+
+
     return JsonResponse({"@@":"a"},status = 200)
     
 # -------- PDF -----------

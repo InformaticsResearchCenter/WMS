@@ -41,11 +41,24 @@
                 <span class="info-box-number">{{borrowedItem}}</span>
             </div>
         </div>
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="fa fa-window-maximize"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Broken Item total</span>
+                <span class="info-box-number">{{brokenItem}}</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="fa fa-window-maximize"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Lost Item total</span>
+                <span class="info-box-number">{{lostItem}}</span>
+            </div>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="{% static 'js/minified/jquery-3.5.1.min.js' %}"></script>
     <canvas id="myChart" width="400"></canvas>
-
 </div>
 {% csrf_token %}
 <script>
