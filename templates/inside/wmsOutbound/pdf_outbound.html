@@ -1,8 +1,5 @@
 {% load static %}
 {% block content %}
-    <div id="content">
-        <h1>Outbound Invoice</h1>
-    </div>
     <html>
     <head>
         <title>Title</title>
@@ -43,12 +40,24 @@
         <!-- <script src="qrcode.min.js"></script> -->
     </head>
     <body style="margin-bottom: 40px;">
-        <div class='wrapper'>
+        <div style=" font-family: arial;">
+            <table>
+                <tr>
+                    <td style="width:18%;"> <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl={{obj.id}}" style="float: right;width:150px;"></td>
+                    <td style="width:82%;">
+                        <h2 style="margin-top: 0px;text-align: center;">OUTBOUND INVOICE</h2>
+                        <h3 style="margin-top: -15px;text-align: center;"><i>RT 02/RW 11</i></h3>
+                        <h5 style="margin-top: -15px;text-align: center;">KP. CIKAMBUY HILIR DS. SANGKANHURIP KEC. KATAPANG KAB. BANDUNG </h5>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+    <br>
             <div class='header'>
-                <p class='title'><u>Invoice #{{obj.id}}</u></p>
+                <p class='title'><u>Outbound Invoice #{{obj.id}}</u></p>
                 
             </div>
-        <div>
             <table>
                 <tr>
                     <td>
