@@ -97,6 +97,8 @@
             option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
             });
             $('#selectProvinsi').html(option);
+
+            localstorage.setKey('dataRegencies', JSON.stringify(result))
         });
         
         $('#selectProvinsi').on('change', function () {
