@@ -17,3 +17,21 @@ def reportIndex(request):
             'lostItem' : ItemData.objects.filter(status="5", userGroup=request.session['usergroup'], deleted = 0).count(),
     }
     return render(request,'inside/wmsReport/index.html', context)
+def reportDetail(request,status):
+	item=Item.objects.filter(userGroup=request.session['usergroup']).values()
+	data=ItemData.objects.filter(status=status, userGroup=request.session['usergroup'], deleted = 0).values('id','inbound__item','binlocation__binlocation')
+	for i in data:
+		for a in item:
+			if i['inbound__item']==a['id']:
+				i['name'] = a['name']
+
+	context = {
+		'title': 'Report | WMS Poltekpos',
+		'role': request.session['role'],
+		'username': request.session['username'],
+		'userGroup' : request.session['usergroup'],
+		'item' : data,
+		'quantity' : ItemData.objects.filter(status=status, userGroup=request.session['usergroup'], deleted = 0).count()
+	}
+	
+	return render(request,'inside/wmsReport/report.html', context)

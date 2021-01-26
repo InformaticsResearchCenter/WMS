@@ -101,7 +101,7 @@ class Supplier(External):
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
     email = models.CharField(max_length=50, default="NULL")
-
+    
 
 class Inbound(models.Model):
     status_choices = [

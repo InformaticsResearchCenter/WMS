@@ -21,7 +21,7 @@
                     <td>Avaible</td>
                     <td>{{avaibleItem}}</td>
                     <td>
-                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                        <a href="{% url 'reportdetail' 1 %}"><button class="btn-primary btn-sm">View</button></a>
                     </td>
                 </tr>
                 <tr>
@@ -29,7 +29,7 @@
                     <td>Sold</td>
                     <td>{{itemSold}}</td>
                     <td>
-                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                        <a href="{% url 'reportdetail' 2 %}"><button class="btn-primary btn-sm">View</button></a>
                     </td>
                 </tr>
                 <tr>
@@ -37,7 +37,7 @@
                     <td>Borrow</td>
                     <td>{{borrowedItem}}</td>
                     <td>
-                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                        <a href="{% url 'reportdetail' 3 %}"><button class="btn-primary btn-sm">View</button></a>
                     </td>
                 </tr>
                 <tr>
@@ -45,7 +45,7 @@
                     <td>Broken</td>
                     <td>{{brokenItem}}</td>
                     <td>
-                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                        <a href="{% url 'reportdetail' 4 %}"><button class="btn-primary btn-sm">View</button></a>
                     </td>
                 </tr>
                 <tr>
@@ -53,7 +53,7 @@
                     <td>Lost</td>
                     <td>{{lostItem}}</td>
                     <td>
-                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                        <a href="{% url 'reportdetail' 5 %}"><button class="btn-primary btn-sm">View</button></a>
                     </td>
                 </tr>
             </tbody>
