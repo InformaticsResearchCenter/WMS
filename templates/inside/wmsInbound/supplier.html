@@ -108,7 +108,7 @@
             .then(result => {
             var option = '<option>--Select City</option>';
             Object.keys(result).map(function (key, index) {
-                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+                option += '<option value="' + result[key].id +'">' + result[key].name + '</option>'
             });
             $('#selectKota').html(option);
             })

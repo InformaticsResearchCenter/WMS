@@ -87,6 +87,11 @@
 <script>
         let get_prov = $('#get_prov').val()
 
+        let name_prov = ""
+        let name_city = ""
+        let name_districts = ""
+        let name_village = ""
+        
         fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
         .then(response => response.json())
         .then(result => {
@@ -94,9 +99,13 @@
               if (get_prov == result[key].id){
                 console.log(result[key])
                 $('#province').html(result[key].name);
+
+                name_prov = result[key].name  
+                console.log(name_prov)
               }
            });
         });
+         
 
         let get_city = $('#get_city').val()
         fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${get_prov}.json`)
@@ -106,6 +115,9 @@
               if (get_city == result[key].id){
                 console.log(result[key])
                 $('#city').html(result[key].name);
+
+                name_city = result[key].name
+                console.log(name_city)
               }
            });
         });
@@ -119,6 +131,9 @@
                 if (get_districts == result[key].id){
                   console.log(result[key])
                   $('#districts').html(result[key].name);
+
+                  name_districts = result[key].name
+                   console.log(name_districts)
                 }
             });
           });
@@ -131,8 +146,20 @@
                 if (get_village == result[key].id){
                   console.log(result[key])
                   $('#village').html(result[key].name);
+                                  
+                   name_village = result[key].name
+                    console.log(name_village)
                 }
             });
           });
+
+
+          let dataObject = {
+            name_prov,
+            name_city,
+            name_districts,
+            name_village
+          }
+          window.localStorage.setKey("dataRegion", JSON.stringify(dataObject))
  </script>       
 {% endblock content %}
