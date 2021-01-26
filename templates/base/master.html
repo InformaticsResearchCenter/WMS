@@ -63,20 +63,24 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #eb5333; ">
             <!-- Brand Logo -->
             <center>
                 <a href="{% url 'home' %}" class="brand-link mx-auto">
-                    <span class="brand-text font-weight-light">WMS COT | Politeknik Pos Indonesia</span>
+                    <span class="brand-text font-weight-light" style="color: white;">
+                        <h4>WMS COT</h4>
+                        <h5>Politeknik Pos
+                            Indonesia</h5>
+                    </span>
                 </a>
             </center>
 
             <!-- Sidebar -->
-            <div class="sidebar">
+            <div class="sidebar" style="background-color: #eb5333; ">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
-                    <div class="info text-light mx-auto">
+                    <div class="info mx-auto" style="color: white;">
                         Logged as {{username}} <br> your role is {{role}}
                     </div>
                 </div>
@@ -90,7 +94,7 @@
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
-                                <p>
+                                <p style="color: white;">
                                     Inbound
                                     <i class="fas fa-angle-left right"></i>
                                 </p>
@@ -99,15 +103,15 @@
                                 <li class="nav-item">
                                     <a href="{% url 'inboundIndex' %}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Inbound Document</p>
+                                        <p style="color: white;">Inbound Document</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>
+                                <i class="nav-icon fas fa-table"></i>
+                                <p style="color: white;">
                                     Storage
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
@@ -118,7 +122,7 @@
                                 <li class="nav-item">
                                     <a href="{% url 'scanner' %}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Scanner</p>
+                                        <p style="color: white;">Scanner</p>
                                     </a>
                                 </li>
                                 </a>
@@ -129,7 +133,7 @@
                     <li class="nav-item">
                         <a href="" class="nav-link">
                             <i class="nav-icon fa fa-cart-arrow-down"></i>
-                            <p>
+                            <p style="color: white;">
                                 Outbound
                                 <i class="fas fa-angle-left right"></i>
                             </p>
@@ -138,7 +142,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'customer' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Customer</p>
+                                    <p style="color: white;">Customer</p>
                                 </a>
                             </li>
                         </ul>
@@ -146,7 +150,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'add_outbound' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Process Order</p>
+                                    <p style="color: white;">Process Order</p>
                                 </a>
                             </li>
                         </ul>
@@ -154,7 +158,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'outbound' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Outbound Data</p>
+                                    <p style="color: white;">Outbound Data</p>
                                 </a>
                             </li>
                         </ul>
@@ -162,8 +166,8 @@
 
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-table"></i>
-                            <p>
+                            <i class="nav-icon fas fa-file"></i>
+                            <p style="color: white;">
                                 Borrow
                                 <i class="fas fa-angle-left right"></i>
                             </p>
@@ -172,7 +176,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'borrowIndex' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Borrow Data</p>
+                                    <p style="color: white;">Borrow Data</p>
                                 </a>
                             </li>
                         </ul>
@@ -181,7 +185,7 @@
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-reply"></i>
-                            <p>
+                            <p style="color: white;">
                                 Return
                                 <i class="fas fa-angle-left right"></i>
                             </p>
@@ -190,13 +194,13 @@
                             <li class="nav-item">
                                 <a href="{% url 'costumerReturnIndex' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Costumer Return</p>
+                                    <p style="color: white;">Costumer Return</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'supplierReturnIndex' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Supplier Return</p>
+                                    <p style="color: white;">Supplier Return</p>
                                 </a>
                             </li>
                         </ul>
@@ -204,7 +208,7 @@
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-folder"></i>
-                            <p>
+                            <p style="color: white;">
                                 Data
                                 <i class="fas fa-angle-left right"></i>
                             </p>
@@ -213,25 +217,25 @@
                             <li class="nav-item">
                                 <a href="{% url 'list_supplier' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Supplier</p>
+                                    <p style="color: white;">Supplier</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'itemIndex' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Item</p>
+                                    <p style="color: white;">Item</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'rackIndex' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Rack</p>
+                                    <p style="color: white;">Rack</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'customer' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Customer</p>
+                                    <p style="color: white;">Customer</p>
                                 </a>
                             </li>
                         </ul>
@@ -240,16 +244,17 @@
                     <li class="nav-item">
                         <a href="{% url 'userIndex' %}" class="nav-link">
                             <i class="nav-icon fa fa-user"></i>
-                            <p>Management User</p>
+                            <p style="color: white;">Management User</p>
                         </a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
                         <a href="{% url 'report'%}" class="nav-link">
-                            <i class="nav-icon fas fa-file"></i>
-                            <p>Report</p>
+                            <i class="nav-icon fas fa-chart-pie"></i>
+                            <p style="color: white;">Report</p>
                         </a>
                     </li>
+
 
                     </ul>
                 </nav>
