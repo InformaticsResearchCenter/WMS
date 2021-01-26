@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="{% static 'Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
-    
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed sidebar-collapse text-sm">
@@ -65,28 +65,19 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="{% static 'Admin/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">WMS POLTEKPOS</span>
-            </a>
+            <center>
+                <a href="{% url 'home' %}" class="brand-link mx-auto">
+                    <span class="brand-text font-weight-light">WMS COT | Politeknik Pos Indonesia</span>
+                </a>
+            </center>
 
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
-                    <div class="info text-light">
-                        <table>
-                            <tr>
-                                <td>Logged as </td>
-                                <td>: {{username}}</td>
-                            </tr>
-                            <tr>
-                                <td>Role </td>
-                                <td>: {{role}}</td>
-                            </tr>
-                        </table>
+                    <div class="info text-light mx-auto">
+                        Logged as {{username}} <br> your role is {{role}}
                     </div>
                 </div>
 
@@ -135,40 +126,30 @@
                         {% endif %}
                     </ul>
                     </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
-                                <p>
-                                    Outbound
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'customer' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Customer</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'add_outbound' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Process Order</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{% url 'outbound' %}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Outbound Data</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        
+                    <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <i class="nav-icon fa fa-cart-arrow-down"></i>
+                            <p>
+                                Outbound
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'customer' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Customer</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'add_outbound' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Process Order</p>
+                                </a>
+                            </li>
+                        </ul>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'outbound' %}" class="nav-link">
@@ -178,7 +159,7 @@
                             </li>
                         </ul>
                     </li>
-                    </li>
+
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-table"></i>
@@ -196,18 +177,10 @@
                             </li>
                         </ul>
                     </li>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url 'outbound' %}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Outbound Data</p>
-                            </a>
-                        </li>
-                    </ul>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
+                            <i class="nav-icon fa fa-reply"></i>
                             <p>
                                 Return
                                 <i class="fas fa-angle-left right"></i>
@@ -230,7 +203,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
+                            <i class="nav-icon fa fa-folder"></i>
                             <p>
                                 Data
                                 <i class="fas fa-angle-left right"></i>
@@ -261,24 +234,18 @@
                                     <p>Customer</p>
                                 </a>
                             </li>
-                            {% comment %} <li class="nav-item">
-                                <a href="{% url 'userGroup' %}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>UserGroup</p>
-                                </a>
-                            </li> {% endcomment %}
                         </ul>
                     </li>
                     {% if role == 'MAN' %}
                     <li class="nav-item">
                         <a href="{% url 'userIndex' %}" class="nav-link">
-                            <i class="nav-icon fas fa-file"></i>
+                            <i class="nav-icon fa fa-user"></i>
                             <p>Management User</p>
                         </a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a href="{% url 'home'%}" class="nav-link">
+                        <a href="{% url 'report'%}" class="nav-link">
                             <i class="nav-icon fas fa-file"></i>
                             <p>Report</p>
                         </a>
@@ -346,7 +313,9 @@
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="{% static 'Admin/plugins/jquery/jquery.min.js' %}"></script>
+    {% comment %} <script src="{% static 'Admin/plugins/jquery/jquery.min.js' %}"></script> {% endcomment %}
+    <script src="{% static 'js/minified/jquery-3.5.1.min.js' %}"></script>
+
     <!-- jQuery UI 1.11.4 -->
     <script src="{% static 'Admin/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
