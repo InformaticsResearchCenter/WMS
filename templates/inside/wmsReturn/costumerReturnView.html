@@ -35,9 +35,9 @@
             {% for crd in costumerReturn %}
             <div class="col">
                 <h6><b>: {{crd.id}}</b></h6>
-                <h6><b>: {{crd.outbound.name}}</b></h6>
-                <h6><b>: {{crd.outbound.address}}</b></h6>
-                <h6><b>: {{crd.outbound.phoneNumber}}</b></h6>
+                <h6><b>: {{crd.outbound.customer.name}}</b></h6>
+                <h6><b>: {{crd.outbound.customer.address}}</b></h6>
+                <h6><b>: {{crd.outbound.customer.phoneNumber}}</b></h6>
                 <h6><b>: {{crd.date}}</b></h6>
                 <h6><b>: {{crd.get_status_display}}</b></h6>
             </div>
