@@ -27,10 +27,27 @@
     .info-box {
         flex: 2;
         width: 20%;
+        background-color: #7abfff;
     }
 
     .info-box-content {
         text-align: center;
+    }
+
+    @media (max-width: 800px) {
+        .card-header {
+            flex-direction: column;
+        }
+
+        .info-box {
+            width: 100%;
+        }
+
+        .info-box-content {
+            text-align: left;
+        }
+
+
     }
 </style>
 <div class="card">

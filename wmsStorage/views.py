@@ -91,7 +91,7 @@ def getOutboundData(request):
     print(outbound)
     customer = []
     if outbound != "":
-        customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber','date'))
+        customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
         if customer != []:
             item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
             print(item)
@@ -105,7 +105,8 @@ def getReturnData(request):
     print(returnId)
     customer = []
     if returnId != "":
-        customer = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id', 'outbound__name', 'outbound__phoneNumber', 'outbound__date'))
+        returns = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('outbound'))
+        customer = list(Outbound.objects.filter(id = returns[0]['outbound'], userGroup =request.session['usergroup'], deleted=0, status=2).values('customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
         if customer != []:
             item = list(CostumerReturnData.objects.filter(costumerReturn=customer[0]['id']).values('item','quantity'))
             print(item)
