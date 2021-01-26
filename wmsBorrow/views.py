@@ -259,8 +259,9 @@ class PdfBorrow(View):
         else:
             datas = list(BorrowData.objects.all().select_related(
                 'borrow').filter(borrow=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity',))
+            ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsBorrow/pdf_borrow.html',
-                                {'datas': datas, 'obj': obj})
+                                {'datas': datas, 'obj': obj, 'ug': ug})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "BorrowData-%s.pdf" % (12341231)

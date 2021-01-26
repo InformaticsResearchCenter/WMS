@@ -276,8 +276,9 @@ class PdfRack(View):
         obj = get_object_or_404(Rack, pk=kwargs['pk'])
         datas = list(Binlocation.objects.all().select_related(
             'Rack').filter(rack=obj).values_list('binlocation', 'rack__rack', 'capacity'))
+        ug = UserGroup.objects.get(pk=request.session['usergroup'])
         pdf = render_to_pdf('inside/wmsStorage/pdf_rack.html', {
-                            'datas': datas, 'obj': obj})
+                            'datas': datas, 'obj': obj, 'ug': ug, 'date': datetime.date.today()})
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
             filename = "Invoice_%s.pdf" % (12341231)

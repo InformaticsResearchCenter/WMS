@@ -102,6 +102,7 @@ def register(request):
             'title': 'Register Akun',
             'id': get_last_value('usergroup_seq'),
             'provinsi': Province.objects.all(),
+            'ug': UserGroup.objects.get(pk=request.session['usergroup'])
         }
         return render(request, "inside/wmsGroup/register.html", context)
     elif request.method == "POST":
@@ -144,7 +145,8 @@ def register(request):
                 return redirect('groupRegister')
     else:
         context = {
-            'title': 'Register Akun'
+            'title': 'Register Akun',
+            'ug': UserGroup.objects.get(pk=request.session['usergroup'])
         }
         return render(request, "inside/wmsGroup/register.html", context)
 

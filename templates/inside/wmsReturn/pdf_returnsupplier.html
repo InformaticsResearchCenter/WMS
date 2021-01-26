@@ -1,8 +1,5 @@
 {% load static %}
 {% block content %}
-<div id="content">
-    <h1>Supplier Return Invoice</h1>
-</div>
 <html>
 
 <head>
@@ -52,9 +49,27 @@
 </head>
 
 <body style="margin-bottom: 40px;">
-    <div class='wrapper'>
+    <!-- start header -->
+    <div style=" font-family: arial;">
+        <table>
+            <tr>
+                <td style="width:17%;"><img src="{{ug.imageCompany.path}}" alt="" style="float: right;width:150px;">
+                </td>
+                <td style="width:90%;">
+                    <h2 style="margin-top: 0px;text-align: center;font-size: 25px;">{{ug.nameCompany}}</h2>
+                    <h6 style="margin-top: -15px;text-align: center;">{{ug.addressCompany}}, {{ug.province}},
+                        {{ug.city}}, {{ug.districts}}, {{ug.village}}</h6>
+                    <p style="margin-top: -15px;text-align: center;"><i>Telp. {{ug.phoneNumber}}, Email : {{ug.email}},
+                            Kode Pos : {{ug.postalCode}}</i></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <br>
+    <!-- end header -->
         <div class='header'>
-            <p class='title'><u>Invoice #{{obj.id}}</u></p>
+            <p class='title'><u>Invoice Supplier Return#{{obj.id}}</u></p>
         </div>
         <div>
             <table width="310px">
@@ -107,7 +122,7 @@
                     <tr>
                         <th scope="row">{{itdt.0}}</th>
                         <td>{{itdt.1}}</td>
-                        <td>{{itdt.2}}</td>
+                        <td>{{itdt.3}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -141,10 +156,11 @@
         </div>
 </body>
 <footer style="margin-top: 40px;">
-    <p style="font-family: arial;margin-left: 500px;margin-top: 20px;">Bandung, 18 Sep 2020</p>
-    <p style="font-family: arial;margin-left: 530px;"><b>Pemilik WMS</b></p>
-    <p style="font-family: arial;margin-left: 480px;padding-top: 50px;">
-        <b>( Politeknik Pos Indonesia )</b></p>
+    <p style="font-family: arial;margin-left: 420px;">{{ug.city}},</p>
+    <p style="font-family: arial;margin-left: 420px;">{{obj.date|date:"l, d F Y"}}</p>
+    <p style="font-family: arial;margin-left: 450px;"><b>{{ug.nameCompany}}</b></p>
+    <p style="font-family: arial;margin-left: 440px;padding-top: 50px;">
+        <b>( {{ug.nameCompany}} )</b></p>
 </footer>
 <script>
     var qrdata = document.getElementById('qr-data');
