@@ -1,0 +1,66 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Data report</h2>
+<hr>
+<div class="card">
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 50px;">No</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col" style="width: 100px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>1</th>
+                    <td>Avaible</td>
+                    <td>{{avaibleItem}}</td>
+                    <td>
+                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td>Sold</td>
+                    <td>{{itemSold}}</td>
+                    <td>
+                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td>Borrow</td>
+                    <td>{{borrowedItem}}</td>
+                    <td>
+                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>4</th>
+                    <td>Broken</td>
+                    <td>{{brokenItem}}</td>
+                    <td>
+                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>5</th>
+                    <td>Lost</td>
+                    <td>{{lostItem}}</td>
+                    <td>
+                        <a href=""><button class="btn-primary btn-sm">View</button></a>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+        </table>
+    </div>
+</div>
+
+
+{% endblock content %}

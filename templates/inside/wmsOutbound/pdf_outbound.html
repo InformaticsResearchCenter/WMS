@@ -67,7 +67,8 @@
     <tr>
         <td>Province</td>
         <td>&nbsp; : &nbsp;</td>
-        <td id="province">{{ug.province}}</td>
+        <td id="province" ></td>
+        <input type="hidden" id="get_prov" value="{{ug.province}}">
     </tr>
     <div class='header'>
         <p class='title'><u>Outbound Invoice #{{obj.id}}</u></p>
@@ -152,8 +153,7 @@
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-    let get_prov = $('#province').val()
-    console.log(get_prov)
+    let get_prov = $('#get_prov').val()
     fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
     .then(response => response.json())
     .then(result => {
