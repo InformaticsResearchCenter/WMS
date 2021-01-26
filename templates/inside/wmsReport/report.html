@@ -1,0 +1,76 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<script src="{% static 'Admin/qrcode.min.js' %}"></script>
+        <h2>Data Customer</h2>
+        <hr>
+        
+            {% if role != 'OPR' %}
+            <a href="{% url 'add_customer' %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Create
+                Customer</a>
+            {% endif %}
+
+        <div class="card">
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Postal Code</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for onb in customer %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{onb.id}}</td>
+                        <td>{{onb.name}}</td>
+                        <td>{{onb.address}}</td>
+                        <td>{{onb.phoneNumber}}</td>
+                        <td>{{onb.postalCode}}</td>
+                        <td>
+                            <a href="{% url 'detail_customer' onb.id %}"><button class="btn-primary btn-sm">View</button></a>
+                            {% if role != 'OPR' %}
+                              {% if onb.status != "3" %}
+                              <a href="{% url 'delete_customer' onb.id  %}"><button class="btn-danger btn-sm">Delete</button></a>
+                              {% endif %}
+                              {% if onb.status != "2" and onb.status != "3" %}
+                              <a href="{% url 'update_customer' onb.id %}"><button class="btn-default btn-sm">Update</button></a>
+                              {% endif %}
+                            {% endif %}
+                            {% if onb.status == "2" or onb.status == "3" %}
+                            <a href="{{onb.id}}"><button class="btn-success btn-sm">PDF</button></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                  {% comment %} <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Inbound Id</th>
+                    <th scope="col">Supplier</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" style="width: 165px;">Action</th>
+                  </tr>
+                  </tfoot> {% endcomment %}
+                </table>
+              </div>
+            </div>
+<script>
+      var qrdata = document.getElementById('qr-data');
+      var qrcode = new QRCode(document.getElementById('qrcode'));
+
+      function generateQR(){
+        var data = qrdata.value;
+
+        qrcode.makeCode(data);
+      }
+  </script>
+{% endblock content %}

@@ -16,7 +16,7 @@ urlpatterns = [
     path('storage/', include('wmsStorage.urls')),
     path('borrow/', include('wmsBorrow.urls')),
     path('return/', include('wmsReturn.urls')),
-
+    path('report/', include('wmsReport.urls'))
 ]
 
 

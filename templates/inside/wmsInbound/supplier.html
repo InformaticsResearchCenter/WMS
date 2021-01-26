@@ -94,34 +94,32 @@
         .then(result => {
             var option = '<option>--Select Province</option>';
             Object.keys(result).map(function (key, index) {
-            option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+                option += '<option value="' + result[key].name + '" id="' + result[key].id + '">' + result[key].name + '</option>'
             });
             $('#selectProvinsi').html(option);
-
-            localstorage.setKey('dataRegencies', JSON.stringify(result))
         });
         
         $('#selectProvinsi').on('change', function () {
-        let id = $(this).val();
+        id = $(this).find('option:selected').attr('id');
         fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`)
             .then(response => response.json())
             .then(result => {
             var option = '<option>--Select City</option>';
             Object.keys(result).map(function (key, index) {
-                option += '<option value="' + result[key].id +'">' + result[key].name + '</option>'
+                option += '<option value="' + result[key].name + '" id="' + result[key].id + '">' + result[key].name + '</option>'
             });
             $('#selectKota').html(option);
             })
         })
 
         $('#selectKota').on('change', function () {
-        let id = $(this).val();
+        let id = $(this).find('option:selected').attr('id');
         fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`)
             .then(response => response.json())
             .then(result => {
             var option = '<option>--Select Districts</option>';
             Object.keys(result).map(function (key, index) {
-                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+                option += '<option value="' + result[key].name + '" id="' + result[key].id + '">' + result[key].name + '</option>'
             });
             $('#selectKecamatan').html(option);
             })
@@ -129,13 +127,13 @@
 
 
         $('#selectKecamatan').on('change', function () {
-        let id = $(this).val();
+        let id = $(this).find('option:selected').attr('id');
         fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`)
             .then(response => response.json())
             .then(result => {
             var option = '<option>--Select Village</option>';
             Object.keys(result).map(function (key, index) {
-                option += '<option value="' + result[key].id + '">' + result[key].name + '</option>'
+                option += '<option value="' + result[key].name + '" id="' + result[key].id + '">' + result[key].name + '</option>'
             });
             $('#selectDesa').html(option);
             })
