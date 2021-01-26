@@ -3,7 +3,7 @@
 
 {% block content %}
 <!-- <div class="wrapper d-flex align-items-stretch">
- -->     <!-- Page Content  -->
+-->     <!-- Page Content  -->
     <div id="content" class="p-4 p-md-5">
       {% if role == 'ADM' %}
         <h2 class="mb-4">Ini Role ADM</h2>
@@ -20,7 +20,7 @@
             Detail Customer
           </div>
           <div class="card-body">
-               <table>
+              <table>
                 <tr>
                   <td>Customer id</td>
                   <td>&nbsp; : &nbsp;</td>
@@ -42,29 +42,37 @@
                   <td>{{customer.phoneNumber}}</td>
                 </tr>
                 <tr>
-                  <td>Districts</td>
+                  <td>Province</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{customer.districts}}</td>
+                  <td>{{customer.province}}</td>
+                  {% comment %} <td id="province"></td>
+                  <input type="hidden" id="get_prov" value="{{customer.province}}"> {% endcomment %}
                 </tr>
                 <tr>
                   <td>City</td>
                   <td>&nbsp; : &nbsp;</td>
                   <td>{{customer.city}}</td>
-                </tr>
+                  {% comment %} <td id="city"></td>
+                   <input type="hidden" id="get_city" value="{{customer.city}}"> {% endcomment %}
+                </tr>       
                 <tr>
-                  <td>Province</td>
+                  <td>Districts</td>
                   <td>&nbsp; : &nbsp;</td>
-                  <td>{{customer.province}}</td>
+                  <td>{{customer.districts}}</td>
+                  {% comment %} <td id="districts"></td>
+                  <input type="hidden" id="get_districts" value="{{customer.districts}}"> {% endcomment %}
+                </tr>
+                 <tr>
+                  <td>Village</td>
+                  <td>&nbsp; : &nbsp;</td>
+                  <td>{{customer.village}}</td>
+                  {% comment %} <td id="village"></td>
+                  <input type="hidden" id="get_village" value="{{customer.village}}"> {% endcomment %}
                 </tr>
                 <tr>
                   <td>Address</td>
                   <td>&nbsp; : &nbsp;</td>
                   <td>{{customer.address}}</td>
-                </tr>
-                <tr>
-                  <td>Village</td>
-                  <td>&nbsp; : &nbsp;</td>
-                  <td>{{customer.village}}</td>
                 </tr>
                 <tr>
                   <td>Postal Code</td>
@@ -79,4 +87,83 @@
         <hr>
     </div>
 </div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+        let get_prov = $('#get_prov').val()
+
+        let name_prov = ""
+        let name_city = ""
+        let name_districts = ""
+        let name_village = ""
+        
+        fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
+        .then(response => response.json())
+        .then(result => {
+           Object.keys(result).map(function (key, index){
+              if (get_prov == result[key].id){
+                console.log(result[key])
+                $('#province').html(result[key].name);
+
+                name_prov = result[key].name  
+                console.log(name_prov)
+              }
+           });
+        });
+         
+
+        let get_city = $('#get_city').val()
+        fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${get_prov}.json`)
+        .then(response => response.json())
+        .then(result => {
+           Object.keys(result).map(function (key, index){
+              if (get_city == result[key].id){
+                console.log(result[key])
+                $('#city').html(result[key].name);
+
+                name_city = result[key].name
+                console.log(name_city)
+              }
+           });
+        });
+
+       
+        let get_districts = $('#get_districts').val()
+         fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/districts/${get_city}.json`)
+         .then(response => response.json())
+         .then(result => {
+            Object.keys(result).map(function (key, index){
+                if (get_districts == result[key].id){
+                  console.log(result[key])
+                  $('#districts').html(result[key].name);
+
+                  name_districts = result[key].name
+                   console.log(name_districts)
+                }
+            });
+          });
+
+          let get_village = $('#get_village').val()
+         fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/villages/${get_districts}.json`)
+         .then(response => response.json())
+         .then(result => {
+            Object.keys(result).map(function (key, index){
+                if (get_village == result[key].id){
+                  console.log(result[key])
+                  $('#village').html(result[key].name);
+                                  
+                   name_village = result[key].name
+                    console.log(name_village)
+                }
+            });
+          });
+
+
+          let dataObject = {
+            name_prov,
+            name_city,
+            name_districts,
+            name_village
+          }
+          window.localStorage.setKey("dataRegion", JSON.stringify(dataObject))
+ </script>       
 {% endblock content %}

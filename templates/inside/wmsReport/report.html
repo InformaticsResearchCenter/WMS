@@ -1,0 +1,50 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<script src="{% static 'js/qrcode.min.js' %}"></script>
+        <h2>Data item</h2> 
+        <hr>
+        <input type="hidden" id="quantity" value="{{quantity}}">
+        <div class="card">
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">item</th>
+                    <th scope="col">bin</th>
+                    <th scope="col">qr</th>
+                </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in item %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td id="id{{forloop.counter}}">{{i.id}}</td>
+                        <td>{{i.name}}</td>
+                        <td>{{i.binlocation__binlocation}}</td>
+                        <td id="qr{{forloop.counter}}"></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                </table>
+        <a href="{% url 'report' %}"><button type="submit" class="btn btn-warning">Back</button></a>
+
+              </div>
+            </div>
+<script src="{% static 'js/minified/jquery-3.5.1.min.js' %}"></script>
+<script>
+  $(document).ready(function () {
+    console.log($("#quantity").val());
+    for (let a = 1; a <= $("#quantity").val(); a++) {
+    var qrcode = new QRCode(document.getElementById('qr'+a), {text: document.getElementById('id'+a).innerText, width:100, height:100});
+    }
+
+
+  });
+
+  </script>
+{% endblock content %}

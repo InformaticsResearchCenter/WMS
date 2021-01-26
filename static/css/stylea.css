@@ -7,6 +7,11 @@
 
 }
 
+.canvas {
+	width: 200px !important;
+	height: 200px !important;
+
+}
 
 .flex-item {
 	display: flex;

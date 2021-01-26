@@ -91,7 +91,7 @@ def getOutboundData(request):
     print(outbound)
     customer = []
     if outbound != "":
-        customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber','date'))
+        customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
         if customer != []:
             item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
             print(item)
@@ -105,7 +105,8 @@ def getReturnData(request):
     print(returnId)
     customer = []
     if returnId != "":
-        customer = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id', 'outbound__name', 'outbound__phoneNumber', 'outbound__date'))
+        returns = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('outbound'))
+        customer = list(Outbound.objects.filter(id = returns[0]['outbound'], userGroup =request.session['usergroup'], deleted=0, status=2).values('customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
         if customer != []:
             item = list(CostumerReturnData.objects.filter(costumerReturn=customer[0]['id']).values('item','quantity'))
             print(item)
@@ -276,8 +277,9 @@ class PdfRack(View):
         obj = get_object_or_404(Rack, pk=kwargs['pk'])
         datas = list(Binlocation.objects.all().select_related(
             'Rack').filter(rack=obj).values_list('binlocation', 'rack__rack', 'capacity'))
+        ug = UserGroup.objects.get(pk=request.session['usergroup'])
         pdf = render_to_pdf('inside/wmsStorage/pdf_rack.html', {
-                            'datas': datas, 'obj': obj})
+                            'datas': datas, 'obj': obj, 'ug': ug, 'date': datetime.date.today()})
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
             filename = "Invoice_%s.pdf" % (12341231)

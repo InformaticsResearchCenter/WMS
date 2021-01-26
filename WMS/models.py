@@ -101,7 +101,7 @@ class Supplier(External):
         UserGroup, on_delete=models.CASCADE, null=True)
     deleted = models.CharField(max_length=1, default=0)
     email = models.CharField(max_length=50, default="NULL")
-
+    
 
 class Inbound(models.Model):
     status_choices = [
@@ -120,6 +120,8 @@ class Inbound(models.Model):
         User, related_name="iConfirm", on_delete=models.CASCADE, null=True)
     create = models.ForeignKey(
         User, related_name="iCreate", on_delete=models.CASCADE, null=True)
+    class Meta:
+        ordering = ['date']
 
 
 class InboundData(models.Model):

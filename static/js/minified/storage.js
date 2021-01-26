@@ -478,12 +478,16 @@ $(document).ready(function () {
 					$("#UniversalData").empty();
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
 				} else {
+					console.log(response.customer)
 					$("#UniversalData").empty();
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Nama</td><td id="nama">` + customer[0] + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Alamat</td><td id="alamat">` + customer[1] + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Nama</td><td id="nama">` + response.customer[0].customer__name + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Alamat</td><td id="alamat">` + response.customer[0].customer__province + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + response.customer[0].customer__city + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__districts + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__village + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__address + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__postalCode + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
 					items = response['items'];

@@ -35,10 +35,10 @@
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{cr.id}}</td>
                     <td>{{cr.outbound.id}}</td>
-                    <td>{{cr.outbound.name}}</td>
-                    <td>{{cr.outbound.address}}</td>
-                    <td>{{cr.outbound.phoneNumber}}</td>
-                    <td>{{cr.outbound.postalCode}}</td>
+                    <td>{{cr.outbound.customer.name}}</td>
+                    <td>{{cr.outbound.customer.address}}</td>
+                    <td>{{cr.outbound.customer.phoneNumber}}</td>
+                    <td>{{cr.outbound.customer.postalCode}}</td>
                     <td>{{cr.date}}</td>
                     <td><b>{{cr.get_status_display}}</b></td>
                     <td>{{cr.confirm.name}}</td>
