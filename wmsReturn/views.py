@@ -224,8 +224,9 @@ class PdfCostumerReturn(View):
         else:
             datas = list(CostumerReturnData.objects.all().select_related(
                 'costumerReturn').filter(costumerReturn=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'costumerReturn'))
+            ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsReturn/pdf_returncostumer.html',
-                                {'datas': datas, 'obj': obj})
+                                {'datas': datas, 'obj': obj, 'ug': ug})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "CostumerReturnData-%s.pdf" % (12341231)
@@ -504,10 +505,11 @@ class PdfSupplierReturn(View):
                 'supplierReturn').filter(supplierReturn=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'supplierReturn__inbound','quantity'))
             itemdata = []
             for e in datas:
-               itemdata.append(list(ItemData.objects.all().select_related('inbound').filter(returnData=e[0],deleted=0, userGroup=request.session['usergroup']).values_list('id', flat='true')))     
+                itemdata.append(list(ItemData.objects.all().select_related('inbound').filter(returnData=e[0],deleted=0, userGroup=request.session['usergroup']).values_list('id', flat='true')))     
             datacollect = zip(datas, itemdata)
+            ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsReturn/pdf_returnsupplier.html',
-                                {'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect})
+                                {'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect, 'ug': ug})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)

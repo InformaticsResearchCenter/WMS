@@ -49,30 +49,23 @@
 </head>
 
 <body style="margin-bottom: 40px;">
+    <!-- start header -->
     <div style=" font-family: arial;">
         <table>
             <tr>
-                <td style="width:18%;"> <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl={{obj.id}}"
+                <td style="width:17%;"><img src="{{ug.imageCompany.path}}" alt=""
                         style="float: right;width:150px;"></td>
-                <td style="width:82%;">
-                    <h2 style="margin-top: 0px;text-align: center;">{{ug.nameCompany}}</h2>
-                    <h5 style="margin-top: -15px;text-align: center;">{{ug.addressCompany}}, {{ug.province}}</h5>
-                    <h3 style="margin-top: -15px;text-align: center;"><i>RT 02/RW 11</i></h3>
+                <td style="width:90%;">
+                    <h2 style="margin-top: 0px;text-align: center;font-size: 25px;">{{ug.nameCompany}}</h2>
+                    <h6 style="margin-top: -15px;text-align: center;">{{ug.addressCompany}}, {{ug.province}}, {{ug.city}}, {{ug.districts}}, {{ug.village}}</h6>
+                    <p style="margin-top: -15px;text-align: center;"><i>Telp. {{ug.phoneNumber}}, Email : {{ug.email}}, Kode Pos : {{ug.postalCode}}</i></p>
                 </td>
             </tr>
         </table>
     </div>
     <hr>
     <br>
-    <tabel>
-    <tr>
-        <td>Province</td>
-        <td>&nbsp; : &nbsp;</td>
-        <td id="province"></td>
-        <p id="get_prov">{{ug.province}}</p>
-        <input type="hidden" id="get_prov" value="{{ug.province}}">
-    </tr>
-    </tabel>
+    <!-- end header -->
     <div class='header'>
         <p class='title'><u>Outbound Invoice #{{obj.id}}</u></p>
     </div>
@@ -127,7 +120,7 @@
         <tbody>
             {% for itdt in datas %}
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{forloop.counter}}</th>
                 <!-- <td>{{itdt.0}}</td> -->
                 <td>{{itdt.1}}</td>
                 <td>{{itdt.2}}</td>
@@ -140,10 +133,11 @@
     </div>
 </body>
 <footer style="margin-top: 40px;">
-    <p style="font-family: arial;margin-left: 500px;margin-top: 20px;">Bandung, 18 Sep 2020</p>
-    <p style="font-family: arial;margin-left: 530px;"><b>Pemilik WMS</b></p>
-    <p style="font-family: arial;margin-left: 480px;padding-top: 50px;">
-        <b>( Politeknik Pos Indonesia )</b></p>
+    <p style="font-family: arial;margin-left: 420px;">{{ug.city}},</p>
+    <p style="font-family: arial;margin-left: 420px;">{{obj.date|date:"l, d F Y"}}</p>
+    <p style="font-family: arial;margin-left: 450px;"><b>{{ug.nameCompany}}</b></p>
+    <p style="font-family: arial;margin-left: 440px;padding-top: 50px;">
+        <b>( {{ug.nameCompany}} )</b></p>
 </footer>
 <script>
     var qrdata = document.getElementById('qr-data');
@@ -154,61 +148,5 @@
         qrcode.makeCode(data);
     }
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-<<<<<<< HEAD
-    let get_prov = $('#get_prov').text()
-
-=======
-    let get_prov = $('#get_prov').val()
->>>>>>> d9bc6282730cf900339f20b4d937a8275b235cef
-    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
-    .then(response => response.json())
-    .then(result => {
-        Object.keys(result).map(function (key, index){
-            if (get_prov == result[key].id){
-                console.log(result[key])
-                $('#province').html(result[key].name);
-            }
-        });
-    });
-
-    let get_city = $('#get_city').val()
-    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${get_prov}.json`)
-    .then(response => response.json())
-    .then(result => {
-        Object.keys(result).map(function (key, index){
-            if (get_city == result[key].id){
-                console.log(result[key])
-                $('#city').html(result[key].name);
-            }
-        });
-    });
-
-    let get_districts = $('#get_districts').val()
-    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/districts/${get_city}.json`)
-    .then(response => response.json())
-    .then(result => {
-        Object.keys(result).map(function (key, index){
-            if (get_districts == result[key].id){
-                console.log(result[key])
-                $('#districts').html(result[key].name);
-            }
-        });
-    });
-
-    let get_village = $('#get_village').val()
-    fetch(`http://www.emsifa.com/api-wilayah-indonesia/api/villages/${get_districts}.json`)
-    .then(response => response.json())
-    .then(result => {
-        Object.keys(result).map(function (key, index){
-            if (get_village == result[key].id){
-                console.log(result[key])
-                $('#village').html(result[key].name);
-            }
-        });
-    });
-</script>
-
 </html>
 {% endblock %}
