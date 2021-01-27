@@ -421,23 +421,29 @@ $(document).ready(function () {
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				stockOpname = response
-				itemStockData = stockOpname.items
-				$("#UniversalData").empty();
-				$("#UniversalModalTitle").val("Stock opname");
-				$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
-				$("#UniversalData").append(`<tr><td>Rack Id</td><td>` + stockOpname.rack[0].id + `</td></tr>`);
-				$("#UniversalData").append(`<tr><td>Bin total</td><td>` + stockOpname.bin.length + `</td></tr>`);
-				$("#UniversalData").append(`<tr><td>Item total</td><td>` + stockOpname.itemQuantity + `</td></tr>`);
-				$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-				$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-				for (let index = 0; index < stockOpname.itemdata.length; index++) {
-					const element = stockOpname.itemdata[index];
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan");
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					stockOpname = response
+					itemStockData = stockOpname.items
+					$("#UniversalData").empty();
+					$("#UniversalModalTitle").val("Stock opname");
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Rack Id</td><td>` + stockOpname.rack[0].id + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Bin total</td><td>` + stockOpname.bin.length + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Item total</td><td>` + stockOpname.itemQuantity + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					for (let index = 0; index < stockOpname.itemdata.length; index++) {
+						const element = stockOpname.itemdata[index];
 
-					$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
+					}
+					$(".overlay").hide();
+					validation["stockopname"] = true;
 				}
-				$(".overlay").hide();
-				validation["stockopname"] = true;
 			}
 		});
 	});
