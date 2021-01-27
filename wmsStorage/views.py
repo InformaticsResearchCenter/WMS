@@ -136,12 +136,18 @@ def getReturnData(request):
         else:
             returnId=request.POST.get('return',None)
             print(returnId)
+            print(returnId != "")
             customer = []
             if returnId != "":
-                returns = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('outbound'))
-                customer = list(Outbound.objects.filter(id = returns[0]['outbound'], userGroup =request.session['usergroup'], deleted=0, status=2).values('customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
+                print('gitcga')
+                returns = list(CostumerReturn.objects.filter(pk = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','outbound'))
+                print(returns[0]['outbound'])
+                print(request.session['usergroup'])
+                customer = list(Outbound.objects.filter(pk = returns[0]['outbound'], userGroup =request.session['usergroup'], deleted=0, status=3).values('id','customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
+                print(customer)
                 if customer != []:
-                    item = list(CostumerReturnData.objects.filter(costumerReturn=customer[0]['id'], userGroup = request.session['usergroup'], deleted=0).values('item','quantity'))
+                    item = list(CostumerReturnData.objects.filter(costumerReturn=returns[0]['id'], userGroup = request.session['usergroup'], deleted=0).values('item','quantity'))
+                    print(customer[0]['id'])
                     return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
             return JsonResponse({'msg' : "data not found"}, status=200)
 
