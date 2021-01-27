@@ -10,178 +10,252 @@ from json import dumps, loads
 from collections import Counter
 
 def scanner(request):
-    context = {
-        'role': request.session['role'],
-        'username': request.session['username'],
-        'title': 'Item | Scanner',
-    }
-    return render(request, 'inside/wmsStorage/index.html',context)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            context = {
+                'role': request.session['role'],
+                'username': request.session['username'],
+                'title': 'Item | Scanner',
+            }
+            return render(request, 'inside/wmsStorage/index.html',context)
 def getItemData(request):
-    avaibleItem = ItemData.objects.select_related('inbound').filter(
-            status='1', deleted=0, userGroup=request.session['usergroup']).values('inbound__item')
-    rawitem = []
-    for i in avaibleItem:
-        found = False
-        for a in rawitem:
-            if i['inbound__item'] == a['item']:
-                a['qty'] += 1
-                found = True
-                break
-        if found == False:
-            try:
-                rawitem.append({'item': i['inbound__item'], 'name': Item.objects.filter(
-                    id=i['inbound__item']).values('name')[0]['name'], 'qty': 1})
-            except:
-                pass
-    name=[]
-    qty=[]
-    for i in rawitem:
-        qty.append(i['qty'])
-        name.append(i['name'])
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            avaibleItem = ItemData.objects.select_related('inbound').filter(
+                    status='1', deleted=0, userGroup=request.session['usergroup']).values('inbound__item')
+            rawitem = []
+            for i in avaibleItem:
+                found = False
+                for a in rawitem:
+                    if i['inbound__item'] == a['item']:
+                        a['qty'] += 1
+                        found = True
+                        break
+                if found == False:
+                    try:
+                        rawitem.append({'item': i['inbound__item'], 'name': Item.objects.filter(
+                            id=i['inbound__item']).values('name')[0]['name'], 'qty': 1})
+                    except:
+                        pass
+            name=[]
+            qty=[]
+            for i in rawitem:
+                qty.append(i['qty'])
+                name.append(i['name'])
 
-    return JsonResponse({'name':name,'qty':qty})
+            return JsonResponse({'name':name,'qty':qty})
 
 def getStockOpname(request):
-    print("Start modul stock opname started")
-    rackId=request.POST.get('rack',None)
-    rack = Rack.objects.filter(pk=rackId, userGroup=request.session['usergroup'], deleted=0).values()
-    bin = Binlocation.objects.filter(rack=rackId).values()
-    itemBulk=[]
-    rawItem=[]
-    quantity=0
-    for a in bin:
-        item = list(ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values())
-        try:
-            if item != []:
-                for b in item:
-                    ibd = list(InboundData.objects.filter(pk=b['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values('item__name'))
-                    if ibd != []:
-                        b['name'] = ibd[0]['item__name']
-                        rawItem.append(ibd[0]['item__name'])
-                        itemBulk.append(b)
-                        quantity+=1
-                    else:
-                        pass
-        except:
-            pass
-    
-    
-    itemlist=[list(i) for i in Counter(rawItem).items()]
-    data = {'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity}
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            print("Start modul stock opname started")
+            rackId=request.POST.get('rack',None)
+            rack = Rack.objects.filter(rack=rackId, userGroup=request.session['usergroup'], deleted=0).values()
+            bin = Binlocation.objects.filter(rack=rack[0]['id']).values()
+            itemBulk=[]
+            rawItem=[]
+            quantity=0
+            for a in bin:
+                item = list(ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values())
+                try:
+                    if item != []:
+                        for b in item:
+                            ibd = list(InboundData.objects.filter(pk=b['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values('item__name'))
+                            if ibd != []:
+                                rawItem.append(ibd[0]['item__name'])
+                                itemBulk.append(b)
+                                quantity+=1
+                            else:
+                                pass
+                except:
+                    pass
+            
+            
+            itemlist=[list(i) for i in Counter(rawItem).items()]
+            data = {'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity}
 
-    print(data)
-    return JsonResponse({'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity},status = 200)
-
+            print(data)
+            return JsonResponse({'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity},status = 200)
 
 def getScannerData(request):
-    items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name'))
-    itemraw1 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="1").select_related('inbound').values('id','inbound__item'))
-    itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
-    binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','capacity'))
-    itemdata = itemraw1+itemraw2
-    item = []
-    for i in itemdata:
-        for a in items:
-            if i['inbound__item'] == a['id']:
-                item.append({'id' : i['id'], 'name' : a['name'], 'itemId' : a['id']})
-    return JsonResponse({'item': item, 'binlocation' : binlocation, 'itemlist' : items}, status=200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name'))
+            itemraw1 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="1").select_related('inbound').values('id','inbound__item'))
+            itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
+            binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','binlocation','capacity'))
+            itemdata = itemraw1+itemraw2
+            item = []
+            for i in itemdata:
+                for a in items:
+                    if i['inbound__item'] == a['id']:
+                        item.append({'id' : i['id'], 'name' : a['name'], 'itemId' : a['id']})
+            return JsonResponse({'item': item, 'binlocation' : binlocation, 'itemlist' : items}, status=200)
 
 def getOutboundData(request):
-    outbound=request.POST.get('outbound',None)
-    print(outbound)
-    customer = []
-    if outbound != "":
-        customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
-        if customer != []:
-            item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
-            print(item)
-            print(customer)
-            return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
-    return JsonResponse({'msg' : "data not found"}, status=200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            outbound=request.POST.get('outbound',None)
+            print(outbound)
+            customer = []
+            if outbound != "":
+                customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
+                if customer != []:
+                    item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
+                    print(item)
+                    print(customer)
+                    return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
+            return JsonResponse({'msg' : "data not found"}, status=200)
     
 
 def getReturnData(request):
-    returnId=request.POST.get('return',None)
-    print(returnId)
-    customer = []
-    if returnId != "":
-        returns = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('outbound'))
-        customer = list(Outbound.objects.filter(id = returns[0]['outbound'], userGroup =request.session['usergroup'], deleted=0, status=2).values('customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
-        if customer != []:
-            item = list(CostumerReturnData.objects.filter(costumerReturn=customer[0]['id']).values('item','quantity'))
-            print(item)
-            print(customer)
-            return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
-    return JsonResponse({'msg' : "data not found"}, status=200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            returnId=request.POST.get('return',None)
+            print(returnId)
+            customer = []
+            if returnId != "":
+                returns = list(CostumerReturn.objects.select_related('outbound').filter(id = returnId, userGroup =request.session['usergroup'], deleted=0, status=2).values('outbound'))
+                customer = list(Outbound.objects.filter(id = returns[0]['outbound'], userGroup =request.session['usergroup'], deleted=0, status=2).values('customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
+                if customer != []:
+                    item = list(CostumerReturnData.objects.filter(costumerReturn=customer[0]['id']).values('item','quantity'))
+                    print(item)
+                    print(customer)
+                    return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
+            return JsonResponse({'msg' : "data not found"}, status=200)
 
 def getBorrowData(request):
-    borrowId=request.POST.get('borrow',None)
-    employee = []
-    if borrowId != "":
-        employee = list(Borrow.objects.filter(id = borrowId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber','date'))
-        if employee != []:
-            item = list(BorrowData.objects.filter(borrow=employee[0]['id']).values('item','quantity'))
-            print(item)
-            print(employee)
-            return JsonResponse({'employee' : employee, 'items' : item}, status = 200)
-    return JsonResponse({'msg' : "data not found"}, status=200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            borrowId=request.POST.get('borrow',None)
+            employee = []
+            if borrowId != "":
+                employee = list(Borrow.objects.filter(id = borrowId, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','name','phoneNumber','date'))
+                if employee != []:
+                    item = list(BorrowData.objects.filter(borrow=employee[0]['id']).values('item','quantity'))
+                    print(item)
+                    print(employee)
+                    return JsonResponse({'employee' : employee, 'items' : item}, status = 200)
+            return JsonResponse({'msg' : "data not found"}, status=200)
     
-
-
 def put(request):
-    binLocation = request.POST.get('binlocation', None)
-    itemCode = loads(request.POST.get('itemCode', None))
-    for i in itemCode:
-        ItemData.objects.filter(id=i).update(status = "1", binlocation=Binlocation.objects.get(pk=binLocation))
-    return JsonResponse({"@@":"a"},status = 200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            binLocation = request.POST.get('binlocation', None)
+            itemCode = loads(request.POST.get('itemCode', None))
+            for i in itemCode:
+                ItemData.objects.filter(id=i).update(status = "1", binlocation=Binlocation.objects.get(binlocation=binLocation, deleted=0))
+            return JsonResponse({"@@":"a"},status = 200)
 
 def out(request):
-    outbound = request.POST.get('outboundId', None)
-    itemCode = loads(request.POST.get('itemCode', None))
-    for i in itemCode:
-        ItemData.objects.filter(id=i).update(status = "2", outbound=Outbound.objects.get(pk=outbound))
-    Outbound.objects.filter(id=outbound).update(status = "3")
-    return JsonResponse({"@@":"a"},status = 200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            outbound = request.POST.get('outboundId', None)
+            itemCode = loads(request.POST.get('itemCode', None))
+            for i in itemCode:
+                ItemData.objects.filter(id=i).update(status = "2", outbound=Outbound.objects.get(pk=outbound))
+            Outbound.objects.filter(id=outbound).update(status = "3")
+            return JsonResponse({"@@":"a"},status = 200)
 
 def move(request):
-    binLocation = request.POST.get('binlocation', None)
-    itemCode = loads(request.POST.get('itemCode', None))
-    for i in itemCode:
-        ItemData.objects.filter(id=i).update(binlocation=Binlocation.objects.get(pk=binLocation))
-    return JsonResponse({"@@":"a"},status = 200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            binLocation = request.POST.get('binlocation', None)
+            itemCode = loads(request.POST.get('itemCode', None))
+            for i in itemCode:
+                ItemData.objects.filter(id=i).update(binlocation=Binlocation.objects.get(binlocation=binLocation, deleted=0))
+            return JsonResponse({"@@":"a"},status = 200)
     
 def borrow(request):
-    itemCode = loads(request.POST.get('itemCode', None))
-    borrowId = request.POST.get('borrowId', None)
-    for i in itemCode:
-        ItemData.objects.filter(id=i).update(status = "3", borrow=Borrow.objects.get(pk=borrowId))
-    Borrow.objects.filter(id=borrowId).update(status = "3")
-    return JsonResponse({"@@":"a"},status = 200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            itemCode = loads(request.POST.get('itemCode', None))
+            borrowId = request.POST.get('borrowId', None)
+            for i in itemCode:
+                ItemData.objects.filter(id=i).update(status = "3", borrow=Borrow.objects.get(pk=borrowId))
+            Borrow.objects.filter(id=borrowId).update(status = "3")
+            return JsonResponse({"@@":"a"},status = 200)
 
 def retur(request):
-    itemCode = loads(request.POST.get('itemCode', None))
-    returnId = request.POST.get('returnId', None)
-    outbound = CostumerReturn.objects.filter(id=returnId).values("outbound__id")
-    for i in itemCode:
-        ItemData.objects.filter(id=i).update(status = "2", outbound = Outbound.objects.get(pk=outbound[0]["outbound__id"]))
-    CostumerReturn.objects.filter(id=returnId).update(status = "3")
-    return JsonResponse({"@@":"a"},status = 200)
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            itemCode = loads(request.POST.get('itemCode', None))
+            returnId = request.POST.get('returnId', None)
+            outbound = CostumerReturn.objects.filter(id=returnId).values("outbound__id")
+            for i in itemCode:
+                ItemData.objects.filter(id=i).update(status = "2", outbound = Outbound.objects.get(pk=outbound[0]["outbound__id"]))
+            CostumerReturn.objects.filter(id=returnId).update(status = "3")
+            return JsonResponse({"@@":"a"},status = 200)
 
 def stockOpname(request):
-    rackid = request.POST.get('rackid', None)
-    item = loads(request.POST.get('item', None))
-    normal = loads(request.POST.get('normal', None))
-    broken = loads(request.POST.get('broken', None))
-    print("stock opname started ")
-    for i in item:
-        ItemData.objects.filter(pk=i['id']).update(status = '5')
-    for i in normal:
-        ItemData.objects.filter(pk=i).update(status='1')
-    for i in broken:
-        ItemData.objects.filter(pk=i).update(status='4')
+    if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
+        return redirect('login')
+    else:
+        if request.session['role'] == "ADM":
+            raise PermissionDenied
+        else:
+            rackid = request.POST.get('rackid', None)
+            item = loads(request.POST.get('item', None))
+            normal = loads(request.POST.get('normal', None))
+            broken = loads(request.POST.get('broken', None))
+            print("stock opname started ")
+            for i in item:
+                ItemData.objects.filter(pk=i['id']).update(status = '5')
+            for i in normal:
+                ItemData.objects.filter(pk=i).update(status='1')
+            for i in broken:
+                ItemData.objects.filter(pk=i).update(status='4')
 
 
-    return JsonResponse({"@@":"a"},status = 200)
+            return JsonResponse({"@@":"a"},status = 200)
     
 # -------- PDF -----------
 from django.template.loader import get_template

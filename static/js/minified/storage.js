@@ -446,7 +446,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		validation["binlocation"] = false;
 		for (let i = 0; i < itemData['binlocation'].length; i++) {
-			if ($("#binLocation").val() == itemData['binlocation'][i]['id']) {
+			if ($("#binLocation").val() == itemData['binlocation'][i]['binlocation']) {
 				alert("found");
 				binlocationExist = 1;
 				validation["binlocation"] = true;
