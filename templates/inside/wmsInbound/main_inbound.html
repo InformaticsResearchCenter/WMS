@@ -30,7 +30,7 @@
             <tbody>
                 {% for inb in inbound %}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{forloop.counter}}</th>
                     <td>{{inb.id}}</td>
                     <td>{{inb.supplier.name}}</td>
                     

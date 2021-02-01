@@ -42,14 +42,18 @@
 	#content {
 		width: 100%;
 	}
+	.content-header{
+		visibility: hidden;
+		height: 0;
+	}
 
 	/* 
 	form {
 		width: 300px;
 	} */
-
+/* 
 	form,
 	form>input,
-	form>button {}
+	form>button {} */
 
 }
