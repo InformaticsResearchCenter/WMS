@@ -86,15 +86,7 @@
                 <tr>
                     <td width="100px">Status</td>
                     <td>:</td>
-                    <td width="400px">
-                        {% if obj.status == "1" %}
-                         <p>Open Document</p>
-                        {% elif obj.status == "2" %}
-                        <p>Complete with reject</p>
-                        {% elif obj.status == "3" %}
-                        <p>Complete</p>
-                        {% endif %}
-                    </td>
+                    <td width="400px">{{obj.get_status_display}}</td>
                 </tr>
                 <tr>
                     <td width="100px">Date</td>

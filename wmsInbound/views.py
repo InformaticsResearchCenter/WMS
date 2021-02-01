@@ -520,6 +520,7 @@ def confirm(request):
         else:
             inbounddata_id_list = list(InboundData.objects.filter(inbound=request.session['inbound_id'], deleted=0,userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter'))
             rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id'], deleted=0, userGroup=request.session['usergroup']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
+            print(rejectlist)
             # Isi field Itemdata
             data = []
             #Looping insert data ke Itemdata

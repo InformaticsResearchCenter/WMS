@@ -291,7 +291,7 @@ def supplierReturnDataIndex(request, id):
     else:
         id_inbound = SupplierReturn.objects.filter(
             pk=id, deleted=0, userGroup=request.session['usergroup']).first().inbound.id,
-        request.session['id_inbound'] = (id_inbound[0])
+        request.session['id_inbound'] = id_inbound[0]
         request.session['supplierReturn'] = id  
         supplierReturndataStats = SupplierReturnData.objects.filter(
             deleted=0, supplierReturn=id, userGroup=request.session['usergroup'])
@@ -386,16 +386,8 @@ def supplierReturndata(request, id=0):
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
                     rejectCounter = list(InboundData.objects.filter(inbound=request.session['id_inbound'], deleted=0,userGroup=request.session['usergroup']).values('rejectCounter', 'item'))
-                    # for s in rejectCounter:
-                    #     if formitem == (s['item']):
-                    #         if int(formqty) > (s['rejectCounter']):
-                    #             messages.error(
-                    #                 request, 'Item quantity exceeded the limit !')
-                    #             return redirect('supplierReturndataCreate')
                     if id == 0:
                         for i in rejectCounter:
-                            # print(i['item'])
-                            # print(i['rejectCounter'])
                             if i['item'] == formitem:
                                 if int(formqty) > (i['rejectCounter']):
                                     messages.error(
@@ -413,21 +405,9 @@ def supplierReturndata(request, id=0):
                                             supRetqty = supRet.first().quantity
                                             supRet.update(
                                                 quantity=supRetqty + int(formqty))
-                                            # inbounddata2 = InboundData.objects.filter(
-                                            #     item=qtySupplier[j][0], inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
-                                            # inbounddata3 = inbounddata2.first()
-                                            # inbounddata2.update(rejectCounter=inbounddata3.rejectCounter - int(
-                                            #     formqty), quantity=inbounddata3.quantity + int(formqty))
                                             return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
                                         j += 1
                     form.save()
-                    # inbounddata2 = InboundData.objects.filter(
-                    #     item=formitem, inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
-                    # inbounddata3 = inbounddata2.first()
-                    # # pp (inbounddata2)
-                    # # pp (inbounddata3.rejectCounter)
-                    # inbounddata2.update(
-                    #     rejectCounter=inbounddata3.rejectCounter - int(formqty), quantity=inbounddata3.quantity + int(formqty))
                     if id == 0:
                         get_next_value(
                             'supplierreturndata_seq')
@@ -445,8 +425,6 @@ def supplierReturndataDelete(request, id):
         else:
             supplierReturndata = SupplierReturnData.objects.filter(
                 pk=id, deleted=0, userGroup=request.session['usergroup']).first()
-            # request.session['supplierReturnData'] = (supplierReturndata[0])    
-            # supplierReturndatastatus = supplierReturndata
             supplierReturndata.delete()
             return redirect('supplierReturndataIndex', id=request.session['supplierReturn'])
 
@@ -459,38 +437,22 @@ def supplierReturnConfirm(request):
             raise PermissionDenied
         else:
             inboundId = SupplierReturn.objects.filter(id=request.session['supplierReturn'], userGroup=request.session['usergroup'], deleted=0).values("inbound")[0]["inbound"]
-            inboundData =  list(InboundData.objects.filter(inbound=inboundId, userGroup=request.session['usergroup'], deleted=0).values_list('id','item'))
+            inboundData =  list(InboundData.objects.filter(inbound=inboundId, userGroup=request.session['usergroup'], deleted=0).values_list('id','item', 'reject', 'rejectCounter', 'quantity'))
             supplierReturnData = list(SupplierReturnData.objects.filter(supplierReturn=request.session['supplierReturn'], userGroup=request.session['usergroup'], deleted=0).values_list('id','item','quantity'))
-            rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
             # Isi field Itemdata
             data = []
             #Looping insert data ke Itemdata
-            i = 0
-
-            for j in inboundData:
-                try:
-                    for m in range(supplierReturnData.len()):
-                        if supplierReturnData[m][1] == j[1]:
-                            for k in range(supplierReturnData[m][2]):
-                                data.append(ItemData(id='ITD'+ str(get_next_value('itemdata_seq')), inbound=InboundData.objects.get(pk=j[0]), userGroup=UserGroup.objects.get(pk=request.session['usergroup']), returnData=SupplierReturnData.objects.get(pk=supplierReturnData[m][0]))),
-                except:
-                    break
-                i += 1        
+            for i in inboundData:
+                for j in supplierReturnData:
+                    if i[1] == j[1]:
+                        InboundData.objects.filter(item=j[1], inbound=inboundId, deleted=0, userGroup=request.session['usergroup']).update(rejectCounter=i[3] - j[2])
+                        for k in range(j[2]):
+                            data.append(ItemData(id='ITD'+ str(get_next_value('itemdata_seq')), inbound=InboundData.objects.get(pk=i[0]), userGroup=UserGroup.objects.get(pk=request.session['usergroup']), returnData=SupplierReturnData.objects.get(pk=j[0])))
             ItemData.objects.bulk_create(data)
-            inbounddata2 = InboundData.objects.filter(
-                item=formitem, inbound=request.session['id_inbound'], deleted=0, userGroup=request.session['usergroup'])
-            inbounddata3 = inbounddata2.first()
-                    # pp (inbounddata2)
-                    # pp (inbounddata3.rejectCounter)
-            inbounddata2.update(
-                rejectCounter=inbounddata3.rejectCounter - int(formqty), quantity=inbounddata3.quantity + int(formqty))
-            # Update status Inbound data
-            if len(rejectlist) > 0:
-                SupplierReturn.objects.filter(
-                    id=request.session['supplierReturn'], deleted=0, userGroup=request.session['usergroup']).update(status="2")
-            else:
-                SupplierReturn.objects.filter(
-                    id=request.session['supplierReturn'], deleted=0, userGroup=request.session['usergroup']).update(status="3")
+            SupplierReturn.objects.filter(id=request.session['supplierReturn'], deleted=0, userGroup=request.session['usergroup']).update(status="2")
+            rejectlist = list(InboundData.objects.filter(inbound=inboundId, userGroup=request.session['usergroup'], deleted=0, rejectCounter=0).values_list('rejectCounter', flat=True))
+            if len(rejectlist) == len(inboundData):
+                Inbound.objects.filter(id=inboundId).update(status="3")
             return redirect('supplierReturnIndex')
 
 
