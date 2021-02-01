@@ -421,23 +421,29 @@ $(document).ready(function () {
 				csrfmiddlewaretoken: csrf
 			},
 			success: function (response) {
-				stockOpname = response
-				itemStockData = stockOpname.items
-				$("#UniversalData").empty();
-				$("#UniversalModalTitle").val("Stock opname");
-				$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
-				$("#UniversalData").append(`<tr><td>Rack Id</td><td>` + stockOpname.rack[0].id + `</td></tr>`);
-				$("#UniversalData").append(`<tr><td>Bin total</td><td>` + stockOpname.bin.length + `</td></tr>`);
-				$("#UniversalData").append(`<tr><td>Item total</td><td>` + stockOpname.itemQuantity + `</td></tr>`);
-				$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-				$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-				for (let index = 0; index < stockOpname.itemdata.length; index++) {
-					const element = stockOpname.itemdata[index];
+				if (typeof response['msg'] != "undefined") {
+					alert("Data tidak ditemukan");
+					$("#UniversalData").empty();
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">` + response['msg'] + `</td></tr>`);
+				} else {
+					stockOpname = response
+					itemStockData = stockOpname.items
+					$("#UniversalData").empty();
+					$("#UniversalModalTitle").val("Stock opname");
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Rack Id</td><td>` + stockOpname.rack[0].id + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Bin total</td><td>` + stockOpname.bin.length + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Item total</td><td>` + stockOpname.itemQuantity + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					for (let index = 0; index < stockOpname.itemdata.length; index++) {
+						const element = stockOpname.itemdata[index];
 
-					$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
+					}
+					$(".overlay").hide();
+					validation["stockopname"] = true;
 				}
-				$(".overlay").hide();
-				validation["stockopname"] = true;
 			}
 		});
 	});
@@ -481,13 +487,13 @@ $(document).ready(function () {
 					console.log(response.customer)
 					$("#UniversalData").empty();
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">customer data</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Nama</td><td id="nama">` + response.customer[0].customer__name + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Alamat</td><td id="alamat">` + response.customer[0].customer__province + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + response.customer[0].customer__city + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__districts + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__village + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__address + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + response.customer[0].customer__postalCode + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Name</td><td id="nama">` + response.customer[0].customer__name + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>province</td><td id="alamat">` + response.customer[0].customer__province + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>city</td><td id="noTelp">` + response.customer[0].customer__city + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>districts</td><td id="tanggal">` + response.customer[0].customer__districts + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>village</td><td id="tanggal">` + response.customer[0].customer__village + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>address</td><td id="tanggal">` + response.customer[0].customer__address + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Postal code</td><td id="tanggal">` + response.customer[0].customer__postalCode + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
 					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
 					items = response['items'];
@@ -534,8 +540,8 @@ $(document).ready(function () {
 					employee = Object.values(response['employee'][0])
 					$("#UniversalData").empty();
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">Employee data</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Nama</td><td id="nama">` + employee[0] + `</td></tr>`);
-					$("#UniversalData").append(`<tr><td>Alamat</td><td id="alamat">` + employee[1] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Nama</td><td id="id">` + employee[0] + `</td></tr>`);
+					$("#UniversalData").append(`<tr><td>Alamat</td><td id="nama">` + employee[1] + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);

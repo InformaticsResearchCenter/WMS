@@ -29,7 +29,7 @@ def itemIndex(request):
         'role': request.session['role'],
         'username': request.session['username'],
         'title': 'Item | Inbound',
-        'Item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name', 'subcategory')
+        'Item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name', 'subcategory', 'subcategory__subcategory')
     }
     return render(request, 'inside/wmsInbound/itemIndex.html', context)
 
