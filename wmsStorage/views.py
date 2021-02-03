@@ -284,7 +284,6 @@ def rackIndex(request):
             'title': 'Rack | Inbound',
             'rack': Rack.objects.filter(deleted=0, userGroup=request.session['usergroup']).annotate(numbin=Count('binlocation')).order_by('id')
         }
-        print(Rack.objects.filter(deleted=0, userGroup=request.session['usergroup']).annotate(numbin=Count('binlocation')).order_by('id'))
         return render(request, 'inside/wmsStorage/rackIndex.html', context)
 
 
