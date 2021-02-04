@@ -31,16 +31,10 @@
             <tbody>
                 {% for inb in supplierReturn %}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{forloop.counter}}</th>
                     <td>{{inb.id}}</td>
                     <td>{{inb.inbound_id}}</td>
-                    {% if inb.status == "1" %}
-                    <td>Open Document</td>
-                    {% elif inb.status == "2" %}
-                    <td>Complete with reject</td>
-                    {% elif inb.status == "3" %}
-                    <td>Complete</td>
-                    {% endif %}
+                    <td>{{inb.get_status_display}}</td>
                     <td>{{inb.date}}</td>
                     <td>{{inb.create.name}}</td>
                     <td>{{inb.confirm.name}}</td>

@@ -24,8 +24,10 @@
                 <tr>
                     <th scope="col" style="width: 100px;">No</th>
                     <th scope="col">Borrowdata Id</th>
-                    <th scope="col">Quantity</th>
                     <th scope="col">Item Name</th>
+                    <th scope="col">Item Size</th>
+                    <th scope="col">Item Colour</th>
+                    <th scope="col">Quantity</th>
                     <th scope="col" style="width: 165px;">Action</th>
                 </tr>
             </thead>
@@ -34,8 +36,10 @@
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
                     <td><b>{{b.id}}</b></td>
-                    <td>{{b.quantity}}</td>
                     <td>{{b.item.name}}</td>
+                    <td>{{b.item.size}}</td>
+                    <td>{{b.item.colour}}</td>
+                    <td>{{b.quantity}}</td>
                     {% if role != 'OPR' %}
                     <td>
                         {% if b.borrow.status == '1' %}

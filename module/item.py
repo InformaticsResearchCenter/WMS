@@ -15,7 +15,9 @@ def avaibleItem(status, deleted, usergroup):
         if found == False:
             try:
                 rawitem.append({'item': i['inbound__item'], 'name': Item.objects.filter(
-                    id=i['inbound__item']).values('name')[0]['name'], 'qty': 1})
+                    id=i['inbound__item']).values('name')[0]['name'],'size': Item.objects.filter(
+                    id=i['inbound__item']).values('size')[0]['size'], 'colour': Item.objects.filter(
+                    id=i['inbound__item']).values('colour')[0]['colour'], 'qty': 1})
             except:
                 pass
 

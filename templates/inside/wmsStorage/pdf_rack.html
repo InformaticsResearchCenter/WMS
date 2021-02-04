@@ -97,17 +97,27 @@
         <table class="table" border="1" style="text-align: center;padding-top: 5px;">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col" width="200px">No</th>
-                    <th scope="col">QRCode</th>
+                    <th scope="col" width="200px">Rack</th>
+                    <th scope="col" width="200px">Rack</th>
+                    <th scope="col" width="200px">Rack</th>
+                    <th scope="col" width="200px">Rack</th>
                 </tr>
             </thead>
             <tbody>
-                {% for u in datas %}
                 <tr>
-                    <th scope="row">{{u.0}}</th>
-                    <td>{{u.0}}<img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{u.0}}'>
-                    </td>
-                </tr>
+                {% for u in datas %}
+                    {% if forloop.first %}
+                    <tr>
+                    {% endif %}
+                        <th scope="col">{{u.0}}
+                        <img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{u.0}}'>
+                        </th>
+                    {% if forloop.counter|divisibleby:4 %}
+                        {% if not forloop.last %}
+                        </tr>
+                        <tr>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>

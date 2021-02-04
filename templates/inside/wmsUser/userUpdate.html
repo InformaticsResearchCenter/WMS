@@ -24,16 +24,23 @@
                             <label for="supplier">Password</label>
                             <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="{{user.password}}">
                         </div>
+                        {% if role != user.role.role %}
                         <div class="form-group">
                             <label for="itemdata">Roleid</label>
                             <select class="form-control" name="role" id="role">
-                                    {% for r in role_data %}
+                                {% for r in role_data %}
                                     {% if r.role != 'MAN' %}
                                     <option value='{{r.role}}'>{{r.role}}</option>
                                     {% endif %}
-                                    {% endfor %}
-                                </select>
+                                {% endfor %}
+                            </select>
                         </div>
+                        {% endif %}
+                        {% if role == user.role.role %}
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="role" id="role" value="{{user.role.role}}">
+                        </div>
+                        {% endif %}
                         <div class="form-group">
                             <input type="hidden" class="form-control" name="userGroup" id="userGroup" value="{{user.userGroup_id}}">
                         </div>

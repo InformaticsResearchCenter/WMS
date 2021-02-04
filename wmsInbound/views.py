@@ -29,7 +29,7 @@ def itemIndex(request):
         'role': request.session['role'],
         'username': request.session['username'],
         'title': 'Item | Inbound',
-        'Item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name', 'subcategory', 'subcategory__subcategory')
+        'Item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name', 'size', 'colour', 'subcategory', 'subcategory__subcategory')
     }
     return render(request, 'inside/wmsInbound/itemIndex.html', context)
 
@@ -156,6 +156,9 @@ def categoryDelete(request, id):
         else:
             Category.objects.filter(
                 pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+            Subcategory.objects.filter(
+                category = id, userGroup=request.session['usergroup']
+            ).update(deleted=1)
             return redirect('categoryIndex')
             # Subcategory.objects.filter(
             #     category
@@ -486,8 +489,7 @@ class PdfInbound(View):
             raise PermissionDenied
         else:
             datas = list(InboundData.objects.all().select_related(
-                'inbound').filter(inbound=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'reject'))
-            i = 0;
+                'inbound').filter(inbound=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'reject', 'item__size', 'item__colour'))
             itemdata = []
             for e in datas:
                 itemdata.append(list(ItemData.objects.all().select_related(
@@ -521,6 +523,7 @@ def confirm(request):
         else:
             inbounddata_id_list = list(InboundData.objects.filter(inbound=request.session['inbound_id'], deleted=0,userGroup=request.session['usergroup']).values_list('id','quantity', 'rejectCounter'))
             rejectlist = list(InboundData.objects.filter(inbound=request.session['inbound_id'], deleted=0, userGroup=request.session['usergroup']).exclude(rejectCounter=0).values_list('rejectCounter', flat=True))
+            print(rejectlist)
             # Isi field Itemdata
             data = []
             #Looping insert data ke Itemdata

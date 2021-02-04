@@ -13,7 +13,6 @@
                     <th scope="col">No.</th>
                     <th scope="col">Subcategory ID</th>
                     <th scope="col">Subcategory</th>
-                    <th scope="col">Size</th>
                     <th scope="col" style="width: 150px;">Action</th>
                 </tr>
             </thead>
@@ -23,7 +22,6 @@
                     <td scope="col">{{forloop.counter}}</td>
                     <td scope="col">{{subcat.id}}</td>
                     <td scope="col">{{subcat.subcategory}}</td>
-                    <td scope="col">{{subcat.size}}</td>
                     <td>
                         {% if role != 'OPR' %}
                         <a href="{% url 'subcategoryUpdate' subcat.id %}" class="btn btn-success btn-sm" role="button"

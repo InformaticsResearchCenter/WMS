@@ -35,7 +35,13 @@
                             <select class="form-control" name="item">
                                 {% for i in item %}
                                     {% if i.qty != 0 %}
-                                    <option value='{{i.item}}'>{{i.name}} || qty = {{i.qty}}</option>
+                                    <option value='{{i.item}}'>{{i.name}} {% if itm.size != None %}
+                                    , Size : {{itm.size}}
+                                    {% endif %}
+                                    {% if itm.colour != Mone %}
+                                    , Colour : {{itm.colour}}
+                                    {% endif %}, qty = {{i.qty}}
+                                    </option>
                                     {% endif %}
                                 {% endfor %}
                             </select>

@@ -43,6 +43,20 @@
             background-color: #fff;
             /* Modern Browsers */
         }
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            background-color: #2196F3;
+            padding: 10px;
+        }
+
+        .grid-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            font-size: 30px;
+            text-align: center;
+        }
     </style>
     <style>
         
@@ -201,20 +215,26 @@
         <table class="table" border="1" style="text-align:center;padding-top: 5px;">
             <thead class="thead-dark" style="colspan:2;">
                 <tr>
-                    <th scope="col" width="150px">Kode</th>
-                    <th scope="col">QRCode</th>
-                    <th scope="col" width="150px">Kode</th>
-                    <th scope="col">QRCode</th>
+                    <th scope="col" width="200px">Item</th>
+                    <th scope="col" width="200px">Item</th>
+                    <th scope="col" width="200px">Item</th>
+                    <th scope="col" width="200px">Item</th>
                 </tr>
             </thead>
             <tbody width="100%" height="100px">
                 {% for u in itdt %}
-                    <indent>
-                    <tr height="100px">
-                        <th scope="row">{{u}} <br> ({{itbc.1}})</th>
-                        <td><img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{u}}'></td>        
-                    </tr>
-                    </indent>
+                    {% if forloop.first %}
+                    <tr>
+                    {% endif %}
+                        <th scope="col">{{u}} <br> {{itbc.1}} <br> {{itbc.4}} <br> {{itbc.5}}
+                        <img src='https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{u}}'>
+                        </th>
+                    {% if forloop.counter|divisibleby:4 %}
+                        {% if not forloop.last %}
+                        </tr>
+                        <tr>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>

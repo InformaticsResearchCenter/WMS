@@ -79,12 +79,15 @@ def user(request, id=0):
                         user = User.objects.get(pk=id)
                         form = UserForm(request.POST, instance=user)
                     if form.is_valid():
-                        if request.POST['role'] != "MAN":
-                            form.save()
-                            return redirect('userIndex')
+                        if id == 0:
+                            if request.POST['role'] != "MAN":
+                                form.save()
+                                return redirect('userIndex')
+                            else:
+                                messages.error(request, "Can't add user role MAN !")
+                                return redirect('userIndex')
                         else:
-                            messages.error(
-                                request, "Can't add user role MAN !")
+                            form.save()
                             return redirect('userIndex')
                 return render(request, 'inside/wmsUser/userCreate.html')
             except IntegrityError as e:
