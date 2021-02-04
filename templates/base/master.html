@@ -146,6 +146,14 @@
                                 </a>
                             </li>
                         </ul> {% endcomment %}
+                        <ul class="nav nav-treeview">    
+                        <li class="nav-item">
+                            <a href="{% url 'customer' %}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p style="color: white;">Customer</p>
+                            </a>
+                        </li>
+                        </ul>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'add_outbound' %}" class="nav-link">
@@ -232,12 +240,7 @@
                                     <p style="color: white;">Rack</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{% url 'customer' %}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p style="color: white;">Customer</p>
-                                </a>
-                            </li>
+
                         </ul>
                     </li>
                     {% if role == 'MAN' %}

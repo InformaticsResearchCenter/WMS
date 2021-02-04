@@ -82,8 +82,10 @@ class Item(models.Model):
     deleted = models.CharField(max_length=1, default=0)
     subcategory = models.ForeignKey(
         Subcategory, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=50)
-
+    name = models.CharField(max_length=50, null=True)
+    size = models.CharField(max_length=50, null=True, blank=True)
+    colour = models.CharField(max_length=50, null=True, blank=True)
+    
 
 class User(External):
     userGroup = models.ForeignKey(

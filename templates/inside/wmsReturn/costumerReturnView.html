@@ -55,6 +55,8 @@
                     <th scope="col">No</th>
                     <th scope="col">Id Costumer Data</th>
                     <th scope="col">Item</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Colour</th>
                     <th scope="col">Quantity</th>
                     {% if costumerReturnDataStats.costumerReturn.status == '1' %}
                         {% if role != 'OPR' %}
@@ -69,6 +71,8 @@
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{crd.id}}</td>
                     <td>{{crd.item.name}}</td>
+                    <td>{{crd.item.size}}</td>
+                    <td>{{crd.item.colour}}</td>
                     <td>{{crd.quantity}}</td>
                     {% if role != 'OPR' %}
                     {% if crd.costumerReturn.status == '1' %}

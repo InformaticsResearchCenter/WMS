@@ -207,6 +207,7 @@ def outbounddata(request, id=0):
         if request.session['role'] == "OPR":
             raise PermissionDenied
         else:
+            print(it.avaibleItem(1, 0, request.session['usergroup']))
             if request.method == "GET":
                 if id == 0:
                     context = {
