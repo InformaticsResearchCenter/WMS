@@ -484,7 +484,7 @@ class PdfInbound(View):
             datacollect = zip(datas, itemdata)
             ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsInbound/pdf_inbound.html', {
-                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect, 'ug': ug,'i':i})
+                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect, 'ug': ug})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)
