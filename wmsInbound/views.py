@@ -487,6 +487,7 @@ class PdfInbound(View):
         else:
             datas = list(InboundData.objects.all().select_related(
                 'inbound').filter(inbound=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'quantity', 'reject'))
+            i = 0;
             itemdata = []
             for e in datas:
                 itemdata.append(list(ItemData.objects.all().select_related(
@@ -496,7 +497,7 @@ class PdfInbound(View):
             datacollect = zip(datas, itemdata)
             ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsInbound/pdf_inbound.html', {
-                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect, 'ug': ug})
+                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect, 'ug': ug,'i':i})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)
