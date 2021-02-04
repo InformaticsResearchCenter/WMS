@@ -156,6 +156,9 @@ def categoryDelete(request, id):
         else:
             Category.objects.filter(
                 pk=id, userGroup=request.session['usergroup']).update(deleted=1)
+            Subcategory.objects.filter(
+                category = id, userGroup=request.session['usergroup']
+            ).update(deleted=1)
             return redirect('categoryIndex')
             # Subcategory.objects.filter(
             #     category
