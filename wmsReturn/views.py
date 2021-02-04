@@ -358,7 +358,7 @@ def supplierReturndata(request, id=0):
                         'id_supplierreturndata': get_last_value('supplierreturndata_seq'),
                         'title': 'Add Supplier Return Data',
                     }
-                    return render(request, 'inside/wmsReturn/supplierReturndataCreate.html', context)
+                    return render(request, 'inside/wmsReturn/supplierReturnDataCreate.html', context)
                 else:
                     supplierReturn = SupplierReturnData.objects.get(pk=id)
                     context = {
