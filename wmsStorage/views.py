@@ -98,7 +98,7 @@ def getScannerData(request):
         if request.session['role'] == "ADM":
             raise PermissionDenied
         else:
-            items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name'))
+            items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name', 'size', 'colour'))
             itemraw1 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="1").select_related('inbound').values('id','inbound__item'))
             itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
             binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','binlocation','capacity'))
@@ -363,8 +363,8 @@ class PdfRack(View):
             filename = "Invoice_%s.pdf" % (12341231)
             content = "inline; filename=%s" % (filename)
             download = request.GET.get("download")
-            # if download:
-            #     content = "attachment; filename=%s" % (filename)
-            # response['Content-Disposition'] = content
+            if download:
+                content = "attachment; filename=%s" % (filename)
+            response['Content-Disposition'] = content
             return response
         return HttpResponse("Not Found")

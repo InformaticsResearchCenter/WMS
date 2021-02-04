@@ -495,19 +495,23 @@ $(document).ready(function () {
 					$("#UniversalData").append(`<tr><td>address</td><td id="tanggal">` + response.customer[0].customer__address + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td>Postal code</td><td id="tanggal">` + response.customer[0].customer__postalCode + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>size</td><td>colour</td><td>qty</td></tr>`);
 					items = response['items'];
 					for (let index = 0; index < items.length; index++) {
 						var itemName;
+						var itemSize;
+						var itemColour;
 						for (let i = 0; i < itemData['itemlist'].length; i++) {
 							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
 								itemName = itemData['itemlist'][i]['name'];
+								itemSize = itemData['itemlist'][i]['size'];
+								itemColour = itemData['itemlist'][i]['colour'];
 								break;
 							} else {
 								itemName = "undefined";
 							}
 						}
-						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + itemSize + `</td><td>` + itemColour + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 					validation["outbound"] = true;
 					$("#itemCodeContainer").show();
@@ -545,19 +549,23 @@ $(document).ready(function () {
 					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + employee[2] + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + employee[3] + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
-					items = response['items']
+					$("#UniversalData").append(`<tr><td>item name</td><td>size</td><td>colour</td><td>qty</td></tr>`);
+					items = response['items'];
 					for (let index = 0; index < items.length; index++) {
 						var itemName;
+						var itemSize;
+						var itemColour;
 						for (let i = 0; i < itemData['itemlist'].length; i++) {
 							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
 								itemName = itemData['itemlist'][i]['name'];
+								itemSize = itemData['itemlist'][i]['size'];
+								itemColour = itemData['itemlist'][i]['colour'];
 								break;
 							} else {
 								itemName = "undefined";
 							}
 						}
-						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + itemSize + `</td><td>` + itemColour + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 					$("#itemCodeContainer").show();
 					validation["borrow"] = true;
@@ -594,19 +602,23 @@ $(document).ready(function () {
 					$("#UniversalData").append(`<tr><td>no Telp</td><td id="noTelp">` + customer[2] + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td>Tanggal</td><td id="tanggal">` + customer[3] + `</td></tr>`);
 					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item list</td></tr>`);
-					$("#UniversalData").append(`<tr><td>item name</td><td>Qty</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>size</td><td>colour</td><td>qty</td></tr>`);
 					items = response['items'];
 					for (let index = 0; index < items.length; index++) {
 						var itemName;
+						var itemSize;
+						var itemColour;
 						for (let i = 0; i < itemData['itemlist'].length; i++) {
 							if (itemData['itemlist'][i]['id'] == items[index]['item']) {
 								itemName = itemData['itemlist'][i]['name'];
+								itemSize = itemData['itemlist'][i]['size'];
+								itemColour = itemData['itemlist'][i]['colour'];
 								break;
 							} else {
 								itemName = "undefined";
 							}
 						}
-						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
+						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + itemSize + `</td><td>` + itemColour + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
 
 					$("#itemCodeContainer").show();

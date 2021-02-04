@@ -26,10 +26,13 @@
                         <div class="form-group">
                         {% for i in item %}
                             {% if i.item == borrowdata.item.id %}
-                            <label for="item">{{i.name}} || Qty = {{i.qty}}</label>
-                            <input type="text" class="form-control" name="item" id="item"
-                                value="{{i.item}}" readonly>
-                            {% endif %}
+                            <label for="item">{{i.name}}{% if i.size != None %}
+                                    , Size : {{i.size}}
+                                    {% endif %}
+                                    {% if i.colour != Mone %}
+                                    , Colour : {{i.colour}}
+                                    {% endif %}, qty = {{i.qty}}
+                                    </option>
                         {% endfor %}
                         <div class="form-group">
                             <label for="name">Quantity</label>

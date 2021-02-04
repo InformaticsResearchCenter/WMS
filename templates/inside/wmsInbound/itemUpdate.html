@@ -22,11 +22,6 @@
                                 value="{{item.userGroup.id}}">
                         </div>
                         <div class="form-group">
-                            <label for="category">Item</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Input Item"
-                                value="{{item.name}}">
-                        </div>
-                        <div class="form-group">
                             <label for="category">Subcategory</label>
                             <select class="form-control" name="subcategory">
                                 <option selected value='{{item.subcategory.id}}'>{{item.subcategory.subcategory}}
@@ -38,6 +33,22 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="category">Item</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Input Item"
+                                value="{{item.name}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Size</label>
+                            <input type="text" class="form-control" name="size" id="size" placeholder="Input Item"
+                            value="{% if itm.size != None %}{{item.size}}{% endif %}">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Colour</label>
+                            <input type="text" class="form-control" name="colour" id="colour" placeholder="Input Item"
+                            value="{% if itm.colour != None %}{{item.colour}}{% endif %}">
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </div>

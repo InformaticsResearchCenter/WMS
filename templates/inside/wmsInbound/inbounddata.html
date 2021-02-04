@@ -26,7 +26,15 @@
                             <label for="itemdata">Item</label>
                             <select class="form-control" name="item" name="item">
                                 {% for itm in item %}
-                                <option value='{{itm.id}}'>{{itm.name}}</option>
+                                <option value='{{itm.id}}'>
+                                {{itm.name}}
+                                {% if itm.size != None %}
+                                , Size : {{itm.size}}
+                                {% endif %}
+                                {% if itm.colour != None %}
+                                , Colour : {{itm.colour}}
+                                {% endif %}
+                                </option>
                                 {% endfor %}
                             </select>
                         </div>

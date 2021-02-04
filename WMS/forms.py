@@ -68,6 +68,8 @@ class ItemForm(forms.ModelForm):
         fields = [
             'id',
             'name',
+            'size',
+            'colour',
             'subcategory',
             'userGroup',
         ]
@@ -91,7 +93,6 @@ class SubcategoryForm(forms.ModelForm):
             'subcategory',
             'category',
             'userGroup',
-            'size',
         ]
 
 

@@ -463,11 +463,10 @@ class PdfSupplierReturn(View):
             raise PermissionDenied
         else:
             datas = list(SupplierReturnData.objects.all().select_related(
-                'supplierReturn').filter(supplierReturn=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'supplierReturn__inbound','quantity'))
+                'supplierReturn').filter(supplierReturn=obj, deleted=0, userGroup=request.session['usergroup']).values_list('id', 'item__name', 'supplierReturn__inbound','quantity', 'item__size', 'item__colour'))
             itemdata = []
             for e in datas:
                 itemdata.append(list(ItemData.objects.all().select_related('inbound').filter(returnData=e[0],deleted=0, userGroup=request.session['usergroup']).values_list('id', flat='true')))     
-            print(itemdata)
             datacollect = zip(datas, itemdata)
             ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsReturn/pdf_returnsupplier.html',
@@ -477,8 +476,8 @@ class PdfSupplierReturn(View):
                 filename = "Invoice_%s.pdf" % (12341231)
                 content = "inline; filename='%s'" % (filename)
                 download = request.GET.get("download")
-                # if download:
-                #     content = "attachment; filename='%s'" % (filename)
-                # response['Content-Disposition'] = content
+                if download:
+                    content = "attachment; filename='%s'" % (filename)
+                response['Content-Disposition'] = content
                 return response
             return HttpResponse("Not Found")
