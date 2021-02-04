@@ -459,7 +459,6 @@ def supplierReturnConfirm(request):
 class PdfSupplierReturn(View):
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(SupplierReturn, pk=kwargs['pk'])
-        #obj = get_object_or_404(Inbound, pk=kwargs['pk'])
         if obj.status == '1':
             raise PermissionDenied
         else:
@@ -468,6 +467,7 @@ class PdfSupplierReturn(View):
             itemdata = []
             for e in datas:
                 itemdata.append(list(ItemData.objects.all().select_related('inbound').filter(returnData=e[0],deleted=0, userGroup=request.session['usergroup']).values_list('id', flat='true')))     
+            print(itemdata)
             datacollect = zip(datas, itemdata)
             ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsReturn/pdf_returnsupplier.html',
@@ -477,8 +477,8 @@ class PdfSupplierReturn(View):
                 filename = "Invoice_%s.pdf" % (12341231)
                 content = "inline; filename='%s'" % (filename)
                 download = request.GET.get("download")
-                if download:
-                    content = "attachment; filename='%s'" % (filename)
-                response['Content-Disposition'] = content
+                # if download:
+                #     content = "attachment; filename='%s'" % (filename)
+                # response['Content-Disposition'] = content
                 return response
             return HttpResponse("Not Found")
