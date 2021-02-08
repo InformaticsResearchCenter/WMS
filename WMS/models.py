@@ -84,6 +84,7 @@ class Item(models.Model):
     name = models.CharField(max_length=50, null=True)
     size = models.CharField(max_length=50, null=True, blank=True)
     colour = models.CharField(max_length=50, null=True, blank=True)
+    itemin = models.IntegerField(default=0, null=True)
     unplaced = models.IntegerField(default=0, null=True)
     avaible = models.IntegerField(default=0, null=True)
     sold = models.IntegerField(default=0, null=True)
@@ -346,16 +347,22 @@ class DjangoSession(models.Model):
 class Log(models.Model):
     detail_list = [
         ('0', 'None'),
-        ('1', 'Inbound'),
-        ('2', 'Supplier Return'),
+        ('1', 'In'),
+        ('2', 'Move'),
         ('3', 'Outbound'),
         ('4', 'Customer Return'),
         ('5', 'Borrowed'),
         ('6', 'Return Borrow'),
     ]
+    item = models.ForeignKey(
+        Item, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()
     detail = models.CharField(max_length=2, choices=detail_list, default=0)
     date = models.DateField(default="1000-10-10")
+    userGroup = models.ForeignKey(
+        UserGroup, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True)
 
 
 

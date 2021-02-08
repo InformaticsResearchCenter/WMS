@@ -97,6 +97,7 @@ def getScannerData(request):
             items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name', 'size', 'colour'))
             itemraw1 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="1").select_related('inbound').values('id','inbound__item'))
             itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
+            itemraw3 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="5").select_related('inbound').values('id','inbound__item'))
             binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','binlocation','capacity'))
             itemdata = itemraw1+itemraw2
             item = []
@@ -176,16 +177,40 @@ def put(request):
         else:
             binLocation = request.POST.get('binlocation', None)
             itemCode = loads(request.POST.get('itemCode', None))
+            itemlog = {
+                'in' : 0,
+                'move' : 0,
+                'found' : 0,
+            }
+            items = []
             for i in itemCode:
                 item = ItemData.objects.filter(id=i)
-                status = list(item.values('status'))[0]
+                status = list(item.values('status', 'inbound__item'))[0]
+                items.append(status)
                 print(status)
                 if status['status'] == '0':
                     item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
                     print('Bound')
+                    itemlog['in']+=1
                 elif status['status'] == '1':
                     item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
                     print('Move')
+                    itemlog['move']+=1
+                elif status['status'] == '5':
+                    item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
+                    print('found')
+                    itemlog['found']+=1
+
+            print(items)
+            if itemlog['in'] > 0:
+                log = Log(detail=1, quantity=itemlog['in'], date=datetime.datetime.today().strftime('%Y-%m-%d'), user=User.objects.get(pk=request.session['id']), userGroup = UserGroup.objects.get(pk=request.session['usergroup']))
+                log.save()
+            if itemlog['move'] > 0:
+                log = Log(detail=2, quantity=itemlog['move'], date=datetime.datetime.today().strftime('%Y-%m-%d'), user=User.objects.get(pk=request.session['id']), userGroup = UserGroup.objects.get(pk=request.session['usergroup']))
+                log.save()
+            if itemlog['found'] > 0:
+                log = Log(detail=2, quantity=itemlog['found'], date=datetime.datetime.today().strftime('%Y-%m-%d'), user=User.objects.get(pk=request.session['id']), userGroup = UserGroup.objects.get(pk=request.session['usergroup']))
+                log.save()
 
 
                 
