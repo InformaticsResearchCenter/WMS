@@ -60,37 +60,33 @@ def getStockOpname(request):
         if request.session['role'] == "ADM":
             raise PermissionDenied
         else:
-            try:
-                print("Start modul stock opname started")
-                rackId=request.POST.get('rack',None)
-                rack = Rack.objects.filter(rack=rackId, userGroup=request.session['usergroup'], deleted=0).values()
-                bin = Binlocation.objects.filter(rack=rack[0]['id'],userGroup = request.session['usergroup']).values()
-                itemBulk=[]
-                rawItem=[]
-                quantity=0
-                for a in bin:
-                    item = list(ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values())
-                    try:
-                        if item != []:
-                            for b in item:
-                                ibd = list(InboundData.objects.filter(pk=b['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values('item__name'))
-                                if ibd != []:
-                                    rawItem.append(ibd[0]['item__name'])
-                                    itemBulk.append(b)
-                                    quantity+=1
-                                else:
-                                    pass
-                    except:
-                        pass
-                
-                
-                itemlist=[list(i) for i in Counter(rawItem).items()]
-                data = {'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity}
+            print("Start modul stock opname started")
+            rackId=request.POST.get('rack',None)
+            rack = Rack.objects.filter(rack=rackId, userGroup=request.session['usergroup'], deleted=0).values()
+            bin = Binlocation.objects.filter(rack=rack[0]['id'],userGroup = request.session['usergroup']).values()
+            itemBulk=[]
+            rawItem=[]
+            quantity=0
+            for a in bin:
+                item = list(ItemData.objects.filter(status='1', binlocation=a['id'], userGroup=request.session['usergroup'], deleted=0).values())
+                try:
+                    if item != []:
+                        for b in item:
+                            ibd = list(InboundData.objects.filter(pk=b['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values('item__name'))
+                            if ibd != []:
+                                rawItem.append(ibd[0]['item__name'])
+                                itemBulk.append(b)
+                                quantity+=1
+                            else:
+                                pass
+                except:
+                    pass
+            itemlist=[list(i) for i in Counter(rawItem).items()]
+            data = {'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity}
 
-                print(data)
-                return JsonResponse({'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity},status = 200)
-            except:
-                return JsonResponse({'msg' : "data not found"}, status=200)
+            print(data)
+            return JsonResponse({'rack': list(rack), 'bin' : list(bin), 'itemdata' : itemlist, 'items' : itemBulk, 'itemQuantity' : quantity},status = 200)
+            # return JsonResponse({'msg' : "data not found"}, status=200)
 def getScannerData(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
         return redirect('login')
@@ -181,7 +177,18 @@ def put(request):
             binLocation = request.POST.get('binlocation', None)
             itemCode = loads(request.POST.get('itemCode', None))
             for i in itemCode:
-                ItemData.objects.filter(id=i).update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
+                item = ItemData.objects.filter(id=i)
+                status = list(item.values('status'))[0]
+                print(status)
+                if status['status'] == '0':
+                    item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
+                    print('Bound')
+                elif status['status'] == '1':
+                    item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
+                    print('Move')
+
+
+                
             return JsonResponse({"@@":"a"},status = 200)
 
 def out(request):

@@ -441,9 +441,9 @@ $(document).ready(function () {
 
 						$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
 					}
-					$(".overlay").hide();
 					validation["stockopname"] = true;
 				}
+				$(".overlay").hide();
 			}
 		});
 	});

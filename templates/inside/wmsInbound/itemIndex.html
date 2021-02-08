@@ -22,6 +22,10 @@
                     <th scope="col">Size</th>
                     <th scope="col">Colour</th>
                     <th scope="col">Subcategory</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Avaible</th>
+                    <th scope="col">Sold</th>
+                    <th scope="col">Borrowed</th>
                     {% if role != 'OPR' %}
                     <th scope="col" style="width: 165px;">Action</th>
                     {% endif %}
@@ -36,6 +40,10 @@
                     <td>{{item.size}}</td>
                     <td>{{item.colour}}</td>
                     <td>{{item.subcategory__subcategory}}</td>
+                    <td>{{item.subcategory__category__category}}</td>
+                    <td>{{item.avaible}}</td>
+                    <td>{{item.sold}}</td>
+                    <td>{{item.borrowed}}</td>
                     {% if role != 'OPR' %}
                     <td>
                         <a href="{% url 'itemUpdate' item.id %}" class="btn btn-success btn-sm" role="button"

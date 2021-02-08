@@ -56,7 +56,6 @@ class UserGroup(External):
     profileOperator = models.ImageField(null=True, blank=True, upload_to="images/operator/")
 
 
-
 class Category(models.Model):
     id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
@@ -85,7 +84,11 @@ class Item(models.Model):
     name = models.CharField(max_length=50, null=True)
     size = models.CharField(max_length=50, null=True, blank=True)
     colour = models.CharField(max_length=50, null=True, blank=True)
-    
+    unplaced = models.IntegerField(default=0, null=True)
+    avaible = models.IntegerField(default=0, null=True)
+    sold = models.IntegerField(default=0, null=True)
+    borrowed = models.IntegerField(default=0, null=True)
+
 
 class User(External):
     userGroup = models.ForeignKey(
@@ -111,6 +114,7 @@ class Inbound(models.Model):
         ('2', 'Complete with reject'),
         ('3', 'Complete'),
     ]
+
     id = models.TextField(primary_key=True)
     userGroup = models.ForeignKey(
         UserGroup, on_delete=models.CASCADE, null=True)
@@ -178,6 +182,7 @@ class OutboundData(models.Model):
     outbound = models.ForeignKey(Outbound, on_delete=models.CASCADE, null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=0)
+
 
 
 class Borrow(Employee):
@@ -337,3 +342,20 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+class Log(models.Model):
+    detail_list = [
+        ('0', 'None'),
+        ('1', 'Inbound'),
+        ('2', 'Supplier Return'),
+        ('3', 'Outbound'),
+        ('4', 'Customer Return'),
+        ('5', 'Borrowed'),
+        ('6', 'Return Borrow'),
+    ]
+    quantity = models.IntegerField()
+    detail = models.CharField(max_length=2, choices=detail_list, default=0)
+    date = models.DateField(default="1000-10-10")
+
+
+
