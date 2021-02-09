@@ -349,7 +349,7 @@ class Log(models.Model):
         ('0', 'None'),
         ('1', 'In'),
         ('2', 'Move'),
-        ('3', 'Outbound'),
+        ('3', 'Found'),
         ('4', 'Customer Return'),
         ('5', 'Borrowed'),
         ('6', 'Return Borrow'),

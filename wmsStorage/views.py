@@ -177,41 +177,32 @@ def put(request):
         else:
             binLocation = request.POST.get('binlocation', None)
             itemCode = loads(request.POST.get('itemCode', None))
-            itemlog = {
-                'in' : 0,
-                'move' : 0,
-                'found' : 0,
-            }
+            # itemCode = ['ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119',]
+            
+            # itemCode = ItemData.objects.all().values_list('id', flat = True)
+            # binLocation = 'A11'
             items = []
-            for i in itemCode:
-                item = ItemData.objects.filter(id=i)
-                status = list(item.values('status', 'inbound__item'))[0]
-                items.append(status)
-                print(status)
-                if status['status'] == '0':
-                    item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
-                    print('Bound')
-                    itemlog['in']+=1
-                elif status['status'] == '1':
-                    item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
-                    print('Move')
-                    itemlog['move']+=1
-                elif status['status'] == '5':
-                    item.update(status = "1", binlocation=Binlocation.objects.get(userGroup = request.session['usergroup'], binlocation=binLocation, deleted=0))
-                    print('found')
-                    itemlog['found']+=1
+            a = ItemData.objects.filter(id__in=itemCode, userGroup = UserGroup.objects.get(pk=request.session['usergroup']), deleted=0)
+            co = Counter(ItemData.objects.filter(id__in=itemCode, userGroup = UserGroup.objects.get(pk=request.session['usergroup']), deleted = 0).values_list('inbound__item', 'status'))
+            print("update item status")
+            for i in a:
+                i.status='1'
+            ItemData.objects.bulk_update(a, ['status'])
 
-            print(items)
-            if itemlog['in'] > 0:
-                log = Log(detail=1, quantity=itemlog['in'], date=datetime.datetime.today().strftime('%Y-%m-%d'), user=User.objects.get(pk=request.session['id']), userGroup = UserGroup.objects.get(pk=request.session['usergroup']))
-                log.save()
-            if itemlog['move'] > 0:
-                log = Log(detail=2, quantity=itemlog['move'], date=datetime.datetime.today().strftime('%Y-%m-%d'), user=User.objects.get(pk=request.session['id']), userGroup = UserGroup.objects.get(pk=request.session['usergroup']))
-                log.save()
-            if itemlog['found'] > 0:
-                log = Log(detail=2, quantity=itemlog['found'], date=datetime.datetime.today().strftime('%Y-%m-%d'), user=User.objects.get(pk=request.session['id']), userGroup = UserGroup.objects.get(pk=request.session['usergroup']))
-                log.save()
-
+            print("Creating log")
+            log = []
+            for i in co.items():
+                if i[1] != 0:
+                    if i[0][1] == '0':
+                        log.append(Log(item = Item.objects.get(pk=i[0][0]), quantity = i[1], detail = '1', date=datetime.datetime.today().strftime('%Y-%m-%d'), userGroup = UserGroup.objects.get(pk=request.session['usergroup']), user=User.objects.get(pk=request.session['id'])))
+                    elif i[0][1] == '1':
+                        log.append(Log(item = Item.objects.get(pk=i[0][0]), quantity = i[1], detail = '2', date=datetime.datetime.today().strftime('%Y-%m-%d'), userGroup = UserGroup.objects.get(pk=request.session['usergroup']), user=User.objects.get(pk=request.session['id'])))
+                    elif i[0][1] == '5':
+                        log.append(Log(item = Item.objects.get(pk=i[0][0]), quantity = i[1], detail = '3', date=datetime.datetime.today().strftime('%Y-%m-%d'), userGroup = UserGroup.objects.get(pk=request.session['usergroup']), user=User.objects.get(pk=request.session['id'])))
+                else:
+                    pass
+            print(log)
+            Log.objects.bulk_create(log)
 
                 
             return JsonResponse({"@@":"a"},status = 200)
