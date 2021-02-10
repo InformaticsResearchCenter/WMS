@@ -1,0 +1,48 @@
+{% extends 'base/master.html' %}
+{% load static %}
+
+{% block content %}
+<h2>History item</h2>
+<hr>
+<div class="card">
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 50px;">No</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Colour</th>
+                    <th scope="col">detail</th>
+                    <th scope="col" style="width: 100px;">quantity</th>
+                    <th scope="col" style="width: 100px;">action by</th>
+                    <th scope="col" style="width: 100px;">date</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for i in log %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <td>{{ i.item__name }}</td>
+                    <td>{{ i.item__size }}</td>
+                    <td>{{ i.item__colour }}</td>
+                    {% if i.detail == '0' %}<td>-</td>{% endif %}
+                    {% if i.detail == '1' %}<td>In [ New item added ]</td>{% endif %}
+                    {% if i.detail == '2' %}<td>Move</td>{% endif %}
+                    {% if i.detail == '3' %}<td>In [ Missing item found ]</td>{% endif %}
+                    {% if i.detail == '4' %}<td>Out [ Sold ]</td>{% endif %}
+                    {% if i.detail == '5' %}<td>Out [ Borrowed ]</td>{% endif %}
+                    {% if i.detail == '6' %}<td>Out [ Return to costumer ]</td>{% endif %}
+                    <td>{{ i.quantity }}</td>
+                    <td>{{ i.user__username }}</td>
+                    <td>{{ i.date }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+        </table>
+    </div>
+</div>
+
+
+{% endblock content %}

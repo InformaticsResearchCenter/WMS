@@ -347,12 +347,13 @@ class DjangoSession(models.Model):
 class Log(models.Model):
     detail_list = [
         ('0', 'None'),
-        ('1', 'In'),
+        ('1', 'In (New item added)'),
         ('2', 'Move'),
-        ('3', 'Found'),
-        ('4', 'Customer Return'),
-        ('5', 'Borrowed'),
-        ('6', 'Return Borrow'),
+        ('3', 'In (Missing Item found)'),
+        ('4', 'Out (sold)'),
+        ('5', 'Out (borrow)'),
+        ('6', 'Out (Return to costumer)'),
+        ('7', 'In (Borrowed item returned)'),
     ]
     item = models.ForeignKey(
         Item, on_delete=models.CASCADE, null=True)
@@ -363,6 +364,8 @@ class Log(models.Model):
         UserGroup, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True)
+    deleted = models.CharField(max_length=1, default=0)
+
 
 
 

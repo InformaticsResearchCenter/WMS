@@ -99,7 +99,7 @@ def getScannerData(request):
             itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
             itemraw3 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="5").select_related('inbound').values('id','inbound__item'))
             binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','binlocation','capacity'))
-            itemdata = itemraw1+itemraw2
+            itemdata = itemraw1+itemraw2+itemraw3
             item = []
             for i in itemdata:
                 for a in items:
@@ -118,6 +118,7 @@ def getOutboundData(request):
             customer = []
             if outbound != "":
                 customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
+                print(customer)
                 if customer != []:
                     item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
                     print(item)
@@ -177,10 +178,6 @@ def put(request):
         else:
             binLocation = request.POST.get('binlocation', None)
             itemCode = loads(request.POST.get('itemCode', None))
-            # itemCode = ['ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119', 'ITD120', 'ITD99','ITD101', 'ITD102', 'ITD103', 'ITD104', 'ITD105', 'ITD106', 'ITD107', 'ITD108', 'ITD109', 'ITD110','ITD111', 'ITD112', 'ITD113', 'ITD114', 'ITD115', 'ITD116', 'ITD117', 'ITD118', 'ITD119',]
-            
-            # itemCode = ItemData.objects.all().values_list('id', flat = True)
-            # binLocation = 'A11'
             items = []
             a = ItemData.objects.filter(id__in=itemCode, userGroup = UserGroup.objects.get(pk=request.session['usergroup']), deleted=0)
             co = Counter(ItemData.objects.filter(id__in=itemCode, userGroup = UserGroup.objects.get(pk=request.session['usergroup']), deleted = 0).values_list('inbound__item', 'status'))
@@ -204,7 +201,6 @@ def put(request):
             print(log)
             Log.objects.bulk_create(log)
 
-                
             return JsonResponse({"@@":"a"},status = 200)
 
 def out(request):
@@ -216,9 +212,23 @@ def out(request):
         else:
             outbound = request.POST.get('outboundId', None)
             itemCode = loads(request.POST.get('itemCode', None))
-            for i in itemCode:
-                ItemData.objects.filter(id=i).update(status = "2", outbound=Outbound.objects.get(pk=outbound, userGroup = request.session['usergroup'], deleted=0))
+
+            a = ItemData.objects.filter(id__in=itemCode, userGroup = UserGroup.objects.get(pk=request.session['usergroup']), deleted=0)
+            print("Update Item status")
+            for i in a:
+                i.status = '2'
+                i.outbound = Outbound.objects.get(pk=outbound)
+            ItemData.objects.bulk_update(a, ['status'])
+
+            print("Creating log")
+            b = OutboundData.objects.filter(outbound=outbound, userGroup = request.session['usergroup'], deleted=0).values('item', 'quantity')
+            log = []
+            for i in b:
+                log.append(Log(item = Item.objects.get(pk=i['item']), quantity = i['quantity'], detail = '3', date=datetime.datetime.today().strftime('%Y-%m-%d'), userGroup = UserGroup.objects.get(pk=request.session['usergroup']), user=User.objects.get(pk=request.session['id'])))
+
+            Log.objects.bulk_create(log)
             Outbound.objects.filter(id=outbound,userGroup = request.session['usergroup'], deleted=0).update(status = "3")
+
             return JsonResponse({"@@":"a"},status = 200)
 
 def move(request):
@@ -243,9 +253,23 @@ def borrow(request):
         else:
             itemCode = loads(request.POST.get('itemCode', None))
             borrowId = request.POST.get('borrowId', None)
-            for i in itemCode:
-                ItemData.objects.filter(id=i).update(status = "3", borrow=Borrow.objects.get(pk=borrowId))
-            Borrow.objects.filter(id=borrowId).update(status = "3")
+            a = ItemData.objects.filter(id__in=itemCode, userGroup = UserGroup.objects.get(pk=request.session['usergroup']), deleted=0)
+            print("Update Item status")
+            for i in a:
+                i.status = '3'
+                i.borrow = Borrow.objects.get(pk=borrowId)
+            ItemData.objects.bulk_update(a, ['status'])
+            ItemData.objects.bulk_update(a, ['borrow'])
+            
+            print("Creating log")
+            b = BorrowData.objects.filter(borrow=borrowId, userGroup = request.session['usergroup'], deleted=0).values('item', 'quantity')
+            log = []
+            for i in b:
+                log.append(Log(item = Item.objects.get(pk=i['item']), quantity = i['quantity'], detail = '5', date=datetime.datetime.today().strftime('%Y-%m-%d'), userGroup = UserGroup.objects.get(pk=request.session['usergroup']), user=User.objects.get(pk=request.session['id'])))
+
+            Log.objects.bulk_create(log)
+            Borrow.objects.filter(id=borrowId,userGroup = request.session['usergroup'], deleted=0).update(status = "3")
+
             return JsonResponse({"@@":"a"},status = 200)
 
 def retur(request):
@@ -255,12 +279,29 @@ def retur(request):
         if request.session['role'] == "ADM":
             raise PermissionDenied
         else:
-            itemCode = loads(request.POST.get('itemCode', None))
-            returnId = request.POST.get('returnId', None)
-            outbound = CostumerReturn.objects.filter(id=returnId).values("outbound__id")
-            for i in itemCode:
-                ItemData.objects.filter(id=i).update(status = "2", outbound = Outbound.objects.get(pk=outbound[0]["outbound__id"], userGroup = request.session['usergroup'], deleted=0))
-            CostumerReturn.objects.filter(id=returnId).update(status = "3")
+            returnId = 'CSR5'
+            itemCode = ['ITD2366', 'ITD1631']
+            # itemCode = loads(request.POST.get('itemCode', None))
+            # returnId = request.POST.get('returnId', None)
+            outbound = CostumerReturn.objects.filter(id=returnId).values_list("outbound__id", flat = True)[0]
+            print(outbound)
+            a = ItemData.objects.filter(id__in=itemCode, userGroup = UserGroup.objects.get(pk=request.session['usergroup']), deleted=0)
+            print(a)
+            print("Update Item status")
+            for i in a:
+                i.status = '2'
+                i.outbound = Outbound.objects.get(id=outbound)
+            print("Done")
+            ItemData.objects.bulk_update(a, ['status'])
+            ItemData.objects.bulk_update(a, ['outbound'])
+            print("Creating log")
+            b = CostumerReturnData.objects.filter(costumerReturn = returnId, userGroup = request.session['usergroup'], deleted=0).values('item', 'quantity')
+            log = []
+            for i in b:
+                log.append(Log(item = Item.objects.get(pk=i['item']), quantity = i['quantity'], detail = '6', date=datetime.datetime.today().strftime('%Y-%m-%d'), userGroup = UserGroup.objects.get(pk=request.session['usergroup']), user=User.objects.get(pk=request.session['id'])))
+
+            Log.objects.bulk_create(log)
+            CostumerReturn.objects.filter(id=returnId, userGroup = request.session['usergroup'], deleted=0).update(status = "3")
             return JsonResponse({"@@":"a"},status = 200)
 
 def stockOpname(request):

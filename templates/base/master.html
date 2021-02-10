@@ -252,13 +252,28 @@
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a href="{% url 'report'%}" class="nav-link">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p style="color: white;">Report</p>
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-folder"></i>
+                            <p style="color: white;">
+                                Report
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'report' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p style="color: white;">Report Detail</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'reportlog' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p style="color: white;">Log history</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-
-
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
