@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from WMS.models import *
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -31,13 +32,13 @@ def log(request):
     return render(request,'inside/wmsReport/log.html', context)
 
 def reportDetail(request,status):
-	item=Item.objects.filter(userGroup=request.session['usergroup']).values()
-	data=ItemData.objects.filter(status=status, userGroup=request.session['usergroup'], deleted = 0).values('id','inbound__item','binlocation__binlocation')
-	for i in data:
-		for a in item:
-			if i['inbound__item']==a['id']:
-				i['name'] = a['name']
 
+	item=Item.objects.filter(userGroup=request.session['usergroup']).values()
+	data=ItemData.objects.filter(status=status, userGroup=request.session['usergroup'], deleted = 0).values('id','inbound__item__name','binlocation__binlocation', 'inbound__inbound__date').order_by('-inbound__inbound__date')
+
+	# p = Paginator(data, 20)
+
+	# page = p.page(1)
 	context = {
 		'title': 'Report | WMS Poltekpos',
 		'role': request.session['role'],

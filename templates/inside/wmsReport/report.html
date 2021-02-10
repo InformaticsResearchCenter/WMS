@@ -15,6 +15,7 @@
                     <th scope="col">Id</th>
                     <th scope="col">item</th>
                     <th scope="col">bin</th>
+                    <th scope="col">date</th>
                     <th scope="col">qr</th>
                 </tr>
                   </thead>
@@ -23,8 +24,9 @@
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td id="id{{forloop.counter}}">{{i.id}}</td>
-                        <td>{{i.name}}</td>
+                        <td>{{i.inbound__item__name}}</td>
                         <td>{{i.binlocation__binlocation}}</td>
+                        <td>{{i.inbound__inbound__date}}</td>
                         <td id="qr{{forloop.counter}}"></td>
                     </tr>
                     {% endfor %}
