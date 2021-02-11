@@ -361,7 +361,7 @@ def main_inbound(request):
         return redirect('login')
     else:
         context = {
-            'inbound': Inbound.objects.filter(deleted=0, userGroup=request.session['usergroup']),
+            'inbound': Inbound.objects.filter(deleted=0, userGroup=request.session['usergroup']).order_by('-id'),
             'username': request.session['username'],
             'role': request.session['role'],
             'title': 'Inbound | WMS Poltekpos'
