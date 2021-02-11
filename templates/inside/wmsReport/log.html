@@ -34,7 +34,7 @@
                     {% if i.detail == '5' %}<td>Out [ Borrowed ]</td>{% endif %}
                     {% if i.detail == '6' %}<td>Out [ Return to costumer ]</td>{% endif %}
                     <td>{{ i.quantity }}</td>
-                    <td>{{ i.user__username }}</td>
+                    <td>{{ i.user__name }}</td>
                     <td>{{ i.date }}</td>
                 </tr>
             {% endfor %}

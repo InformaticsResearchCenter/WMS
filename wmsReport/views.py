@@ -26,7 +26,7 @@ def log(request):
             'role': request.session['role'],
             'username': request.session['username'],
             'userGroup' : request.session['usergroup'],
-			'log' : Log.objects.filter(userGroup=request.session['usergroup'], deleted = 0).values('id', 'detail', 'item__name', 'item__size', 'item__colour', 'quantity', 'user__username', 'date')
+			'log' : Log.objects.filter(userGroup=request.session['usergroup'], deleted = 0).values('id', 'detail', 'item__name', 'item__size', 'item__colour', 'quantity', 'user__name', 'date').order_by('-id')
     }
     return render(request,'inside/wmsReport/log.html', context)
 

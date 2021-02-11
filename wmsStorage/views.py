@@ -95,16 +95,20 @@ def getScannerData(request):
             raise PermissionDenied
         else:
             items = list(Item.objects.filter(userGroup = request.session['usergroup'], deleted=0).values('id','name', 'size', 'colour'))
-            itemraw1 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="1").select_related('inbound').values('id','inbound__item'))
-            itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
-            itemraw3 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="5").select_related('inbound').values('id','inbound__item'))
+            # itemraw1 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="1").select_related('inbound').values('id','inbound__item'))
+            # itemraw2 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="0").select_related('inbound').values('id','inbound__item'))
+            # itemraw3 = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status="5").select_related('inbound').values('id','inbound__item'))
+            item = list(ItemData.objects.filter(userGroup = request.session['usergroup'], deleted=0, status__in=['1','0','5']).select_related('inbound').values('id','inbound__item', 'inbound__item__name', 'inbound__item__size', 'inbound__item__colour'))
+            print(item)
             binlocation = list(Binlocation.objects.select_related('rack').filter(userGroup = request.session['usergroup'], deleted=0, rack__deleted=0).values('id','binlocation','capacity'))
-            itemdata = itemraw1+itemraw2+itemraw3
-            item = []
-            for i in itemdata:
-                for a in items:
-                    if i['inbound__item'] == a['id']:
-                        item.append({'id' : i['id'], 'name' : a['name'], 'itemId' : a['id']})
+
+
+            # itemdata = itemraw1+itemraw2+itemraw3
+            # item = []
+            # for i in itemdata:
+            #     for a in items:
+            #         if i['inbound__item'] == a['id']:
+            #             item.append({'id' : i['id'], 'name' : a['name'], 'itemId' : a['id']})
             return JsonResponse({'item': item, 'binlocation' : binlocation, 'itemlist' : items}, status=200)
 def getOutboundData(request):
     if 'is_login' not in request.session or request.session['limit'] <= datetime.datetime.today().strftime('%Y-%m-%d'):
@@ -120,10 +124,16 @@ def getOutboundData(request):
                 customer = list(Outbound.objects.filter(id = outbound, userGroup =request.session['usergroup'], deleted=0, status=2).values('id','customer__name', 'customer__address', 'customer__districts', 'customer__city', 'customer__province', 'customer__village', 'customer__postalCode'))
                 print(customer)
                 if customer != []:
-                    item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item','quantity'))
+                    item = list(OutboundData.objects.filter(outbound=customer[0]['id']).values('item', 'item__name', 'item__size', 'item__colour','quantity'))
                     print(item)
                     print(customer)
-                    return JsonResponse({'customer' : customer, 'items' : item}, status = 200)
+                    itemRaw = OutboundData.objects.filter(outbound=outbound, userGroup =request.session['usergroup'], deleted=0).values_list('item', flat=True)
+                    print(itemRaw)
+                    itemCollection = ItemData.objects.filter(inbound__item__in = itemRaw, userGroup =request.session['usergroup'], deleted=0).values_list('inbound__item__name', 'binlocation__binlocation')
+                    print(itemCollection)
+                    itemBin = [list(i) for i in Counter(itemCollection).items()]
+                    print(itemBin)
+                    return JsonResponse({'customer' : customer, 'items' : item, 'itemBin' : itemBin}, status = 200)
             return JsonResponse({'msg' : "data not found"}, status=200)
     
 
@@ -184,7 +194,9 @@ def put(request):
             print("update item status")
             for i in a:
                 i.status='1'
+                i.binlocation=Binlocation.objects.get(binlocation = binLocation ,userGroup = request.session['usergroup'], deleted=0)
             ItemData.objects.bulk_update(a, ['status'])
+            ItemData.objects.bulk_update(a, ['binlocation'])
 
             print("Creating log")
             log = []
