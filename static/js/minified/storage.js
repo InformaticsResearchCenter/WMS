@@ -143,6 +143,8 @@ $(document).ready(function () {
 		code = [];
 		itemLimit = [];
 		$("#data").empty();
+		$("#UniversalData").empty();
+		$("#UniversalData").append(`<tr><td>none</td></tr>`);
 		$("#itemData").empty();
 		$("#itemData").append(`<tr><td>none</td></tr>`);
 		$(".card-body").show();
@@ -313,9 +315,9 @@ $(document).ready(function () {
 					if (items != []) {
 						for (let a = 0; a < items.length; a++) {
 							checkLimit = null;
-							if (itemData['item'][i]['itemId'] == items[a]['item']) {
+							if (itemData['item'][i]['inbound__item'] == items[a]['item']) {
 								for (let e = 0; e < itemLimit.length; e++) {
-									if (itemLimit[e]['name'] == itemData['item'][i]['name']) {
+									if (itemLimit[e]['name'] == itemData['item'][i]['inbound__item__name']) {
 										if (parseInt(itemLimit[e]['qty']) >= items[a]['quantity']) {
 											checkLimit = 1;
 											break;
@@ -331,19 +333,19 @@ $(document).ready(function () {
 						} else if (checkLimit == 2) {
 							alert("Item tidak ada dalam list");
 						} else {
-							$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
+							$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['inbound__item__name']}]</li>`);
 							code.push($("#itemCode").val());
 
 							if (itemLimit.length == 0) {
 								itemLimit.push({
-									"name": itemData['item'][i]['name'],
-									"id": itemData['item'][i]['itemId'],
+									"name": itemData['item'][i]['inbound__item__name'],
+									"id": itemData['item'][i]['inbound__item'],
 									"qty": 1
 								});
 							} else {
 								for (let a = 0; a < itemLimit.length; a++) {
 									itemLimitExist = null
-									if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
+									if (itemLimit[a]['name'] == itemData['item'][i]['inbound__item__name']) {
 										itemLimit[a]['qty'] += 1;
 										itemLimitExist = 1;
 										break;
@@ -351,8 +353,8 @@ $(document).ready(function () {
 								}
 								if (itemLimitExist != 1) {
 									itemLimit.push({
-										"name": itemData['item'][i]['name'],
-										"id": itemData['item'][i]['itemId'],
+										"name": itemData['item'][i]['inbound__item__name'],
+										"id": itemData['item'][i]['inbound__item'],
 										"qty": 1
 									});
 								}
@@ -364,19 +366,19 @@ $(document).ready(function () {
 							}
 						}
 					} else {
-						$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['name']}]</li>`);
+						$("#data").append(`<li id="data${i}" onclick="removeItem('${$("#itemCode").val()}','data${i}')">${$("#itemCode").val()} [${itemData['item'][i]['inbound__item__name']}]</li>`);
 						code.push($("#itemCode").val());
 
 						if (itemLimit.length == 0) {
 							itemLimit.push({
-								"name": itemData['item'][i]['name'],
-								"id": itemData['item'][i]['itemId'],
+								"name": itemData['item'][i]['inbound__item__name'],
+								"id": itemData['item'][i]['inbound__item'],
 								"qty": 1
 							});
 						} else {
 							for (let a = 0; a < itemLimit.length; a++) {
 								itemLimitExist = null
-								if (itemLimit[a]['name'] == itemData['item'][i]['name']) {
+								if (itemLimit[a]['name'] == itemData['item'][i]['inbound__item__name']) {
 									itemLimit[a]['qty'] += 1;
 									itemLimitExist = 1;
 									break;
@@ -384,8 +386,8 @@ $(document).ready(function () {
 							}
 							if (itemLimitExist != 1) {
 								itemLimit.push({
-									"name": itemData['item'][i]['name'],
-									"id": itemData['item'][i]['itemId'],
+									"name": itemData['item'][i]['inbound__item__name'],
+									"id": itemData['item'][i]['inbound__item'],
 									"qty": 1
 								});
 							}
@@ -441,9 +443,9 @@ $(document).ready(function () {
 
 						$("#UniversalData").append(`<tr><td>` + element[0] + `</td><td>` + element[1] + `</td></tr>`);
 					}
-					$(".overlay").hide();
 					validation["stockopname"] = true;
 				}
+				$(".overlay").hide();
 			}
 		});
 	});
@@ -513,6 +515,19 @@ $(document).ready(function () {
 						}
 						$("#UniversalData").append(`<tr><td>` + itemName + `</td><td>` + itemSize + `</td><td>` + itemColour + `</td><td>` + items[index]['quantity'] + `</td></tr>`);
 					}
+					$("#UniversalData").append(`<tr><td colspan="2" style="font-weight:bold;">item location</td></tr>`);
+					$("#UniversalData").append(`<tr><td>item name</td><td>location</td><td>qty</td></tr>`);
+					itemBin = response['itemBin'];
+					for (let i = 0; i < itemBin.length; i++) {
+						const el = itemBin[i];
+						if (el[0][1] == null) {
+							el[0][1] = 'Stagging area'
+						}
+						$("#UniversalData").append(`<tr><td>` + el[0][0] + `</td><td>` + el[0][1] + `</td><td>` + el[1] + `</td></tr>`);
+
+					}
+
+
 					validation["outbound"] = true;
 					$("#itemCodeContainer").show();
 				}

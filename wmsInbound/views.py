@@ -29,7 +29,7 @@ def itemIndex(request):
         'role': request.session['role'],
         'username': request.session['username'],
         'title': 'Item | Inbound',
-        'Item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name', 'size', 'colour', 'subcategory', 'subcategory__subcategory')
+        'Item': Item.objects.filter(deleted=0, userGroup=request.session['usergroup']).values('id', 'name', 'size', 'colour', 'subcategory', 'subcategory__subcategory', 'subcategory__category__category', 'avaible', 'sold', 'borrowed')
     }
     return render(request, 'inside/wmsInbound/itemIndex.html', context)
 
@@ -361,7 +361,7 @@ def main_inbound(request):
         return redirect('login')
     else:
         context = {
-            'inbound': Inbound.objects.filter(deleted=0, userGroup=request.session['usergroup']),
+            'inbound': Inbound.objects.filter(deleted=0, userGroup=request.session['usergroup']).order_by('-id'),
             'username': request.session['username'],
             'role': request.session['role'],
             'title': 'Inbound | WMS Poltekpos'
@@ -441,28 +441,13 @@ def inbound_data(request, id=0):
                     formqty = request.POST['quantity']
                     formitem = request.POST['item']
                     formreject = request.POST['reject']
-                    item = it.avaibleItem(1,0, request.session['usergroup'])
-                    # print(qtyInbounddata[0].item.id)
-                    # print(formitem)
+                    Inbounddata = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values_list('item__id', flat=True))
                     if id == 0:
-                        for i in item:
-                            if i['item'] == formitem:
-                                # print(i['item'])
-                                # print(formitem)
-                                qtyInbounddata = list(InboundData.objects.filter(inbound=request.session['inbound_id'], userGroup=request.session['usergroup'], deleted=0).values_list('item__id'))
-                                j = 0
-                                print('HELLO')
-                                while j < len(qtyInbounddata):
-                                    if qtyInbounddata[j][0] == formitem:
-                                        InData = InboundData.objects.filter(item=qtyInbounddata[j][0], inbound=request.session['inbound_id'],userGroup=request.session['usergroup'], deleted=0)
-                                        print(InData)
-                                        print(request.session['inbound_id'])
-                                        InDataqty = InData.first().quantity
-                                        print(InDataqty)
-                                        InData.update(quantity=InDataqty + int(formqty), rejectCounter=InData.first().rejectCounter + int(formreject), reject=InData.first().reject + int(formreject) )
-                                        print('berhasil di update')
-                                        return redirect('view_inbound', id=request.session['inbound_id'])
-                                    j += 1    
+                        for i in Inbounddata:
+                            if i == formitem:
+                                InData = InboundData.objects.filter(item=i, inbound=request.session['inbound_id'], userGroup=request.session['usergroup'], deleted=0)
+                                InData.update(quantity=InData.first().quantity + int(formqty), rejectCounter=InData.first().rejectCounter + int(formreject), reject=InData.first().reject + int(formreject) )
+                                return redirect('view_inbound', id=request.session['inbound_id'])
                     form.save()
                     if id == 0:
                         get_next_value('inbounddata_seq')
@@ -499,7 +484,7 @@ class PdfInbound(View):
             datacollect = zip(datas, itemdata)
             ug = UserGroup.objects.get(pk=request.session['usergroup'])
             pdf = render_to_pdf('inside/wmsInbound/pdf_inbound.html', {
-                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect, 'ug': ug,'i':i})
+                                'datas': datas, 'obj': obj, 'itemdata': itemdata, 'datacollect': datacollect, 'ug': ug})
             if pdf:
                 response = HttpResponse(pdf, content_type='application/pdf')
                 filename = "Invoice_%s.pdf" % (12341231)

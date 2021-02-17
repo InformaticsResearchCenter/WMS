@@ -245,7 +245,7 @@ def borrowdataReturn(request):
                 Borrow.objects.filter(
                     pk=request.session['borrow'], deleted=0,userGroup=request.session['usergroup']).update(status='4')
                 ItemData.objects.filter(
-                    borrow=request.session['borrow'], deleted=0,userGroup=request.session['usergroup']).update(borrow=None)
+                    borrow=request.session['borrow'], deleted=0,userGroup=request.session['usergroup']).update(borrow=None, status='1')
                 return redirect('borrowView', id=request.session['borrow'])
             else:
                 raise PermissionDenied
