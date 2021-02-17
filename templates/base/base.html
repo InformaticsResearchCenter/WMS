@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Warehouse Management System</title>
     
   {% load static %}
@@ -9,7 +12,7 @@
  -->
      <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static '/base/css/bootstrap.min.css' %}" />
-    <!-- Pogo Slider CSS -->
+    <!-- Pogo Slider CSS --
     <link rel="stylesheet" href="{% static '/base/css/pogo-slider.min.css' %}" />
     <!-- Site CSS -->
     <link rel="stylesheet" href="{% static '/base/css/style.css' %}" />
@@ -17,9 +20,10 @@
     <link rel="stylesheet" href="{% static '/base/css/responsive.css' %}" />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static '/base/css/custom.css' %}" />
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
-      media="screen">
+    <script src="https://kit.fontawesome.com/8b969e22b4.js" crossorigin="anonymous"></script>
+    {% comment %} <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"> {% endcomment %}
+   {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+      media="screen"> {% endcomment %}
 </head>
 <body>
 <!-- LOADER -->
@@ -58,7 +62,7 @@
         </div>
         <div class="header_bottom" style="width:100%;">
           {% comment %} <div class="container" style="width:100%;"> {% endcomment %}
-          <div>
+          <div style="position:relative;">
             <div>
             {% comment %} <div class="col-sm-12" style="width:100%;"> {% endcomment %}
                 <div class="menu_orange_section" style="background: #ff880e;" style="width:100%;">
@@ -71,12 +75,12 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbar-wd" style="width:100%;">
                     <ul class="navbar-nav">
-                        <li><a class="nav-link active" href="index.html">Home</a></li>
-                        <li><a class="nav-link" href="about.html">About</a></li>
-                        <li><a class="nav-link" href="exchange.html">Exchange</a></li>
-                        <li><a class="nav-link" href="services.html">Services</a></li>
-                        <li><a class="nav-link" href="new.html">News</a></li>
-                        <li><a class="nav-link" href="contact.html">Contact</a></li>
+                        <li><a class="nav-link active" href="#home">Home</a></li>
+                        <li><a class="nav-link" href="#services">Services</a></li>
+                        <li><a class="nav-link" href="#exchange">Exchange</a></li>
+                        <li><a class="nav-link" href="#about">About</a></li>
+                        <li><a class="nav-link" href="#news">News</a></li>
+                        <li><a class="nav-link" href="#contact">Contact</a></li>
                     </ul>
                 </div>
                      </div>
@@ -110,7 +114,7 @@
     <!-- End Banner -->
     
   <!-- section -->
-    <div class="section" style="width:100%;">
+    <div class="section" style="width:100%;" id="home">
         <div class="container">
             <div class="row" style="width:100%;">
                 <div class="col-md-6">
@@ -137,7 +141,7 @@
     </div>
   <!-- end section -->
     <!-- section -->
-    <div class="section layout_padding">
+    <div class="section layout_padding" id="services">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -187,7 +191,7 @@
     </div>
     <!-- end section -->
     <!-- section -->
-    <div class="section white_fonts" style="background: #2a2a2a;">
+    <div class="section white_fonts" style="background: #2a2a2a;" id="exchange">
         <div class="container">
             <div class="row">
                 <div class="col-md-6" style="background: #fff;">
@@ -213,7 +217,7 @@
     </div>
     <!-- end section -->
   <!-- section -->
-    <div class="section layout_padding about_bg">
+    <div class="section layout_padding about_bg" id="about">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -239,7 +243,7 @@
     </div>
     <!-- end section -->
   <!-- section -->
-    <div class="section layout_padding padding_top_0">
+    <div class="section layout_padding padding_top_0" id="news">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -286,7 +290,7 @@
     </div>
     <!-- end section -->
     <!-- section -->
-    <div class="section layout_padding padding_top_0">
+    <div class="section layout_padding padding_top_0" id="contact">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -425,11 +429,11 @@
    </div>
 
     <!-- ALL JS FILES -->
-    <script src="{% static '/js/jquery.min.js' %}"></script>
+    {% comment %} <script src="{% static '/js/jquery.min.js' %}"></script>
   <script src="{% static '/js/popper.min.js' %}"></script>
-    <script src="{% static '/js/bootstrap.min.js' %}"></script>
+    <script src="{% static '/js/bootstrap.min.js' %}"></script> {% endcomment %}
     <!-- ALL PLUGINS -->
-    <script src="{% static '/js/jquery.magnific-popup.min.js' %}"></script>
+    {% comment %} <script src="{% static '/js/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static '/js/jquery.pogo-slider.min.js' %}"></script>
     <script src="{% static '/js/slider-index.js' %}"></script>
     <script src="{% static '/js/smoothscroll.js' %}"></script>
@@ -437,8 +441,8 @@
     <script src="{% static '/js/contact-form-script.js' %}"></script>
     <script src="{% static '/js/isotope.min.js' %}"></script>
     <script src="{% static '/js/base/images-loded.min.js' %}"></script>
-    <script src="{% static '/js/custom.js' %}"></script>
-  <script>
+    <script src="{% static '/js/custom.js' %}"></script> {% endcomment %}
+  {% comment %} <script>
   /* counter js */
 
 (function ($) {
@@ -539,6 +543,24 @@ jQuery(function ($) {
   $this.countTo(options);
   }
 });
+  </script> {% endcomment %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+  {% comment %} <script src="js/bootstrap.min.js"></script> {% endcomment %}
+  <script>
+  $(document).ready(function(){
+    $("a").on('click', function(event) {
+     if (this.hash !== "") {
+        event.preventDefault();
+        var hash = this.hash;
+        $('html, body').animate({
+          scrollTop: $(hash).offset().top
+        }, 3000, function(){
+          window.location.hash = hash;
+        });
+      } // End if
+    });
+  });
   </script>
 </body>
 
