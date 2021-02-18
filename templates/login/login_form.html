@@ -41,7 +41,7 @@
             {{ message }}
           </div>
           {% endfor %}
-          <span class="login100-form-title">{{login}} Login</span>
+          <span class="login100-form-title">Login</span>
           <div class="wrap-input100 validate-input" data-validate="Please input your username correctly !">
             <input class="input100" type="text" name="username" placeholder="Username or Email" />
             <span class="focus-input100"></span>
@@ -55,6 +55,20 @@
             <span class="symbol-input100">
               <i class="fa fa-lock" aria-hidden="true"></i>
             </span>
+          </div>
+          <div class="wrap-input100 validate-input">
+            <a href="{% url 'groupRegister' %}"> Register here</a>
+            <a style="float: right;" href="{% url 'groupReset' %}"> Forget Password</a>
+          </div>
+          <div class="form-group" style="margin-top: 20px;">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input" type="radio" id="member" name="login" value="member" checked>
+              <label for="member" class="custom-control-label">Login as Member</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input" type="radio" id="group" name="login" value="group">
+              <label for="group" class="custom-control-label">Login as Group</label>
+            </div>
           </div>
           <div class="container-login100-form-btn">
             <button class="login100-form-btn" style="background:#fd7e14;">Login</button>

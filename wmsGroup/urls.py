@@ -6,7 +6,7 @@ from .views import VerificationView, ResetPassword
 
 urlpatterns = [
     path('', views.index, name="groupIndex"),
-    path('login/', views.login, name="groupLogin"),
+    # path('login/', views.login, name="groupLogin"),
     path('register/', views.register, name="groupRegister"),
     path('reset/', views.resetPassword, name="groupReset"),
     path('logout/', views.logout, name="groupLogout"),

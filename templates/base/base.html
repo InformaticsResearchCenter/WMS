@@ -47,9 +47,8 @@
                             <li style="margin-top:20px;"><a href="mailto:exchang@gmail.com"><img src="{% static '/base/images/mail_icon.png' %}" alt="#" />wms.helpdesk@poltekpos.ac.id</a></li>
                             <li style="margin-left:-50px;margin-top:20px;"><a href="tel:exchang@gmail.com"><img src="{% static '/base/images/phone_icon.png' %}" alt="#" />(022)2009562</a></li>
                             {% comment %} <li><a href="#login" data-toggle="modal" data-target="#exampleModalCenter" class="join_bt">Login</a></li> {% endcomment %}
-                            <li style="width:100px;font-size:12px;margin-left:-10px;margin-top:20px;"><a href="{% url 'login'%}" class="join_bt">Login Member</a></li>
+                            <li style="width:100px;font-size:12px;margin-left:-10px;margin-top:20px;"><a href="{% url 'login'%}" class="join_bt">Login</a></li>
                             {% comment %} <li style="width:100px;font-size:12px;"><a href="" class="join_bt">Login Admin</a></li> {% endcomment %}
-                            <li style="width:100px;font-size:12px;margin-left:10px;margin-top:20px;"><a href="{% url 'groupLogin'%}" class="join_bt">Login Group</a></li>
                             <a href="{% url 'adminLogin'%}" class="navbar-brand" href="index.html"><img src="{% static '/base/images/admin.png' %}" alt="image" style="width:70px;"></a>
                         </ul>
                     </div>
@@ -419,7 +418,6 @@
             <div class="modal-body mx-auto">
                <a class="btn bg-primary text-light " href="{% url 'login'%}">login member</a>
                <a class="btn bg-primary text-light" href="{% url 'adminLogin'%}">login admin</a>
-               <a class="btn bg-primary text-light " href="{% url 'groupLogin'%}">login group</a>
             </div>
          </div>
       </div>
