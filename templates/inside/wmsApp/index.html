@@ -67,11 +67,11 @@
     }
 </style>
 <div class="card">
-    <canvas class="canvas" id="myChart1" width="400"></canvas>
-    <canvas class="canvas" id="myChart2" width="400"></canvas>
+    <!-- <canvas class="canvas" id="myChart1" width="400"></canvas>
+    <canvas class="canvas" id="myChart2" width="400"></canvas> -->
     <canvas class="canvas" id="myChart3" width="400"></canvas>
-    <canvas class="canvas" id="myChart4" width="400"></canvas>
-    <canvas class="canvas" id="myChart5" width="400"></canvas>
+    <!-- <canvas class="canvas" id="myChart4" width="400"></canvas>
+    <canvas class="canvas" id="myChart5" width="400"></canvas> -->
 
     <div class="card-header">
 
@@ -110,7 +110,7 @@
     <script src="{% static 'js/minified/jquery-3.5.1.min.js' %}"></script>
 </div>
 {% csrf_token %}
-<script>
+<!-- <script>
     $(document).ready(function () {
         var csrf = $("input[name='csrfmiddlewaretoken']").val();
         $.ajax({
@@ -197,7 +197,7 @@
         });
 
     });
-</script>
+</script> -->
 <script>
     $(document).ready(function () {
         var csrf = $("input[name='csrfmiddlewaretoken']").val();
@@ -218,9 +218,9 @@
                         datasets: [{
                             label: 'Item quantity',
                             data: response['qty'],
-                            backgroundColor: '#a7c957',
+                            backgroundColor: '#ffa60000',
                             borderColor: '#457b9d',
-                            borderWidth: 2
+                            borderWidth: 4
                         }]
                     },
                     options: {
@@ -242,7 +242,7 @@
 
     });
 </script>
-<script>
+<!-- <script>
     $(document).ready(function () {
         var csrf = $("input[name='csrfmiddlewaretoken']").val();
         $.ajax({
@@ -329,5 +329,5 @@
         });
 
     });
-</script>
+</script> -->
 {% endblock content %}
