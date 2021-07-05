@@ -47,9 +47,8 @@
                             <li style="margin-top:20px;"><a href="mailto:exchang@gmail.com"><img src="{% static '/base/images/mail_icon.png' %}" alt="#" />wms.helpdesk@poltekpos.ac.id</a></li>
                             <li style="margin-left:-50px;margin-top:20px;"><a href="tel:exchang@gmail.com"><img src="{% static '/base/images/phone_icon.png' %}" alt="#" />(022)2009562</a></li>
                             {% comment %} <li><a href="#login" data-toggle="modal" data-target="#exampleModalCenter" class="join_bt">Login</a></li> {% endcomment %}
-                            <li style="width:100px;font-size:12px;margin-left:-10px;margin-top:20px;"><a href="{% url 'login'%}" class="join_bt">Login Member</a></li>
+                            <li style="width:100px;font-size:12px;margin-left:-10px;margin-top:20px;"><a href="{% url 'login'%}" class="join_bt">Login</a></li>
                             {% comment %} <li style="width:100px;font-size:12px;"><a href="" class="join_bt">Login Admin</a></li> {% endcomment %}
-                            <li style="width:100px;font-size:12px;margin-left:10px;margin-top:20px;"><a href="{% url 'groupLogin'%}" class="join_bt">Login Group</a></li>
                             <a href="{% url 'adminLogin'%}" class="navbar-brand" href="index.html"><img src="{% static '/base/images/admin.png' %}" alt="image" style="width:70px;"></a>
                         </ul>
                     </div>
@@ -116,7 +115,7 @@
             <div class="row" style="width:100%;">
                 <div class="col-md-6">
                     <div class="full text_align_right_img">
-                        <img src="{% static '/base/images/wms.jpg' %}" alt="#" />
+                        <img src="{% static '/base/images/wms_fix.png' %}" alt="#" />
                         
                     </div>
                 </div>
@@ -127,7 +126,7 @@
                         </div>
                     </div>
                     <div style="width:100%;">
-                        <p style="width:100%;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                        <p style="width:100%;"></p><b>WMS Politeknik Pos Indonesia</b> is a website-based application that operates in the logistics sector. More precisely, it is a warehouse management system application using qrcode in the management of goods contained in the warehouse. Starting from the incoming goods from the supplier, stock taking, until the goods out to the customer.</p>
                     </div>
                     <div class="full paddding_left_15">
                         <a class="main_bt" href="#">About more ></a>
@@ -203,7 +202,7 @@
                         </div>
                     </div>
                     <div class="full paddding_left_15">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                        <p>The incoming goods to the outgoing goods will be well controlled because every action must pass through the scanner activity of each item so as to minimize errors that occur in the management of goods in the warehouse such as human errors</p>
                     </div>
                     <div class="full paddding_left_15">
                         <a class="main_bt" href="#">Exchange ></a>
@@ -224,14 +223,14 @@
                         </div>
                     </div>
                     <div class="full paddding_left_15">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                        <p>In warehousing activities, there must be many shortcomings and mistakes in running it. For this reason, <b>WMS Politeknik Pos Indonesia</b> created a website-based application which in its use already uses a scanner and qrcode system to assist in the management of goods in the warehouse. Starting from the incoming goods from the supplier, stock taking, until the goods leave the warehouse and arrive at the customer. And every activity must pass through the scanner to be integrated with the application.</p>
                     </div>
                     <div class="full paddding_left_15">
                         <a class="main_bt" href="#">Read More ></a>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="full text_align_right_img">
+                    <div class="full text_align_left_img">
                         <img src="{% static '/base/images/wms3.jpg' %}" alt="#" />
                     </div>
                 </div>
@@ -419,7 +418,6 @@
             <div class="modal-body mx-auto">
                <a class="btn bg-primary text-light " href="{% url 'login'%}">login member</a>
                <a class="btn bg-primary text-light" href="{% url 'adminLogin'%}">login admin</a>
-               <a class="btn bg-primary text-light " href="{% url 'groupLogin'%}">login group</a>
             </div>
          </div>
       </div>

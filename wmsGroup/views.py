@@ -35,43 +35,42 @@ def index(request):
     if 'group_is_login' in request.session:
         return render(request, "inside/wmsGroup/content/index.html")
     else:
-        return redirect('groupLogin')
+        return redirect('login')
 
 
-def login(request):
-    if request.method == "GET":
-        context = {
-            'title': 'Login Group'
-        }
-        return render(request, "inside/wmsGroup/form/login.html", context)
-    elif request.method == "POST":
-        try:
-            UserGroup.objects.get(email=request.POST['email'])
-        except:
-            messages.error(request, 'Email tidak terdaftar')
-            return redirect('groupLogin')
-        usergroup = UserGroup.objects.get(email=request.POST['email'])
-        # angka 2 ganti dengan 0
-        if usergroup.active != '2':
-            data = list(UserGroup.objects.filter(email=request.POST['email']).values(
-                'id', 'password', 'name', 'limit'))
-            if data[0]['password'] == request.POST['password']:
-                request.session['groupId'] = data[0]['id']
-                request.session['groupName'] = data[0]['name']
-                request.session['groupLimit'] = str(data[0]['limit'])
-                request.session['group_is_login'] = True
-                return redirect('groupIndex')
-            else:
-                messages.error(request, 'Email atau password salah')
-                return redirect('groupLogin')
-        else:
-            messages.error(request, 'Email belum verifikasi')
-            return redirect('groupLogin')
-    else:
-        context = {
-            'title': 'Login Group'
-        }
-        return render(request, "inside/wmsGroup/form/login.html", context)
+# def login(request):
+#     if request.method == "GET":
+#         context = {
+#             'title': 'Login Group'
+#         }
+#         return render(request, "inside/wmsGroup/form/login.html", context)
+#     elif request.method == "POST":
+#         try:
+#             UserGroup.objects.get(email=request.POST['email'])
+#         except:
+#             messages.error(request, 'Email tidak terdaftar')
+#             return redirect('groupLogin')
+#         usergroup = UserGroup.objects.get(email=request.POST['email'])
+#         if usergroup.active != '0':
+#             data = list(UserGroup.objects.filter(email=request.POST['email']).values(
+#                 'id', 'password', 'name', 'limit'))
+#             if data[0]['password'] == request.POST['password']:
+#                 request.session['groupId'] = data[0]['id']
+#                 request.session['groupName'] = data[0]['name']
+#                 request.session['groupLimit'] = str(data[0]['limit'])
+#                 request.session['group_is_login'] = True
+#                 return redirect('groupIndex')
+#             else:
+#                 messages.error(request, 'Email atau password salah')
+#                 return redirect('groupLogin')
+#         else:
+#             messages.error(request, 'Email belum verifikasi')
+#             return redirect('groupLogin')
+#     else:
+#         context = {
+#             'title': 'Login Group'
+#         }
+#         return render(request, "inside/wmsGroup/form/login.html", context)
 
 
 
@@ -138,7 +137,7 @@ def register(request):
                     [request.POST['email']],
                 )
                 email.send(fail_silently=False)
-                return redirect('groupLogin')
+                return redirect('login')
             else:
                 messages.error(request, 'Terjadi Error')
                 return redirect('groupRegister')
@@ -174,7 +173,7 @@ def resetPassword(request):
             [request.POST['email']],
         )
         email.send(fail_silently=False)
-        return redirect('groupLogin')
+        return redirect('login')
     else:
         context = {
             'title': 'Reset Password'
@@ -188,7 +187,7 @@ def resetPassword(request):
 
 def logout(request):
     request.session.flush()
-    return redirect('groupLogin')
+    return redirect('login')
 
 
 class VerificationView(View):
@@ -199,10 +198,10 @@ class VerificationView(View):
         if getusergroup.token == token:
             usergroup.update(active=1)
             messages.success(request, 'Verifikasi Berhasil')
-            return redirect('groupLogin')
+            return redirect('login')
         else:
             messages.success(request, 'Token url anda Salah')
-            return redirect('groupLogin') 
+            return redirect('login') 
 
 
 class ResetPassword(View):
@@ -220,7 +219,7 @@ class ResetPassword(View):
         if getusergroup.token == token:
             usergroup.update(password=request.POST['password'])
             messages.success(request, 'Reset Berhasil')
-            return redirect('groupLogin')            
+            return redirect('login')            
         else:
             messages.success(request, 'Token url anda Salah')
             return redirect('groupReset') 

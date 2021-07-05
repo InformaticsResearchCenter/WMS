@@ -56,34 +56,58 @@ def login(request):
         return redirect('home')
     else:
         if request.method == 'POST':
-            try:
-                User.objects.get(username=request.POST['username'])
-            except User.DoesNotExist:
-                messages.error(request, 'username does not exists!')
-                return redirect('login')
-            
-            data = list(User.objects.filter(username=request.POST['username']).values('id','username','role_id','userGroup_id','password','deleted'))
-            date = list(UserGroup.objects.filter(id=data[0]['userGroup_id']).values('limit'))
-
-            if data[0]['deleted'] == "1":
-                messages.error(request, 'username does not exists!')
-                return redirect('login')
-
-            elif data[0]['password'] == request.POST['password']:
-                if  datetime.datetime.today().strftime('%Y-%m-%d') <= str(date[0]['limit']) :
-                    request.session['id'] = data[0]['id']
-                    request.session['username'] = data[0]['username']
-                    request.session['role'] = data[0]['role_id']
-                    request.session['usergroup'] = data[0]['userGroup_id']
-                    request.session['limit'] = str(date[0]['limit'])
-                    request.session['is_login'] = True
-                    return redirect('home')
-                else:
-                    messages.error(request, 'Expired')
+            if request.POST['login'] == 'member':
+                try:
+                    User.objects.get(username=request.POST['username'])
+                except User.DoesNotExist:
+                    messages.error(request, 'username does not exists!')
                     return redirect('login')
-            else:
-                messages.error(request, 'username or password is not correct!')
-                return redirect('login')
+                
+                data = list(User.objects.filter(username=request.POST['username']).values('id','username','role_id','userGroup_id','password','deleted'))
+                date = list(UserGroup.objects.filter(id=data[0]['userGroup_id']).values('limit'))
+
+                if data[0]['deleted'] == "1":
+                    messages.error(request, 'username does not exists!')
+                    return redirect('login')
+
+                elif data[0]['password'] == request.POST['password']:
+                    if  datetime.datetime.today().strftime('%Y-%m-%d') <= str(date[0]['limit']) :
+                        request.session['id'] = data[0]['id']
+                        request.session['username'] = data[0]['username']
+                        request.session['role'] = data[0]['role_id']
+                        request.session['usergroup'] = data[0]['userGroup_id']
+                        request.session['limit'] = str(date[0]['limit'])
+                        request.session['is_login'] = True
+                        return redirect('home')
+                    else:
+                        messages.error(request, 'Expired')
+                        return redirect('login')
+                else:
+                    messages.error(request, 'username or password is not correct!')
+                    return redirect('login')
+            if request.POST['login'] == 'group':
+                try:
+                    UserGroup.objects.get(email=request.POST['username'])
+                except:
+                    messages.error(request, 'Email tidak terdaftar')
+                    return redirect('login')
+                usergroup = UserGroup.objects.get(email=request.POST['username'])
+                # angka 2 ganti dengan 0
+                if usergroup.active != '0':
+                    data = list(UserGroup.objects.filter(email=request.POST['username']).values(
+                        'id', 'password', 'name', 'limit'))
+                    if data[0]['password'] == request.POST['password']:
+                        request.session['groupId'] = data[0]['id']
+                        request.session['groupName'] = data[0]['name']
+                        request.session['groupLimit'] = str(data[0]['limit'])
+                        request.session['group_is_login'] = True
+                        return redirect('groupIndex')
+                    else:
+                        messages.error(request, 'Email atau password salah')
+                        return redirect('login')
+                else:
+                    messages.error(request, 'Email belum verifikasi')
+                    return redirect('login')
     return render(request, "login/login_form.html", context)
 
 

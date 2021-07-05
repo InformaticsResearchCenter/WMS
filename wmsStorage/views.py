@@ -50,7 +50,7 @@ def getItemData(request):
             for i in rawitem:
                 qty.append(i['qty'])
                 name.append(i['name'])
-
+            print(name)
             return JsonResponse({'name':name,'qty':qty})
 
 def getStockOpname(request):
