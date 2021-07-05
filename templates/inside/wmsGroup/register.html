@@ -170,7 +170,7 @@
             $('#selectDesa').html(option);
             })
         })
-
+</script>
         {% comment %} function fetchCity(){
             // get id provinsi
             let idProvinsi = $('#selectProvinsi').val()
@@ -180,7 +180,7 @@
             .then(result => {
                 result.map(item => {
                     $('#selectKota').append(
-                        '<option value="' + item.name + '" id="' + item.id + '">' + item.name + '<option/>'
+                         <!-- '<option value="' + item.name + '" id="' + item.id + '">' + item.name + '<option/>' -->
                     );
                 })
             });
@@ -195,7 +195,7 @@
             .then(result => {
                 result.map(item => {
                     $('#selectKecamatan').append(
-                        '<option value="' + item.name + '" id="' + item.id + '">' + item.name + '<option/>'
+                        <!-- '<option value="' + item.name + '" id="' + item.id + '">' + item.name + '<option/>' -->
                     );
                 })
             });
@@ -210,11 +210,10 @@
             .then(result => {
                 result.map(item => {
                     $('#selectDesa').append(
-                        '<option value="' + item.name + '" id="' + item.id + '">' + item.name + '<option/>'
+                        <!-- '<option value="' + item.name + '" id="' + item.id + '">' + item.name + '<option/>' -->
                     );
                 })
             });
         } {% endcomment %}
-    </script>
 
 </html>
