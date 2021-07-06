@@ -41,18 +41,18 @@
             
             <div class="container">
                 <div class="row">
-                    <div class="logo_section" style="width:100%;">
+                    <div class="logo_section" style="width:100%;align-content: center;">
                         {% comment %} <a class="navbar-brand" href="index.html"><img src="{% static '/base/images/logo.png' %}" alt="image"></a> {% endcomment %}
                         <h1 style="font-size:45px;margin-top:20px;font-style:bold;"><span class="theme_color">WMS </span>POLTEKPOS</h1>
                     </div>
                     <div class="site_information" style="width:100%;">
-                        <ul style="width:100%;">
+                        <ul style="width:100%;align-content: center;">
                             <li style="margin-top:20px;"><a href="mailto:exchang@gmail.com"><img src="{% static '/base/images/mail_icon.png' %}" alt="#" />wms.helpdesk@poltekpos.ac.id</a></li>
                             <li style="margin-left:-50px;margin-top:20px;"><a href="tel:exchang@gmail.com"><img src="{% static '/base/images/phone_icon.png' %}" alt="#" />(022)2009562</a></li>
                             {% comment %} <li><a href="#login" data-toggle="modal" data-target="#exampleModalCenter" class="join_bt">Login</a></li> {% endcomment %}
-                            <li style="width:100px;font-size:12px;margin-left:-10px;margin-top:20px;"><a href="{% url 'login'%}" class="join_bt">Login</a></li>
+                            <li style="width:100px;font-size:12px;margin-top:20px;margin-left: 150px;"><a href="{% url 'login'%}" class="join_bt">Login</a></li>
                             {% comment %} <li style="width:100px;font-size:12px;"><a href="" class="join_bt">Login Admin</a></li> {% endcomment %}
-                            <a href="{% url 'adminLogin'%}" class="navbar-brand" href="index.html"><img src="{% static '/base/images/admin.png' %}" alt="image" style="width:70px;"></a>
+                            <a href="{% url 'adminLogin'%}" style="margin-left:20px;" class="navbar-brand" href="index.html"><img src="{% static '/base/images/admin.png' %}" alt="image" style="width:70px;"></a>
                         </ul>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                     <div style="width:100%;">
-                        <p style="width:100%;"></p><b>WMS Politeknik Pos Indonesia</b> is a website-based application that operates in the logistics sector. More precisely, it is a warehouse management system application using qrcode in the management of goods contained in the warehouse. Starting from the incoming goods from the supplier, stock taking, until the goods out to the customer.</p>
+                        <justify><p style="width:100%;text-align: justify;"><b>WMS Politeknik Pos Indonesia</b> is a website-based application that operates in the logistics sector. More precisely, it is a warehouse management system application using qrcode in the management of goods contained in the warehouse. Starting from the incoming goods from the supplier, stock taking, until the goods out to the customer.</p></justify>
                     </div>
                     <div class="full paddding_left_15">
                         <a class="main_bt" href="#">About more ></a>
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                     <div class="full paddding_left_15">
-                        <p>The incoming goods to the outgoing goods will be well controlled because every action must pass through the scanner activity of each item so as to minimize errors that occur in the management of goods in the warehouse such as human errors</p>
+                        <p style="text-align: justify;">The incoming goods to the outgoing goods will be well controlled because every action must pass through the scanner activity of each item so as to minimize errors that occur in the management of goods in the warehouse such as human errors</p>
                     </div>
                     <div class="full paddding_left_15">
                         <a class="main_bt" href="#">Exchange ></a>
@@ -226,7 +226,7 @@
                         </div>
                     </div>
                     <div class="full paddding_left_15">
-                        <p>In warehousing activities, there must be many shortcomings and mistakes in running it. For this reason, <b>WMS Politeknik Pos Indonesia</b> created a website-based application which in its use already uses a scanner and qrcode system to assist in the management of goods in the warehouse. Starting from the incoming goods from the supplier, stock taking, until the goods leave the warehouse and arrive at the customer. And every activity must pass through the scanner to be integrated with the application.</p>
+                        <p style="text-align: justify;">In warehousing activities, there must be many shortcomings and mistakes in running it. For this reason, <b>WMS Politeknik Pos Indonesia</b> created a website-based application which in its use already uses a scanner and qrcode system to assist in the management of goods in the warehouse. Starting from the incoming goods from the supplier, stock taking, until the goods leave the warehouse and arrive at the customer. And every activity must pass through the scanner to be integrated with the application.</p>
                     </div>
                     <div class="full paddding_left_15">
                         <a class="main_bt" href="#">Read More ></a>
@@ -260,7 +260,7 @@
                        <div class="overlay"><a class="main_bt transparent" href="#">View</a></div>
                        <div class="blog_details">
                          <h3>Bitcoin News</h3>
-                         <p>pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                         <p style="text-align: justify;padding: 10px;">pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
                        </div>
                     </div>
                 </div>
@@ -270,7 +270,7 @@
                         <div class="overlay"><a class="main_bt transparent" href="#">View</a></div>
                        <div class="blog_details">
                          <h3>Ethereum News</h3>
-                         <p>pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                         <p style="text-align: justify;padding: 10px;">pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
                        </div>
                     </div>
                 </div>
@@ -280,7 +280,7 @@
                         <div class="overlay"><a class="main_bt transparent" href="#">View</a></div>
                        <div class="blog_details">
                          <h3>Light News</h3>
-                         <p>pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                         <p style="text-align: justify;padding: 10px;">pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
                        </div>
                     </div>
                 </div>
@@ -365,7 +365,7 @@
                             <div class="full">
                                 <div class="footer_blog full white_fonts">
                              <h3>Newsletter</h3>
-                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</p>
+                             <p style="text-align: justify;padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</p>
                              <div class="newsletter_form">
                                 <form action="index.html">
                                    <input type="email" placeholder="Your Email" name="#" required="">
